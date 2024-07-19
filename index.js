@@ -15,7 +15,7 @@ const displayProjects = async (searchTerm) => {
 
     data.forEach((project) => {
         projectList += `
-        <li class="relative bg-gray-100 flex flex-col justify-between rounded-md p-4 sm:w-full lg:w-1/4 group">
+        <li class="relative bg-gray-100 flex flex-col grow justify-between rounded-md p-4 sm:w-full lg:w-1/4 group">
             <div>
                 <h3 class="text-2xl font-medium">${project.ProjectId}: ${project.Name}</h3>
                 <p class="my-4"><bold class="font-bold">Description:</bold> ${project.Description}</p>
