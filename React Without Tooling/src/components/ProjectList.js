@@ -40,28 +40,6 @@ export default function ProjectsList() {
 
     return (
         <div>
-            <div className="flex justify-between items-center">
-                <h1 className="text-3xl">Project Listings</h1>
-                <a
-                    href="/add.html"
-                    className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md cursor-pointer"
-                >
-                    Add Project
-                </a>
-            </div>
-            <form
-                id="search_form"
-                className="flex items-center border-2 border-gray-300 rounded-full my-4 px-4"
-                onSubmit={handleSearch}
-            >
-                <input
-                    placeholder="Search"
-                    id="search_input"
-                    className="py-2 w-full focus:outline-none"
-                    type="text"
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-            </form>
             {loading ? (
                 <div>Loading...</div>
             ) : (
