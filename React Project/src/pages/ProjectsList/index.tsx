@@ -1,5 +1,5 @@
 import { BASE_URL } from "../../configs/urls";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export type Project = {
     ProjectId: number;
@@ -13,6 +13,9 @@ export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
     const [loading, setLoading] = useState<boolean>(true);
 
+    const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+
     useEffect(() => {
         fetchProjects();
     }, []);
@@ -21,7 +24,27 @@ export default function ProjectsList() {
         const response: Response = await fetch(BASE_URL);
         const projects: Project[] = await response.json();
         setProjects(projects);
+        setSearchedProjects(projects);
         setLoading(false);
+    };
+
+    const handleSearch = (e: FormEvent) => {
+        e.preventDefault();
+
+        if (searchTerm) {
+            if (!projects) return;
+
+            const projectList: Project[] | [] = projects.filter((project) => {
+                let name = project.Name.toLowerCase();
+                let regex = new RegExp(searchTerm, "i");
+
+                return name.match(regex) ? true : false;
+            });
+
+            setSearchedProjects(projectList);
+        } else {
+            setSearchedProjects(projects);
+        }
     };
 
     return (
@@ -38,20 +61,22 @@ export default function ProjectsList() {
             <form
                 id="search_form"
                 className="flex items-center border-2 border-gray-300 rounded-full my-4 px-4"
+                onSubmit={handleSearch}
             >
                 <input
                     placeholder="Search"
                     id="search_input"
                     className="py-2 w-full focus:outline-none"
                     type="text"
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </form>
             {loading ? (
                 <div>Loading...</div>
             ) : (
                 <ul id="list" className="flex flex-wrap justify-start gap-2">
-                    {projects?.length &&
-                        projects.map((project, index) => (
+                    {searchedProjects?.length &&
+                        searchedProjects.map((project, index) => (
                             <li
                                 className="relative bg-gray-100 flex flex-col grow justify-between rounded-md p-4 sm:w-full lg:w-1/4 group"
                                 key={index}
