@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Project } from "../ProjectsList";
+import { Project } from "../ProjectsList/ProjectList";
 import { useNavigate } from "react-router-dom";
 
 export default function AddProject() {

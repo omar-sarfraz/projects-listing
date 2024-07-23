@@ -1,9 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProjectsList from "./pages/ProjectsList";
-import AddProject from "./pages/AddProject";
+import ProjectsList from "./pages/ProjectsList/ProjectList";
+import AddProject from "./pages/AddProject/AddProject";
 import Layout from "./pages/Layout";
 import NotFound from "./components/NotFound";
-import Login from "./pages/Login";
+import Login from "./pages/Login/Login";
+import SignUp from "./pages/SignUp/SignUp";
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                     <Route index element={<ProjectsList />} />
                     <Route path="projects/add" element={<AddProject />} />
                     <Route path="login" element={<Login />} />
+                    <Route path="sign-up" element={<SignUp />} />
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>

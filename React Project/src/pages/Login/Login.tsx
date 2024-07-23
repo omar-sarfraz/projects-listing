@@ -39,7 +39,7 @@ export default function Login() {
             <div className="bg-gray-100 px-10 py-10 rounded-md md:w-1/2 w-full">
                 <div className="flex flex-col items-center">
                     <h2 className="text-3xl font-medium mb-2">Login</h2>
-                    <p>Login to access 1000s of projects</p>
+                    <p>Login to access thousands of projects</p>
                 </div>
                 <div className="my-10">
                     <div className="flex flex-col gap-1">
@@ -80,7 +80,7 @@ export default function Login() {
                     </div>
                     <div className="mt-4">
                         <div className="text-end">
-                            Already have an account?{" "}
+                            Don't have an account?{" "}
                             <Link to="/sign-up" className="font-semibold">
                                 Sign Up
                             </Link>
