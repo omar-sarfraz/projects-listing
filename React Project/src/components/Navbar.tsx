@@ -4,17 +4,14 @@ function Navbar() {
     return (
         <div className="flex justify-between items-center px-10 py-6">
             <h2 className="text-3xl font-medium">
-                <Link
-                    className="hover:border-b-4 pb-1 border-cyan-500 transition-all rounded-b-sm"
-                    to="/"
-                >
+                <Link className="hover:border-b-4 pb-1 border-cyan-500 transition-all" to="/">
                     Project Listings
                 </Link>
             </h2>
             <ul className="flex gap-4 text-xl font-medium">
                 <li>
                     <Link
-                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all rounded-b-sm"
+                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all"
                         to="/"
                     >
                         Home
@@ -22,7 +19,7 @@ function Navbar() {
                 </li>
                 <li>
                     <Link
-                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all rounded-b-sm"
+                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all"
                         to="/"
                     >
                         Projects
@@ -32,7 +29,7 @@ function Navbar() {
             <ul className="flex gap-4 text-xl font-medium">
                 <li>
                     <Link
-                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all rounded-b-sm"
+                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all"
                         to="/login"
                     >
                         Login
@@ -40,7 +37,7 @@ function Navbar() {
                 </li>
                 <li>
                     <Link
-                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all rounded-b-sm"
+                        className="hover:border-b-4 pb-1 border-emerald-500 transition-all"
                         to="/sign-up"
                     >
                         Sign Up
