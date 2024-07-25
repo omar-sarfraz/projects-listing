@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import TextField from "../../components/TextField";
 
-type Error = {
+export type LoginError = {
     type: "" | "EMAIL" | "PASSWORD";
     message: string;
 };
@@ -9,7 +10,7 @@ type Error = {
 export default function Login() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState<Error>({ type: "", message: "" });
+    const [error, setError] = useState<LoginError>({ type: "", message: "" });
 
     const handleLogin = () => {
         setError({ type: "", message: "" });
@@ -42,42 +43,24 @@ export default function Login() {
                     <p>Login to access thousands of projects</p>
                 </div>
                 <div className="my-10">
-                    <div className="flex flex-col gap-1">
-                        <label htmlFor="email" className="text-xl">
-                            Email
-                        </label>
-                        <input
-                            id="email"
-                            value={email}
-                            type="email"
-                            placeholder="johndoe@gmail.com"
-                            onChange={(e) => setEmail(e.target.value)}
-                            className={`p-2 rounded-md outline-none ${
-                                error.type === "EMAIL" ? "border-2 border-red-500" : ""
-                            }`}
-                        />
-                        {error.type === "EMAIL" && (
-                            <p className="text-red-500 pl-2">{error.message}</p>
-                        )}
-                    </div>
-                    <div className="flex flex-col gap-1 mt-3">
-                        <label htmlFor="password" className="text-xl">
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            value={password}
-                            type="password"
-                            placeholder="********"
-                            onChange={(e) => setPassword(e.target.value)}
-                            className={`p-2 rounded-md outline-none ${
-                                error.type === "PASSWORD" ? "border-2 border-red-500" : ""
-                            }`}
-                        />
-                        {error.type === "PASSWORD" && (
-                            <p className="text-red-500 pl-2">{error.message}</p>
-                        )}
-                    </div>
+                    <TextField
+                        currentValue={email}
+                        setCurrentValue={setEmail}
+                        type="email"
+                        placeholder="johndoe@gmail.com"
+                        error={error}
+                        label="Email"
+                        errorType="EMAIL"
+                    />
+                    <TextField
+                        currentValue={password}
+                        setCurrentValue={setPassword}
+                        type="password"
+                        placeholder="Password"
+                        error={error}
+                        label="Password"
+                        errorType="PASSWORD"
+                    />
                     <div className="mt-4">
                         <div className="text-end">
                             Don't have an account?{" "}

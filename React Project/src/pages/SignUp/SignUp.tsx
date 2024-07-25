@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import TextField from "../../components/TextField";
 
-type Error = {
+export type SignUpError = {
     type: "" | "FIRST_NAME" | "LAST_NAME" | "EMAIL" | "PASSWORD" | "CONFIRM_PASSWORD";
     message: string;
 };
@@ -12,7 +13,7 @@ export default function SignUp() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [error, setError] = useState<Error>({ type: "", message: "" });
+    const [error, setError] = useState<SignUpError>({ type: "", message: "" });
 
     const handleSignUp = () => {
         setError({ type: "", message: "" });
@@ -58,96 +59,51 @@ export default function SignUp() {
                     <p>SignUp to access thousands of projects</p>
                 </div>
                 <div className="my-10">
-                    <div className="flex flex-col gap-1">
-                        <label htmlFor="first_name" className="text-xl">
-                            First Name
-                        </label>
-                        <input
-                            id="first_name"
-                            value={firstName}
-                            type="text"
-                            placeholder="John"
-                            onChange={(e) => setFirstName(e.target.value)}
-                            className={`p-2 rounded-md outline-none ${
-                                error.type === "FIRST_NAME" ? "border-2 border-red-500" : ""
-                            }`}
-                        />
-                        {error.type === "FIRST_NAME" && (
-                            <p className="text-red-500 pl-2">{error.message}</p>
-                        )}
-                    </div>
-                    <div className="flex flex-col gap-1 mt-3">
-                        <label htmlFor="last_name" className="text-xl">
-                            Last Name
-                        </label>
-                        <input
-                            id="last_name"
-                            value={lastName}
-                            type="text"
-                            placeholder="Doe"
-                            onChange={(e) => setLastName(e.target.value)}
-                            className={`p-2 rounded-md outline-none ${
-                                error.type === "LAST_NAME" ? "border-2 border-red-500" : ""
-                            }`}
-                        />
-                        {error.type === "LAST_NAME" && (
-                            <p className="text-red-500 pl-2">{error.message}</p>
-                        )}
-                    </div>
-                    <div className="flex flex-col gap-1 mt-3">
-                        <label htmlFor="email" className="text-xl">
-                            Email
-                        </label>
-                        <input
-                            id="email"
-                            value={email}
-                            type="email"
-                            placeholder="johndoe@gmail.com"
-                            onChange={(e) => setEmail(e.target.value)}
-                            className={`p-2 rounded-md outline-none ${
-                                error.type === "EMAIL" ? "border-2 border-red-500" : ""
-                            }`}
-                        />
-                        {error.type === "EMAIL" && (
-                            <p className="text-red-500 pl-2">{error.message}</p>
-                        )}
-                    </div>
-                    <div className="flex flex-col gap-1 mt-3">
-                        <label htmlFor="password" className="text-xl">
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            value={password}
-                            type="password"
-                            placeholder="********"
-                            onChange={(e) => setPassword(e.target.value)}
-                            className={`p-2 rounded-md outline-none ${
-                                error.type === "PASSWORD" ? "border-2 border-red-500" : ""
-                            }`}
-                        />
-                        {error.type === "PASSWORD" && (
-                            <p className="text-red-500 pl-2">{error.message}</p>
-                        )}
-                    </div>
-                    <div className="flex flex-col gap-1 mt-3">
-                        <label htmlFor="confirmPassword" className="text-xl">
-                            Confirm Password
-                        </label>
-                        <input
-                            id="confirmPassword"
-                            value={confirmPassword}
-                            type="password"
-                            placeholder="********"
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className={`p-2 rounded-md outline-none ${
-                                error.type === "CONFIRM_PASSWORD" ? "border-2 border-red-500" : ""
-                            }`}
-                        />
-                        {error.type === "CONFIRM_PASSWORD" && (
-                            <p className="text-red-500 pl-2">{error.message}</p>
-                        )}
-                    </div>
+                    <TextField
+                        currentValue={firstName}
+                        setCurrentValue={setFirstName}
+                        type="text"
+                        placeholder="John"
+                        error={error}
+                        label="First Name"
+                        errorType="FIRST_NAME"
+                    />
+                    <TextField
+                        currentValue={lastName}
+                        setCurrentValue={setLastName}
+                        type="text"
+                        placeholder="Doe"
+                        error={error}
+                        label="Last Name"
+                        errorType="LAST_NAME"
+                    />
+                    <TextField
+                        currentValue={email}
+                        setCurrentValue={setEmail}
+                        type="email"
+                        placeholder="johndoe@gmail.com"
+                        error={error}
+                        label="Email"
+                        errorType="EMAIL"
+                    />
+                    <TextField
+                        currentValue={password}
+                        setCurrentValue={setPassword}
+                        type="password"
+                        placeholder="Password"
+                        error={error}
+                        label="Password"
+                        errorType="PASSWORD"
+                    />
+                    <TextField
+                        currentValue={confirmPassword}
+                        setCurrentValue={setConfirmPassword}
+                        type="password"
+                        placeholder="Confirm Password"
+                        error={error}
+                        label="Confirm Password"
+                        errorType="CONFIRM_PASSWORD"
+                    />
                     <div className="mt-4">
                         <div className="text-end">
                             Already have an account?{" "}
