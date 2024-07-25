@@ -2,10 +2,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
+import { encrypt } from "@omar-sarfraz/caesar-cipher";
+import bcrypt from "bcryptjs";
 
 export type SignUpError = {
     type: "" | "FIRST_NAME" | "LAST_NAME" | "EMAIL" | "PASSWORD" | "CONFIRM_PASSWORD";
     message: string;
+};
+
+export type User = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
 };
 
 export default function SignUp() {
@@ -16,7 +25,7 @@ export default function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [error, setError] = useState<SignUpError>({ type: "", message: "" });
 
-    const handleSignUp = () => {
+    const handleSignUp = async () => {
         setError({ type: "", message: "" });
 
         if (!firstName) {
@@ -49,7 +58,28 @@ export default function SignUp() {
             return;
         }
 
-        alert("Implement Sign Up");
+        const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
+
+        const encryptedFirstName = encrypt(key, firstName);
+        const encryptedLastName = encrypt(key, lastName);
+        const encryptedEmail = encrypt(key, email);
+
+        const hash = await bcrypt.genSalt(key);
+        const encryptedPassword = await bcrypt.hash(password, hash);
+
+        let userData: User = {
+            firstName: encryptedFirstName,
+            lastName: encryptedLastName,
+            email: encryptedEmail,
+            password: encryptedPassword,
+        };
+        let existingUser = localStorage.getItem(encryptedEmail);
+
+        if (existingUser) alert("User with this email already exists");
+        else {
+            localStorage.setItem(encryptedEmail, JSON.stringify(userData));
+            alert("Account registered successfully");
+        }
     };
 
     return (

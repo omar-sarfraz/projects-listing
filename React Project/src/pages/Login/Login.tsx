@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
+import { encrypt } from "@omar-sarfraz/caesar-cipher";
+import { User } from "../SignUp/SignUp";
+import bcrypt from "bcryptjs";
 
 export type LoginError = {
     type: "" | "EMAIL" | "PASSWORD";
@@ -13,7 +16,7 @@ export default function Login() {
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<LoginError>({ type: "", message: "" });
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         setError({ type: "", message: "" });
 
         if (!email) {
@@ -26,10 +29,19 @@ export default function Login() {
             return;
         }
 
-        const correctEmail = "test@gmail.com";
-        const correctPassword = "12345678";
+        const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
+        const encryptedEmail = encrypt(key, email);
 
-        if (email === correctEmail && password === correctPassword) {
+        let existingUser = localStorage.getItem(encryptedEmail);
+        if (!existingUser) {
+            alert("Email or Password is Incorrect");
+            return;
+        }
+
+        let existingUserData: User = JSON.parse(existingUser);
+        let match = await bcrypt.compare(password, existingUserData.password);
+
+        if (match) {
             alert("Email and Password is correct!");
         } else {
             alert("Email or password is incorrect!");
