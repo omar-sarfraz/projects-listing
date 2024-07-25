@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import TextField from "../../components/TextField";
+import Button from "../../components/Button";
 
 export type SignUpError = {
     type: "" | "FIRST_NAME" | "LAST_NAME" | "EMAIL" | "PASSWORD" | "CONFIRM_PASSWORD";
@@ -113,12 +114,7 @@ export default function SignUp() {
                         </div>
                     </div>
                 </div>
-                <button
-                    className="bg-emerald-500 text-white w-full py-2 text-xl font-medium rounded-md"
-                    onClick={handleSignUp}
-                >
-                    SignUp
-                </button>
+                <Button text="SignUp" handleClick={handleSignUp} />
             </div>
         </div>
     );
