@@ -5,6 +5,7 @@ import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import { User } from "../SignUp/SignUp";
 import bcrypt from "bcryptjs";
+import { toast } from "react-toastify";
 
 export type LoginError = {
     type: "" | "EMAIL" | "PASSWORD";
@@ -30,11 +31,17 @@ export default function Login() {
         }
 
         const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
+
+        if (!key) {
+            toast("An error has occured. Please try again after some time.", { type: "error" });
+            return;
+        }
+
         const encryptedEmail = encrypt(key, email);
 
         let existingUser = localStorage.getItem(encryptedEmail);
         if (!existingUser) {
-            alert("Email or Password is Incorrect");
+            toast("Email or Password is Incorrect", { type: "error" });
             return;
         }
 
@@ -42,9 +49,9 @@ export default function Login() {
         let match = await bcrypt.compare(password, existingUserData.password);
 
         if (match) {
-            alert("Email and Password is correct!");
+            toast("Login Successfull", { type: "success" });
         } else {
-            alert("Email or password is incorrect!");
+            toast("Email or Password is Incorrect", { type: "error" });
         }
     };
 

@@ -6,6 +6,9 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function App() {
     return (
         <BrowserRouter>
@@ -18,6 +21,7 @@ function App() {
                     <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
+            <ToastContainer />
         </BrowserRouter>
     );
 }

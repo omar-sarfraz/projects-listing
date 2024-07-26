@@ -4,6 +4,7 @@ import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcryptjs";
+import { toast } from "react-toastify";
 
 export type SignUpError = {
     type: "" | "FIRST_NAME" | "LAST_NAME" | "EMAIL" | "PASSWORD" | "CONFIRM_PASSWORD";
@@ -60,6 +61,11 @@ export default function SignUp() {
 
         const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
+        if (!key) {
+            toast("An error has occured. Please try again after some time.", { type: "error" });
+            return;
+        }
+
         const encryptedFirstName = encrypt(key, firstName);
         const encryptedLastName = encrypt(key, lastName);
         const encryptedEmail = encrypt(key, email);
@@ -75,10 +81,10 @@ export default function SignUp() {
         };
         let existingUser = localStorage.getItem(encryptedEmail);
 
-        if (existingUser) alert("User with this email already exists");
+        if (existingUser) toast("User with this email already exists", { type: "error" });
         else {
             localStorage.setItem(encryptedEmail, JSON.stringify(userData));
-            alert("Account registered successfully");
+            toast("Account registered successfully", { type: "success" });
         }
     };
 
