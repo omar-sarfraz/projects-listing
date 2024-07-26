@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
@@ -25,6 +25,8 @@ export default function SignUp() {
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [error, setError] = useState<SignUpError>({ type: "", message: "" });
+
+    const navigate = useNavigate();
 
     const handleSignUp = async () => {
         setError({ type: "", message: "" });
@@ -85,6 +87,7 @@ export default function SignUp() {
         else {
             localStorage.setItem(encryptedEmail, JSON.stringify(userData));
             toast("Account registered successfully", { type: "success" });
+            navigate("/login");
         }
     };
 

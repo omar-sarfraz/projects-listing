@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import { User } from "../SignUp/SignUp";
 import bcrypt from "bcryptjs";
 import { toast } from "react-toastify";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export type LoginError = {
     type: "" | "EMAIL" | "PASSWORD";
@@ -13,9 +14,12 @@ export type LoginError = {
 };
 
 export default function Login() {
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [email, setEmail] = useState<string>("omar@gmail.com");
+    const [password, setPassword] = useState<string>("12345678");
     const [error, setError] = useState<LoginError>({ type: "", message: "" });
+    const { setUser } = useContext(AuthContext);
+
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         setError({ type: "", message: "" });
@@ -49,7 +53,10 @@ export default function Login() {
         let match = await bcrypt.compare(password, existingUserData.password);
 
         if (match) {
+            setUser(existingUserData);
             toast("Login Successfull", { type: "success" });
+            localStorage.setItem("user", JSON.stringify(existingUserData));
+            navigate("/", { replace: true });
         } else {
             toast("Email or Password is Incorrect", { type: "error" });
         }
