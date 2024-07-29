@@ -66,7 +66,7 @@ export default function SignUp() {
         const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
         if (!key) {
-            displayToastMessage("An error has occured. Please try again after some time.");
+            displayToastMessage("An error has occured. Please try again after some time.", "error");
             return;
         }
 
@@ -85,10 +85,10 @@ export default function SignUp() {
         };
         let existingUser = localStorage.getItem(encryptedEmail);
 
-        if (existingUser) displayToastMessage("User with this email already exists");
+        if (existingUser) displayToastMessage("User with this email already exists", "error");
         else {
             localStorage.setItem(encryptedEmail, JSON.stringify(userData));
-            displayToastMessage("Account registered successfully");
+            displayToastMessage("Account registered successfully", "success");
             navigate("/login");
         }
     };
