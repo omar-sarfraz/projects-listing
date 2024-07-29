@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 
 type MessageVariant = undefined | "success" | "error";
 type Color = "black" | "green-500" | "red-500";
@@ -20,6 +20,7 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
     const [toastMessage, setToastMessage] = useState<string>("");
     const [type, setType] = useState<MessageVariant>();
     const [color, setColor] = useState<Color>("black");
+    const toastRef = useRef<number>();
 
     useEffect(() => {
         let typeColor: Color = "black";
@@ -29,11 +30,13 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
     }, [type]);
 
     const displayToastMessage = (message: string, type: MessageVariant) => {
+        if (toastRef.current) clearTimeout(toastRef.current);
+
         setShowToast(true);
         setToastMessage(message);
         setType(type ?? undefined);
 
-        setTimeout(() => {
+        toastRef.current = setTimeout(() => {
             setShowToast(false);
             setToastMessage("");
             setType(undefined);
