@@ -1,18 +1,20 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProjectsList from "./pages/ProjectsList";
-import AddProject from "./pages/AddProject";
-import Layout from "./pages/Layout";
+import { AuthContextProvider } from "./contexts/AuthContext";
+import { BrowserRouter } from "react-router-dom";
+import MainNavigator from "./Navigators/MainNavigator";
+
+import { ToastContextProvider } from "./contexts/ToastContext";
+import ToastContainer from "./components/ToastContainer";
 
 function App() {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<ProjectsList />} />
-                    <Route path="projects/add" element={<AddProject />} />
-                </Route>
-            </Routes>
-        </BrowserRouter>
+        <AuthContextProvider>
+            <ToastContextProvider>
+                <BrowserRouter>
+                    <MainNavigator />
+                </BrowserRouter>
+                <ToastContainer />
+            </ToastContextProvider>
+        </AuthContextProvider>
     );
 }
 

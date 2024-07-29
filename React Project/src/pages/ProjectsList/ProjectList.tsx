@@ -1,5 +1,6 @@
 import { BASE_URL } from "../../configs/urls";
 import { FormEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export type Project = {
     ProjectId: number;
@@ -50,13 +51,13 @@ export default function ProjectsList() {
     return (
         <div>
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl">Project Listings</h1>
-                <a
-                    href="/projects/add"
+                <h1 className="text-3xl">All Project Listings</h1>
+                <Link
+                    to="/projects/add"
                     className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md cursor-pointer"
                 >
                     Add Project
-                </a>
+                </Link>
             </div>
             <form
                 id="search_form"
