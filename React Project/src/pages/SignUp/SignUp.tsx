@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcryptjs";
-import { toast } from "react-toastify";
+import { ToastContext } from "../../contexts/ToastContext";
 
 export type SignUpError = {
     type: "" | "FIRST_NAME" | "LAST_NAME" | "EMAIL" | "PASSWORD" | "CONFIRM_PASSWORD";
@@ -25,6 +25,8 @@ export default function SignUp() {
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [error, setError] = useState<SignUpError>({ type: "", message: "" });
+
+    const { displayToastMessage } = useContext(ToastContext);
 
     const navigate = useNavigate();
 
@@ -64,7 +66,7 @@ export default function SignUp() {
         const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
         if (!key) {
-            toast("An error has occured. Please try again after some time.", { type: "error" });
+            displayToastMessage("An error has occured. Please try again after some time.");
             return;
         }
 
@@ -83,10 +85,10 @@ export default function SignUp() {
         };
         let existingUser = localStorage.getItem(encryptedEmail);
 
-        if (existingUser) toast("User with this email already exists", { type: "error" });
+        if (existingUser) displayToastMessage("User with this email already exists");
         else {
             localStorage.setItem(encryptedEmail, JSON.stringify(userData));
-            toast("Account registered successfully", { type: "success" });
+            displayToastMessage("Account registered successfully");
             navigate("/login");
         }
     };

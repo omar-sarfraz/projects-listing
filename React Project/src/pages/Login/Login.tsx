@@ -5,8 +5,8 @@ import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import { User } from "../SignUp/SignUp";
 import bcrypt from "bcryptjs";
-import { toast } from "react-toastify";
 import { AuthContext } from "../../contexts/AuthContext";
+import { ToastContext } from "../../contexts/ToastContext";
 
 export type LoginError = {
     type: "" | "EMAIL" | "PASSWORD";
@@ -18,6 +18,7 @@ export default function Login() {
     const [password, setPassword] = useState<string>("12345678");
     const [error, setError] = useState<LoginError>({ type: "", message: "" });
     const { setUser } = useContext(AuthContext);
+    const { displayToastMessage } = useContext(ToastContext);
 
     const navigate = useNavigate();
 
@@ -37,7 +38,7 @@ export default function Login() {
         const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
         if (!key) {
-            toast("An error has occured. Please try again after some time.", { type: "error" });
+            displayToastMessage("An error has occured. Please try again after some time.");
             return;
         }
 
@@ -45,7 +46,7 @@ export default function Login() {
 
         let existingUser = localStorage.getItem(encryptedEmail);
         if (!existingUser) {
-            toast("Email or Password is Incorrect", { type: "error" });
+            displayToastMessage("Email or Password is Incorrect");
             return;
         }
 
@@ -54,11 +55,11 @@ export default function Login() {
 
         if (match) {
             setUser(existingUserData);
-            toast("Login Successfull", { type: "success" });
+            displayToastMessage("Login Successfull");
             localStorage.setItem("user", JSON.stringify(existingUserData));
             navigate("/", { replace: true });
         } else {
-            toast("Email or Password is Incorrect", { type: "error" });
+            displayToastMessage("Email or Password is Incorrect");
         }
     };
 
