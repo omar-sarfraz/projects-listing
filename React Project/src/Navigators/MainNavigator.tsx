@@ -4,25 +4,11 @@ import AddProject from "../pages/AddProject/AddProject";
 import Layout from "../pages/Layout";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login/Login";
-import SignUp, { User } from "../pages/SignUp/SignUp";
-import { useEffect, useState } from "react";
+import SignUp from "../pages/SignUp/SignUp";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function MainNavigator() {
-    const { user, setUser } = useAuth();
-
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const localUser = localStorage.getItem("user");
-
-        if (localUser) {
-            const userData: User | undefined = JSON.parse(localUser);
-            setUser(userData);
-        }
-
-        setLoading(false);
-    }, []);
+    const { user, loading } = useAuth();
 
     if (loading) return <div>Loading</div>;
 
