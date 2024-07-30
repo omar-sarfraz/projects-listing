@@ -5,11 +5,11 @@ import Layout from "../pages/Layout";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login/Login";
 import SignUp, { User } from "../pages/SignUp/SignUp";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function MainNavigator() {
-    const { user, setUser } = useContext(AuthContext);
+    const { user, setUser } = useAuth();
 
     const [loading, setLoading] = useState(true);
 

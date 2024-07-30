@@ -1,9 +1,9 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 
 type MessageVariant = undefined | "success" | "error";
 type Color = "black" | "green-500" | "red-500";
 
-export const ToastContext = createContext<{
+const ToastContext = createContext<{
     showToast: boolean;
     toastMessage: string;
     displayToastMessage: Function;
@@ -48,4 +48,9 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
             {children}
         </ToastContext.Provider>
     );
+}
+
+export function useToast() {
+    const context = useContext(ToastContext);
+    return { ...context };
 }

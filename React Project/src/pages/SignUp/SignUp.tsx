@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcryptjs";
-import { ToastContext } from "../../contexts/ToastContext";
+import { useToast } from "../../contexts/ToastContext";
 
 export type SignUpError = {
     type: "" | "FIRST_NAME" | "LAST_NAME" | "EMAIL" | "PASSWORD" | "CONFIRM_PASSWORD";
@@ -26,7 +26,7 @@ export default function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [error, setError] = useState<SignUpError>({ type: "", message: "" });
 
-    const { displayToastMessage } = useContext(ToastContext);
+    const { displayToastMessage } = useToast();
 
     const navigate = useNavigate();
 

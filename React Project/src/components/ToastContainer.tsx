@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { ToastContext } from "../contexts/ToastContext";
+import { useToast } from "../contexts/ToastContext";
 
 export default function ToastContainer() {
-    const { toastMessage, showToast, color } = useContext(ToastContext);
+    const { toastMessage, showToast, color } = useToast();
 
     return (
         <div
