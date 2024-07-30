@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Project } from "../ProjectsList/ProjectList";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../contexts/ToastContext";
 
 export default function AddProject() {
     const [id, setId] = useState<number>();
@@ -9,13 +10,16 @@ export default function AddProject() {
     const [timeline, setTimeline] = useState<string>();
     const [description, setDescription] = useState<string>();
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const { displayToastMessage } = useToast();
+
     const navigate = useNavigate();
 
     const handleProjectSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         if (!id || !name || !budget || !timeline || !description) {
-            alert("All fields are required!");
+            displayToastMessage("All fields are required!", "error");
             return;
         }
 
@@ -28,6 +32,7 @@ export default function AddProject() {
         };
 
         try {
+            setLoading(true);
             let response: Response = await fetch("https://sheetlabs.com/CRES/project_list", {
                 headers: {
                     "Content-Type": "application/json",
@@ -37,14 +42,16 @@ export default function AddProject() {
             });
 
             if (response.status === 204) {
-                alert("Project Submitted Successfully!");
+                displayToastMessage("Project Submitted Successfully!", "success");
                 navigate("/");
             } else {
-                alert("An error has occured. Please try again.");
+                displayToastMessage("An error has occured. Please try again.", "error");
             }
         } catch (e: any) {
             console.log(e);
-            alert(`An error has occured! ${e.message}`);
+            displayToastMessage(`An error has occured! ${e.message}`, "error");
+        } finally {
+            setLoading(false);
         }
     };
 

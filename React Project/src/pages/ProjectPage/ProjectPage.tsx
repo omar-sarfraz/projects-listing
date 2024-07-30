@@ -10,13 +10,15 @@ export default function ProjectPage() {
                 <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
                     Project Name
                 </h2>
-                <p className="text-4xl text-white font-extrabold text-center py-6">{state.Name}</p>
+                <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
+                    {state.Name}
+                </p>
             </div>
             <div className="row-span-4 col-span-4 bg-green-500 rounded-xl">
                 <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
                     Description{" "}
                 </h2>
-                <p className="text-xl text-white font-extrabold text-center py-6">
+                <p className="text-xl text-white font-extrabold text-center py-6 px-4">
                     {state.Description}
                 </p>
             </div>
@@ -24,7 +26,7 @@ export default function ProjectPage() {
                 <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
                     Budget{" "}
                 </h2>
-                <p className="text-4xl text-white font-extrabold text-center py-6">
+                <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
                     {state.Budget}
                 </p>
             </div>
@@ -32,7 +34,7 @@ export default function ProjectPage() {
                 <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
                     Timeline{" "}
                 </h2>
-                <p className="text-4xl text-white font-extrabold text-center py-6">
+                <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
                     {state.Timeline}
                 </p>
             </div>
