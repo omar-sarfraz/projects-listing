@@ -4,25 +4,12 @@ import AddProject from "../pages/AddProject/AddProject";
 import Layout from "../pages/Layout";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login/Login";
-import SignUp, { User } from "../pages/SignUp/SignUp";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import SignUp from "../pages/SignUp/SignUp";
+import { useAuth } from "../contexts/AuthContext";
+import ProjectPage from "../pages/ProjectPage/ProjectPage";
 
 export default function MainNavigator() {
-    const { user, setUser } = useContext(AuthContext);
-
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const localUser = localStorage.getItem("user");
-
-        if (localUser) {
-            const userData: User | undefined = JSON.parse(localUser);
-            setUser(userData);
-        }
-
-        setLoading(false);
-    }, []);
+    const { user, loading } = useAuth();
 
     if (loading) return <div>Loading</div>;
 
@@ -33,6 +20,7 @@ export default function MainNavigator() {
                     <>
                         <Route index element={<ProjectsList />} />
                         <Route path="projects/add" element={<AddProject />} />
+                        <Route path="projects/:id" element={<ProjectPage />} />
                     </>
                 ) : (
                     <>

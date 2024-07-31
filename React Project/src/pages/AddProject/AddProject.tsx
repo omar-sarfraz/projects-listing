@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Project } from "../ProjectsList/ProjectList";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../contexts/ToastContext";
 
 export default function AddProject() {
     const [id, setId] = useState<number>();
@@ -9,13 +10,16 @@ export default function AddProject() {
     const [timeline, setTimeline] = useState<string>();
     const [description, setDescription] = useState<string>();
 
+    const [loading, setLoading] = useState<boolean>(false);
+    const { toast } = useToast();
+
     const navigate = useNavigate();
 
     const handleProjectSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
         if (!id || !name || !budget || !timeline || !description) {
-            alert("All fields are required!");
+            toast("All fields are required!", "error");
             return;
         }
 
@@ -28,6 +32,7 @@ export default function AddProject() {
         };
 
         try {
+            setLoading(true);
             let response: Response = await fetch("https://sheetlabs.com/CRES/project_list", {
                 headers: {
                     "Content-Type": "application/json",
@@ -37,14 +42,16 @@ export default function AddProject() {
             });
 
             if (response.status === 204) {
-                alert("Project Submitted Successfully!");
+                toast("Project Submitted Successfully!", "success");
                 navigate("/");
             } else {
-                alert("An error has occured. Please try again.");
+                toast("An error has occured. Please try again.", "error");
             }
         } catch (e: any) {
             console.log(e);
-            alert(`An error has occured! ${e.message}`);
+            toast(`An error has occured! ${e.message}`, "error");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -128,8 +135,9 @@ export default function AddProject() {
                     type="submit"
                     className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md w-full md:w-1/3 mt-4 outline-none"
                     onClick={handleProjectSubmit}
+                    disabled={loading}
                 >
-                    Submit
+                    {loading ? "Loading..." : "Submit"}
                 </button>
             </form>
         </div>

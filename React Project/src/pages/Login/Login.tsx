@@ -1,65 +1,68 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import { User } from "../SignUp/SignUp";
 import bcrypt from "bcryptjs";
-import { AuthContext } from "../../contexts/AuthContext";
-import { ToastContext } from "../../contexts/ToastContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { useToast } from "../../contexts/ToastContext";
+import { object, string } from "yup";
 
 export type LoginError = {
-    type: "" | "EMAIL" | "PASSWORD";
+    type?: "email" | "password";
     message: string;
 };
+
+const loginSchema = object().shape({
+    email: string().email().required("Email is required."),
+    password: string().required("Please enter your password."),
+});
 
 export default function Login() {
     const [email, setEmail] = useState<string>("omar@gmail.com");
     const [password, setPassword] = useState<string>("12345678");
-    const [error, setError] = useState<LoginError>({ type: "", message: "" });
-    const { setUser } = useContext(AuthContext);
-    const { displayToastMessage } = useContext(ToastContext);
+    const [error, setError] = useState<LoginError>({ type: undefined, message: "" });
+    const { setUser } = useAuth();
+    const { toast } = useToast();
 
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        setError({ type: "", message: "" });
+        setError({ type: undefined, message: "" });
 
-        if (!email) {
-            setError({ type: "EMAIL", message: "Email is required!" });
-            return;
-        }
+        try {
+            await loginSchema.validate({ email, password }, { abortEarly: false });
 
-        if (!password) {
-            setError({ type: "PASSWORD", message: "Password is required!" });
-            return;
-        }
+            const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
-        const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
+            if (!key) {
+                toast("An error has occured. Please try again after some time.", "error");
+                return;
+            }
 
-        if (!key) {
-            displayToastMessage("An error has occured. Please try again after some time.", "error");
-            return;
-        }
+            const encryptedEmail = encrypt(key, email);
 
-        const encryptedEmail = encrypt(key, email);
+            let existingUser = localStorage.getItem(encryptedEmail);
+            if (!existingUser) {
+                toast("Email or Password is Incorrect", "error");
+                return;
+            }
 
-        let existingUser = localStorage.getItem(encryptedEmail);
-        if (!existingUser) {
-            displayToastMessage("Email or Password is Incorrect", "error");
-            return;
-        }
+            let existingUserData: User = JSON.parse(existingUser);
+            let match = await bcrypt.compare(password, existingUserData.password);
 
-        let existingUserData: User = JSON.parse(existingUser);
-        let match = await bcrypt.compare(password, existingUserData.password);
-
-        if (match) {
-            setUser(existingUserData);
-            displayToastMessage("Login Successfull", "success");
-            localStorage.setItem("user", JSON.stringify(existingUserData));
-            navigate("/", { replace: true });
-        } else {
-            displayToastMessage("Email or Password is Incorrect", "error");
+            if (match) {
+                setUser(existingUserData);
+                toast("Login Successfull", "success");
+                localStorage.setItem("user", JSON.stringify(existingUserData));
+                navigate("/", { replace: true });
+            } else {
+                toast("Email or Password is Incorrect", "error");
+            }
+        } catch (e: any) {
+            const firstError = e.inner[0];
+            setError({ type: firstError.path, message: firstError.errors[0] });
         }
     };
 
@@ -78,7 +81,7 @@ export default function Login() {
                         placeholder="johndoe@gmail.com"
                         error={error}
                         label="Email"
-                        errorType="EMAIL"
+                        errorType="email"
                     />
                     <TextField
                         currentValue={password}
@@ -87,7 +90,7 @@ export default function Login() {
                         placeholder="Password"
                         error={error}
                         label="Password"
-                        errorType="PASSWORD"
+                        errorType="password"
                     />
                     <div className="mt-4">
                         <div className="text-end">

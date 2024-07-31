@@ -1,13 +1,16 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TextField from "../../components/TextField";
-import Button from "../../components/Button";
+
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcryptjs";
-import { ToastContext } from "../../contexts/ToastContext";
+import { object, string, ref } from "yup";
+
+import TextField from "../../components/TextField";
+import Button from "../../components/Button";
+import { useToast } from "../../contexts/ToastContext";
 
 export type SignUpError = {
-    type: "" | "FIRST_NAME" | "LAST_NAME" | "EMAIL" | "PASSWORD" | "CONFIRM_PASSWORD";
+    type?: "firstName" | "lastName" | "email" | "password" | "confirmPassword";
     message: string;
 };
 
@@ -18,78 +21,76 @@ export type User = {
     password: string;
 };
 
+let userSchema = object().shape({
+    firstName: string().required("First Name is required."),
+    lastName: string().required("Last Name is required."),
+    email: string().email().required("Email is required."),
+    password: string()
+        .required("Please enter your password.")
+        .min(8, "Your password must be at least 8 characters long."),
+    confirmPassword: string()
+        .required("Please retype your password.")
+        .oneOf([ref("password")], "Your passwords do not match."),
+});
+
 export default function SignUp() {
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [error, setError] = useState<SignUpError>({ type: "", message: "" });
+    const [error, setError] = useState<SignUpError>({ type: undefined, message: "" });
 
-    const { displayToastMessage } = useContext(ToastContext);
+    const { toast } = useToast();
 
     const navigate = useNavigate();
 
     const handleSignUp = async () => {
-        setError({ type: "", message: "" });
+        setError({ type: undefined, message: "" });
 
-        if (!firstName) {
-            setError({ type: "FIRST_NAME", message: "First Name is required!" });
-            return;
-        }
+        try {
+            await userSchema.validate(
+                {
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    confirmPassword,
+                },
+                { abortEarly: false }
+            );
 
-        if (!lastName) {
-            setError({ type: "LAST_NAME", message: "Last Name is required!" });
-            return;
-        }
+            const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
-        if (!email) {
-            setError({ type: "EMAIL", message: "Email is required!" });
-            return;
-        }
+            if (!key) {
+                toast("An error has occured. Please try again after some time.", "error");
+                return;
+            }
 
-        if (!password || password.length < 8) {
-            setError({ type: "PASSWORD", message: "Password must be 8 or more characters long!" });
-            return;
-        }
+            const encryptedFirstName = encrypt(key, firstName);
+            const encryptedLastName = encrypt(key, lastName);
+            const encryptedEmail = encrypt(key, email);
 
-        if (!confirmPassword) {
-            setError({ type: "CONFIRM_PASSWORD", message: "Please confirm your password!" });
-            return;
-        }
+            const hash = await bcrypt.genSalt(key);
+            const encryptedPassword = await bcrypt.hash(password, hash);
 
-        if (password !== confirmPassword) {
-            setError({ type: "CONFIRM_PASSWORD", message: "Passwords do not match!" });
-            return;
-        }
+            let userData: User = {
+                firstName: encryptedFirstName,
+                lastName: encryptedLastName,
+                email: encryptedEmail,
+                password: encryptedPassword,
+            };
+            let existingUser = localStorage.getItem(encryptedEmail);
 
-        const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
-
-        if (!key) {
-            displayToastMessage("An error has occured. Please try again after some time.", "error");
-            return;
-        }
-
-        const encryptedFirstName = encrypt(key, firstName);
-        const encryptedLastName = encrypt(key, lastName);
-        const encryptedEmail = encrypt(key, email);
-
-        const hash = await bcrypt.genSalt(key);
-        const encryptedPassword = await bcrypt.hash(password, hash);
-
-        let userData: User = {
-            firstName: encryptedFirstName,
-            lastName: encryptedLastName,
-            email: encryptedEmail,
-            password: encryptedPassword,
-        };
-        let existingUser = localStorage.getItem(encryptedEmail);
-
-        if (existingUser) displayToastMessage("User with this email already exists", "error");
-        else {
-            localStorage.setItem(encryptedEmail, JSON.stringify(userData));
-            displayToastMessage("Account registered successfully", "success");
-            navigate("/login");
+            if (existingUser) toast("User with this email already exists", "error");
+            else {
+                localStorage.setItem(encryptedEmail, JSON.stringify(userData));
+                toast("Account registered successfully", "success");
+                navigate("/login");
+            }
+        } catch (e: any) {
+            const firstError = e.inner[0];
+            setError({ type: firstError.path, message: firstError.errors[0] });
         }
     };
 
@@ -108,7 +109,7 @@ export default function SignUp() {
                         placeholder="John"
                         error={error}
                         label="First Name"
-                        errorType="FIRST_NAME"
+                        errorType="firstName"
                     />
                     <TextField
                         currentValue={lastName}
@@ -117,7 +118,7 @@ export default function SignUp() {
                         placeholder="Doe"
                         error={error}
                         label="Last Name"
-                        errorType="LAST_NAME"
+                        errorType="lastName"
                     />
                     <TextField
                         currentValue={email}
@@ -126,7 +127,7 @@ export default function SignUp() {
                         placeholder="johndoe@gmail.com"
                         error={error}
                         label="Email"
-                        errorType="EMAIL"
+                        errorType="email"
                     />
                     <TextField
                         currentValue={password}
@@ -135,7 +136,7 @@ export default function SignUp() {
                         placeholder="Password"
                         error={error}
                         label="Password"
-                        errorType="PASSWORD"
+                        errorType="password"
                     />
                     <TextField
                         currentValue={confirmPassword}
@@ -144,7 +145,7 @@ export default function SignUp() {
                         placeholder="Confirm Password"
                         error={error}
                         label="Confirm Password"
-                        errorType="CONFIRM_PASSWORD"
+                        errorType="confirmPassword"
                     />
                     <div className="mt-4">
                         <div className="text-end">
