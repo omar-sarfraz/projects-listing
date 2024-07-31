@@ -5,8 +5,8 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "workspaces": [
-        "./React Project",
-        "./Backend"
+        "React Project",
+        "Backend"
     ],
     "keywords": [],
     "author": "",
