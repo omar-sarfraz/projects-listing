@@ -10,7 +10,7 @@ import Button from "../../components/Button";
 import { useToast } from "../../contexts/ToastContext";
 
 export type SignUpError = {
-    type: "" | "firstName" | "lastName" | "email" | "password" | "confirmPassword";
+    type?: "firstName" | "lastName" | "email" | "password" | "confirmPassword";
     message: string;
 };
 
@@ -39,14 +39,14 @@ export default function SignUp() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [error, setError] = useState<SignUpError>({ type: "", message: "" });
+    const [error, setError] = useState<SignUpError>({ type: undefined, message: "" });
 
     const { displayToastMessage } = useToast();
 
     const navigate = useNavigate();
 
     const handleSignUp = async () => {
-        setError({ type: "", message: "" });
+        setError({ type: undefined, message: "" });
 
         try {
             await userSchema.validate(

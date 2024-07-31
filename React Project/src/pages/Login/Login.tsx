@@ -10,7 +10,7 @@ import { useToast } from "../../contexts/ToastContext";
 import { object, string } from "yup";
 
 export type LoginError = {
-    type: "" | "email" | "password";
+    type?: "email" | "password";
     message: string;
 };
 
@@ -22,14 +22,14 @@ const loginSchema = object().shape({
 export default function Login() {
     const [email, setEmail] = useState<string>("omar@gmail.com");
     const [password, setPassword] = useState<string>("12345678");
-    const [error, setError] = useState<LoginError>({ type: "", message: "" });
+    const [error, setError] = useState<LoginError>({ type: undefined, message: "" });
     const { setUser } = useAuth();
     const { displayToastMessage } = useToast();
 
     const navigate = useNavigate();
 
     const handleLogin = async () => {
-        setError({ type: "", message: "" });
+        setError({ type: undefined, message: "" });
 
         try {
             await loginSchema.validate({ email, password }, { abortEarly: false });
