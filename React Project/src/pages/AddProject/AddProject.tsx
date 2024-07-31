@@ -11,7 +11,7 @@ export default function AddProject() {
     const [description, setDescription] = useState<string>();
 
     const [loading, setLoading] = useState<boolean>(false);
-    const { displayToastMessage } = useToast();
+    const { toast } = useToast();
 
     const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ export default function AddProject() {
         e.preventDefault();
 
         if (!id || !name || !budget || !timeline || !description) {
-            displayToastMessage("All fields are required!", "error");
+            toast("All fields are required!", "error");
             return;
         }
 
@@ -42,14 +42,14 @@ export default function AddProject() {
             });
 
             if (response.status === 204) {
-                displayToastMessage("Project Submitted Successfully!", "success");
+                toast("Project Submitted Successfully!", "success");
                 navigate("/");
             } else {
-                displayToastMessage("An error has occured. Please try again.", "error");
+                toast("An error has occured. Please try again.", "error");
             }
         } catch (e: any) {
             console.log(e);
-            displayToastMessage(`An error has occured! ${e.message}`, "error");
+            toast(`An error has occured! ${e.message}`, "error");
         } finally {
             setLoading(false);
         }
@@ -135,8 +135,9 @@ export default function AddProject() {
                     type="submit"
                     className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md w-full md:w-1/3 mt-4 outline-none"
                     onClick={handleProjectSubmit}
+                    disabled={loading}
                 >
-                    Submit
+                    {loading ? "Loading..." : "Submit"}
                 </button>
             </form>
         </div>

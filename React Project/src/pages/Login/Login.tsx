@@ -24,7 +24,7 @@ export default function Login() {
     const [password, setPassword] = useState<string>("12345678");
     const [error, setError] = useState<LoginError>({ type: undefined, message: "" });
     const { setUser } = useAuth();
-    const { displayToastMessage } = useToast();
+    const { toast } = useToast();
 
     const navigate = useNavigate();
 
@@ -37,10 +37,7 @@ export default function Login() {
             const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
             if (!key) {
-                displayToastMessage(
-                    "An error has occured. Please try again after some time.",
-                    "error"
-                );
+                toast("An error has occured. Please try again after some time.", "error");
                 return;
             }
 
@@ -48,7 +45,7 @@ export default function Login() {
 
             let existingUser = localStorage.getItem(encryptedEmail);
             if (!existingUser) {
-                displayToastMessage("Email or Password is Incorrect", "error");
+                toast("Email or Password is Incorrect", "error");
                 return;
             }
 
@@ -57,11 +54,11 @@ export default function Login() {
 
             if (match) {
                 setUser(existingUserData);
-                displayToastMessage("Login Successfull", "success");
+                toast("Login Successfull", "success");
                 localStorage.setItem("user", JSON.stringify(existingUserData));
                 navigate("/", { replace: true });
             } else {
-                displayToastMessage("Email or Password is Incorrect", "error");
+                toast("Email or Password is Incorrect", "error");
             }
         } catch (e: any) {
             const firstError = e.inner[0];

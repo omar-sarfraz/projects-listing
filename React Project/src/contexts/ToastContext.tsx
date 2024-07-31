@@ -6,12 +6,12 @@ type Color = "black" | "green-500" | "red-500";
 const ToastContext = createContext<{
     showToast: boolean;
     toastMessage: string;
-    displayToastMessage: Function;
+    toast: Function;
     color: Color;
 }>({
     showToast: false,
     toastMessage: "",
-    displayToastMessage: () => {},
+    toast: () => {},
     color: "black",
 });
 
@@ -29,7 +29,7 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
         setColor(typeColor);
     }, [type]);
 
-    const displayToastMessage = (message: string, type: MessageVariant) => {
+    const toast = (message: string, type: MessageVariant) => {
         if (toastRef.current) clearTimeout(toastRef.current);
 
         setShowToast(true);
@@ -44,7 +44,7 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
     };
 
     return (
-        <ToastContext.Provider value={{ showToast, toastMessage, displayToastMessage, color }}>
+        <ToastContext.Provider value={{ showToast, toastMessage, toast, color }}>
             {children}
         </ToastContext.Provider>
     );

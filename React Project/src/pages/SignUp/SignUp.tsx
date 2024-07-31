@@ -41,7 +41,7 @@ export default function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [error, setError] = useState<SignUpError>({ type: undefined, message: "" });
 
-    const { displayToastMessage } = useToast();
+    const { toast } = useToast();
 
     const navigate = useNavigate();
 
@@ -63,10 +63,7 @@ export default function SignUp() {
             const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
 
             if (!key) {
-                displayToastMessage(
-                    "An error has occured. Please try again after some time.",
-                    "error"
-                );
+                toast("An error has occured. Please try again after some time.", "error");
                 return;
             }
 
@@ -85,10 +82,10 @@ export default function SignUp() {
             };
             let existingUser = localStorage.getItem(encryptedEmail);
 
-            if (existingUser) displayToastMessage("User with this email already exists", "error");
+            if (existingUser) toast("User with this email already exists", "error");
             else {
                 localStorage.setItem(encryptedEmail, JSON.stringify(userData));
-                displayToastMessage("Account registered successfully", "success");
+                toast("Account registered successfully", "success");
                 navigate("/login");
             }
         } catch (e: any) {
