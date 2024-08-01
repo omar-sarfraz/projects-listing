@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 
 import authRoutes from "./routes/auth/auth";
+import "./configs/passport";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
