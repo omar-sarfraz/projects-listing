@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { encrypt } from "@omar-sarfraz/caesar-cipher";
+import { encrypt, decrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -34,7 +34,7 @@ const login = async (req: Request, res: Response) => {
                 .json({ message: "Email or password is incorrect!", error: true });
         }
 
-        const existingUser: User = userResponse.rows[0];
+        const existingUser = userResponse.rows[0];
         const match = await bcrypt.compare(userData.password, existingUser.password);
 
         if (!match) {
@@ -49,16 +49,23 @@ const login = async (req: Request, res: Response) => {
             process.exit(1);
         }
 
+        const userToSend = {
+            id: existingUser.id,
+            email: decrypt(key, existingUser.email),
+            firstName: decrypt(key, existingUser.firstname),
+            lastName: decrypt(key, existingUser.lastname),
+        };
+
         const token = jwt.sign(
             {
-                id: existingUser.id,
-                email: existingUser.email,
-                name: `${existingUser.firstName} ${existingUser.lastName}`,
+                ...userToSend,
             },
             secret
         );
 
-        return res.status(200).json({ message: "Logged in successfully", error: false, token });
+        return res
+            .status(200)
+            .json({ message: "Logged in successfully", error: false, token, user: userToSend });
     } catch (e) {
         console.log("Login Error", e);
         return res.status(500).json({ message: "Internal Server Error", error: true });
