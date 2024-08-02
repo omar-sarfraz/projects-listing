@@ -2,12 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
-import { encrypt } from "@omar-sarfraz/caesar-cipher";
-import { User } from "../SignUp/SignUp";
-import bcrypt from "bcryptjs";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
 import { object, string } from "yup";
+import { AxiosResponse } from "axios";
+import axiosInstance from "../../lib/axios";
 
 export type LoginError = {
     type?: "email" | "password";
@@ -33,36 +32,26 @@ export default function Login() {
 
         try {
             await loginSchema.validate({ email, password }, { abortEarly: false });
-
-            const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
-
-            if (!key) {
-                toast("An error has occured. Please try again after some time.", "error");
-                return;
-            }
-
-            const encryptedEmail = encrypt(key, email);
-
-            let existingUser = localStorage.getItem(encryptedEmail);
-            if (!existingUser) {
-                toast("Email or Password is Incorrect", "error");
-                return;
-            }
-
-            let existingUserData: User = JSON.parse(existingUser);
-            let match = await bcrypt.compare(password, existingUserData.password);
-
-            if (match) {
-                setUser(existingUserData);
-                toast("Login Successfull", "success");
-                localStorage.setItem("user", JSON.stringify(existingUserData));
-                navigate("/", { replace: true });
-            } else {
-                toast("Email or Password is Incorrect", "error");
-            }
         } catch (e: any) {
             const firstError = e.inner[0];
             setError({ type: firstError.path, message: firstError.errors[0] });
+            return;
+        }
+
+        try {
+            let response: AxiosResponse = await axiosInstance.post("/login", { email, password });
+
+            if (response.status === 200) {
+                const user = { ...response.data.user, token: response.data.token };
+                setUser(user);
+                toast("Logged in successfully", "success");
+                localStorage.setItem("user", JSON.stringify(user));
+                navigate("/", { replace: true });
+            } else {
+                toast(response.data?.message || "An error has occurred", "error");
+            }
+        } catch (e: any) {
+            toast(e?.message || "An error has occurred", "error");
         }
     };
 

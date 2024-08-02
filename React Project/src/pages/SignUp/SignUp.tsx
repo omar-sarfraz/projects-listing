@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { encrypt } from "@omar-sarfraz/caesar-cipher";
-import bcrypt from "bcryptjs";
 import { object, string, ref } from "yup";
 
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { useToast } from "../../contexts/ToastContext";
+import axiosInstance from "../../lib/axios";
+import { AxiosResponse } from "axios";
 
 export type SignUpError = {
     type?: "firstName" | "lastName" | "email" | "password" | "confirmPassword";
@@ -59,38 +59,29 @@ export default function SignUp() {
                 },
                 { abortEarly: false }
             );
-
-            const key = parseInt(import.meta.env.VITE_CIPHER_KEY);
-
-            if (!key) {
-                toast("An error has occured. Please try again after some time.", "error");
-                return;
-            }
-
-            const encryptedFirstName = encrypt(key, firstName);
-            const encryptedLastName = encrypt(key, lastName);
-            const encryptedEmail = encrypt(key, email);
-
-            const hash = await bcrypt.genSalt(key);
-            const encryptedPassword = await bcrypt.hash(password, hash);
-
-            let userData: User = {
-                firstName: encryptedFirstName,
-                lastName: encryptedLastName,
-                email: encryptedEmail,
-                password: encryptedPassword,
-            };
-            let existingUser = localStorage.getItem(encryptedEmail);
-
-            if (existingUser) toast("User with this email already exists", "error");
-            else {
-                localStorage.setItem(encryptedEmail, JSON.stringify(userData));
-                toast("Account registered successfully", "success");
-                navigate("/login");
-            }
         } catch (e: any) {
             const firstError = e.inner[0];
             setError({ type: firstError.path, message: firstError.errors[0] });
+            return;
+        }
+
+        try {
+            let userData: User = {
+                firstName,
+                lastName,
+                email,
+                password,
+            };
+
+            let response: AxiosResponse = await axiosInstance.post("/signup", userData);
+            if (response.status === 200) {
+                toast("Account registered successfully", "success");
+                navigate("/login");
+            } else {
+                toast(response.data?.message || "An error has occurred", "error");
+            }
+        } catch (e: any) {
+            toast(e?.message || "An error has occurred", "error");
         }
     };
 
