@@ -3,8 +3,8 @@ import { encrypt, decrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import pool from "../../db";
-import { User } from "../../routes/auth/auth";
+import { UserType } from "../../routes/auth/auth";
+import { User } from "../../models/User";
 
 const login = async (req: Request, res: Response) => {
     const userData = req.body;
@@ -24,17 +24,15 @@ const login = async (req: Request, res: Response) => {
 
         const encryptedEmail = encrypt(key, userData.email);
 
-        const userResponse = await pool.query("SELECT * FROM users WHERE email = $1;", [
-            encryptedEmail,
-        ]);
+        let existingRecord = await User.findOne({ where: { email: encryptedEmail } });
 
-        if (!userResponse.rows.length) {
+        if (!existingRecord) {
             return res
                 .status(400)
                 .json({ message: "Email or password is incorrect!", error: true });
         }
 
-        const existingUser = userResponse.rows[0];
+        let existingUser: UserType = existingRecord.dataValues;
         const match = await bcrypt.compare(userData.password, existingUser.password);
 
         if (!match) {
@@ -52,8 +50,8 @@ const login = async (req: Request, res: Response) => {
         const userToSend = {
             id: existingUser.id,
             email: decrypt(key, existingUser.email),
-            firstName: decrypt(key, existingUser.firstname),
-            lastName: decrypt(key, existingUser.lastname),
+            firstName: decrypt(key, existingUser.firstName),
+            lastName: decrypt(key, existingUser.lastName),
         };
 
         const token = jwt.sign(

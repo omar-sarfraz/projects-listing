@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import passport from "passport";
-import pool from "../db";
+import { User } from "../models/User";
 
 if (!process.env.SECTRET) {
     console.error("SECRET is required for Passport JS");
@@ -15,10 +15,8 @@ const options: StrategyOptions = {
 passport.use(
     new Strategy(options, async (payload, done) => {
         try {
-            const userQuery = await pool.query("SELECT * FROM users WHERE users.id = $1", [
-                payload.id,
-            ]);
-            if (userQuery.rows.length) return done(null, userQuery.rows[0]);
+            const record = await User.findOne({ where: { id: payload.id } });
+            if (record) return done(null, record.dataValues);
         } catch (e) {
             console.log("Error in passport config");
             return done(e);

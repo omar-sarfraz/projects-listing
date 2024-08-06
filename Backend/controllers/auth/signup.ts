@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcrypt";
 
-import pool from "../../db";
-import { User } from "../../routes/auth/auth";
+import { UserType } from "../../routes/auth/auth";
+import { User } from "../../models/User";
 
 const signup = async (req: Request, res: Response) => {
-    const userData: User = req.body;
+    const userData: UserType = req.body;
 
     if (!userData.email || !userData.firstName || !userData.lastName || !userData.password)
         return res.status(400).json({
@@ -23,14 +23,12 @@ const signup = async (req: Request, res: Response) => {
 
         const encryptedEmail = encrypt(key, userData.email);
 
-        const userResponse = await pool.query("SELECT * FROM users WHERE email = $1;", [
-            encryptedEmail,
-        ]);
-
-        if (userResponse.rows.length)
+        const existingUser = await User.findOne({ where: { email: encryptedEmail } });
+        if (existingUser) {
             return res
                 .status(400)
                 .json({ message: "User with this email already exists", error: true });
+        }
 
         const encryptedFirstName = encrypt(key, userData.firstName);
         const encryptedLastName = encrypt(key, userData.lastName);
@@ -38,12 +36,15 @@ const signup = async (req: Request, res: Response) => {
         const hash = await bcrypt.genSalt(key);
         const encryptedPassword = await bcrypt.hash(userData.password, hash);
 
-        const signUpResponse = await pool.query(
-            "INSERT INTO users (firstName, lastName, email, password) VALUES ($1, $2, $3, $4)",
-            [encryptedFirstName, encryptedLastName, encryptedEmail, encryptedPassword]
-        );
+        const user = await User.create({
+            firstName: encryptedFirstName,
+            lastName: encryptedLastName,
+            email: encryptedEmail,
+            password: encryptedPassword,
+        });
+        console.log("User created", user);
 
-        if (signUpResponse.rowCount)
+        if (user)
             return res.status(200).json({ message: "User added successfully.", error: false });
         else return res.status(400).json({ message: "Failed to add user", error: true });
     } catch (e) {
