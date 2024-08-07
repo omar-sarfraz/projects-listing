@@ -20,7 +20,7 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
     const [toastMessage, setToastMessage] = useState<string>("");
     const [type, setType] = useState<MessageVariant>();
     const [color, setColor] = useState<Color>("black");
-    const toastRef = useRef<number>();
+    const toastRef = useRef<any>();
 
     useEffect(() => {
         let typeColor: Color = "black";

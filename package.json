@@ -1,0 +1,15 @@
+{
+    "name": "project-listing",
+    "version": "1.0.0",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "workspaces": [
+        "React Project",
+        "Backend"
+    ],
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": ""
+}
