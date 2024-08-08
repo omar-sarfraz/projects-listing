@@ -25,6 +25,7 @@ const login = async (req: Request, res: Response) => {
         const encryptedEmail = encrypt(key, userData.email);
 
         let existingRecord = await User.findOne({ where: { email: encryptedEmail } });
+        console.log("Existing Record", existingRecord?.dataValues);
 
         if (!existingRecord) {
             return res
@@ -50,8 +51,8 @@ const login = async (req: Request, res: Response) => {
         const userToSend = {
             id: existingUser.id,
             email: decrypt(key, existingUser.email),
-            firstName: decrypt(key, existingUser.firstName),
-            lastName: decrypt(key, existingUser.lastName),
+            firstName: existingUser.firstName,
+            lastName: existingUser.lastName,
         };
 
         const token = jwt.sign(

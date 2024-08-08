@@ -30,15 +30,12 @@ const signup = async (req: Request, res: Response) => {
                 .json({ message: "User with this email already exists", error: true });
         }
 
-        const encryptedFirstName = encrypt(key, userData.firstName);
-        const encryptedLastName = encrypt(key, userData.lastName);
-
         const hash = await bcrypt.genSalt(key);
         const encryptedPassword = await bcrypt.hash(userData.password, hash);
 
         const user = await User.create({
-            firstName: encryptedFirstName,
-            lastName: encryptedLastName,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
             email: encryptedEmail,
             password: encryptedPassword,
         });
