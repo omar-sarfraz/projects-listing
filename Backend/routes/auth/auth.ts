@@ -3,14 +3,6 @@ import passport from "passport";
 import signup from "../../controllers/auth/signup";
 import login from "../../controllers/auth/login";
 
-export type UserType = {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-};
-
 const router = Router();
 
 router.post("/signup", signup);

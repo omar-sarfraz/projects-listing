@@ -3,7 +3,7 @@ import { encrypt, decrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-import { UserType } from "../../routes/auth/auth";
+import { UserType } from "../../lib/types";
 import { User } from "../../models/User";
 
 const login = async (req: Request, res: Response) => {

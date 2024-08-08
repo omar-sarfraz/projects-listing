@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcrypt";
 
-import { UserType } from "../../routes/auth/auth";
+import { UserType } from "../../lib/types";
 import { User } from "../../models/User";
 
 const signup = async (req: Request, res: Response) => {
