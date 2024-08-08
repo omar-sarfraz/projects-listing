@@ -8,11 +8,11 @@ export const User = sequelize.define("User", {
         primaryKey: true,
     },
     firstName: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     lastName: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
     },
     email: {
