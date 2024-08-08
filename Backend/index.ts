@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import cors from "cors";
 
 import authRoutes from "./routes/auth/auth";
 import "./configs/passport";
@@ -8,6 +9,7 @@ const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 app.use("/", authRoutes);
 

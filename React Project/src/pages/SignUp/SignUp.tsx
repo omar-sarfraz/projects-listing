@@ -81,7 +81,7 @@ export default function SignUp() {
                 toast(response.data?.message || "An error has occurred", "error");
             }
         } catch (e: any) {
-            toast(e?.message || "An error has occurred", "error");
+            toast(e?.response?.data?.message || "An error has occurred", "error");
         }
     };
 

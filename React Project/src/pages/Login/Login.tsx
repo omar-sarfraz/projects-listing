@@ -19,7 +19,7 @@ const loginSchema = object().shape({
 });
 
 export default function Login() {
-    const [email, setEmail] = useState<string>("omar@gmail.com");
+    const [email, setEmail] = useState<string>("test@gmail.com");
     const [password, setPassword] = useState<string>("12345678");
     const [error, setError] = useState<LoginError>({ type: undefined, message: "" });
     const { setUser } = useAuth();
@@ -51,7 +51,8 @@ export default function Login() {
                 toast(response.data?.message || "An error has occurred", "error");
             }
         } catch (e: any) {
-            toast(e?.message || "An error has occurred", "error");
+            console.log("Login Error", e?.response);
+            toast(e?.response?.data?.message || "An error has occurred", "error");
         }
     };
 
