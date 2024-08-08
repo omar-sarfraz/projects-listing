@@ -39,7 +39,6 @@ const signup = async (req: Request, res: Response) => {
             email: encryptedEmail,
             password: encryptedPassword,
         });
-        console.log("User created", user);
 
         if (user)
             return res.status(200).json({ message: "User added successfully.", error: false });

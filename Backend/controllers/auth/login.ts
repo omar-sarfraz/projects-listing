@@ -25,7 +25,6 @@ const login = async (req: Request, res: Response) => {
         const encryptedEmail = encrypt(key, userData.email);
 
         let existingRecord = await User.findOne({ where: { email: encryptedEmail } });
-        console.log("Existing Record", existingRecord?.dataValues);
 
         if (!existingRecord) {
             return res
