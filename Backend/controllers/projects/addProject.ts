@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { ProjectType } from "../../lib/types";
 import { Project } from "../../models/Project";
 import projectSchema from "../../validation/Project";
+import { createJoiError } from "../../lib/utils";
 
 export const addProject = async (req: Request, res: Response) => {
     const project: ProjectType = req.body;
@@ -14,7 +15,7 @@ export const addProject = async (req: Request, res: Response) => {
         console.log("Error while adding project", e);
 
         return res.status(500).json({
-            message: e?.details[0]?.message || "An error has occured while creating project",
+            message: createJoiError(e) || "An error has occured while creating project",
             error: true,
         });
     }
