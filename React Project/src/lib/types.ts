@@ -17,9 +17,9 @@ export type User = {
 };
 
 export type Project = {
-    ProjectId: number;
-    Name: string;
-    Budget: string;
-    Timeline: string;
-    Description: string;
+    id: number;
+    name: string;
+    budget: string;
+    deadline: string;
+    description: string;
 };

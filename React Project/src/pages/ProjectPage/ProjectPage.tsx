@@ -11,7 +11,7 @@ export default function ProjectPage() {
                     Project Name
                 </h2>
                 <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
-                    {state.Name}
+                    {state.name}
                 </p>
             </div>
             <div className="row-span-4 col-span-4 bg-green-500 rounded-xl">
@@ -19,7 +19,7 @@ export default function ProjectPage() {
                     Description{" "}
                 </h2>
                 <p className="text-xl text-white font-extrabold text-center py-6 px-4">
-                    {state.Description}
+                    {state.description}
                 </p>
             </div>
             <div className="row-span-4 col-span-4 bg-cyan-500 rounded-xl">
@@ -27,15 +27,15 @@ export default function ProjectPage() {
                     Budget{" "}
                 </h2>
                 <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
-                    {state.Budget}
+                    {state.budget} $
                 </p>
             </div>
             <div className="row-span-4 col-span-4 bg-blue-500 rounded-xl">
                 <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
-                    Timeline{" "}
+                    Deadline{" "}
                 </h2>
                 <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
-                    {state.Timeline}
+                    {new Date(state.deadline).toDateString()}
                 </p>
             </div>
         </div>

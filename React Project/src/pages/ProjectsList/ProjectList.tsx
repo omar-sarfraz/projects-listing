@@ -28,7 +28,6 @@ export default function ProjectsList() {
                 headers: { Authorization: "Bearer " + user?.token },
             });
 
-            console.log(response);
             if (response.status === 200) {
                 const projects: Project[] = await response.data.data;
                 setProjects(projects);
@@ -51,7 +50,7 @@ export default function ProjectsList() {
             if (!projects) return;
 
             const projectList: Project[] | [] = projects.filter((project) => {
-                let name = project.Name.toLowerCase();
+                let name = project.name.toLowerCase();
                 let regex = new RegExp(searchTerm, "i");
 
                 return name.match(regex) ? true : false;
@@ -99,11 +98,11 @@ export default function ProjectsList() {
                             >
                                 <div>
                                     <h3 className="text-2xl font-medium">
-                                        {project.ProjectId}: {project.Name}
+                                        {project.id}: {project.name}
                                     </h3>
                                     <div className="my-4">
                                         <div className="font-bold">Description:</div>
-                                        {project.Description}
+                                        {project.description}
                                     </div>
                                 </div>
                                 <div>
@@ -111,18 +110,18 @@ export default function ProjectsList() {
                                         <div>
                                             <h3 className="font-bold">Budget</h3>
                                             <div className="bg-cyan-500 rounded-full px-3 mt-1 text-white">
-                                                {project.Budget}
+                                                {project.budget} $
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 className="font-bold">Timeline</h3>
+                                            <h3 className="font-bold">Deadline</h3>
                                             <div className="bg-emerald-500 rounded-full px-3 mt-1 text-white">
-                                                {project.Timeline}
+                                                {new Date(project.deadline).toDateString()}
                                             </div>
                                         </div>
                                     </div>
                                     <Link
-                                        to={`/projects/${project.ProjectId}`}
+                                        to={`/projects/${project.id}`}
                                         state={project}
                                         className="absolute left-0 w-full cursor-pointer bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-md text-center py-2 mt-4 opacity-0 group-hover:-translate-y-full group-hover:opacity-100 transition duration-500 ease-in-out"
                                     >
