@@ -5,39 +5,25 @@ export default function ProjectPage() {
     let { state }: { state: Project } = useLocation();
 
     return (
-        <div className="grid grid-rows-8 grid-cols-8 gap-8">
-            <div className="row-span-4 col-span-4 bg-red-500 rounded-xl">
-                <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
-                    Project Name
-                </h2>
-                <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
-                    {state.name}
-                </p>
+        <>
+            <div className="flex gap-4 justify-between py-4">
+                <div className="flex items-center gap-2">
+                    <h2 className="text-2xl italic">Budget </h2>
+                    <p className="border-cyan-500 text-cyan-500 border-[1px] rounded-xl text-xl px-4 font-semibold">
+                        {state.budget} $
+                    </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <h2 className="text-2xl italic">Deadline </h2>
+                    <p className="border-cyan-500 text-cyan-500 border-[1px] rounded-xl text-xl px-4 font-semibold">
+                        {new Date(state.deadline).toDateString()}
+                    </p>
+                </div>
             </div>
-            <div className="row-span-4 col-span-4 bg-green-500 rounded-xl">
-                <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
-                    Description{" "}
-                </h2>
-                <p className="text-xl text-white font-extrabold text-center py-6 px-4">
-                    {state.description}
-                </p>
-            </div>
-            <div className="row-span-4 col-span-4 bg-cyan-500 rounded-xl">
-                <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
-                    Budget{" "}
-                </h2>
-                <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
-                    {state.budget} $
-                </p>
-            </div>
-            <div className="row-span-4 col-span-4 bg-blue-500 rounded-xl">
-                <h2 className="text-2xl  font-extrabold tracking-wide italic bg-white w-fit rounded-br-lg p-2">
-                    Deadline{" "}
-                </h2>
-                <p className="text-4xl text-white font-extrabold text-center py-6 px-4">
-                    {new Date(state.deadline).toDateString()}
-                </p>
-            </div>
-        </div>
+            <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>
+            <p className="text-2xl mt-4">{state.name}</p>
+            <h2 className="text-xl italic underline underline-offset-8 mt-8">Description </h2>
+            <p className="text-xl mt-4">{state.description}</p>
+        </>
     );
 }
