@@ -47,6 +47,7 @@ const login = async (req: Request, res: Response) => {
             email: decrypt(key, existingUser.email),
             firstName: existingUser.firstName,
             lastName: existingUser.lastName,
+            role: existingUser.role,
         };
 
         const token = jwt.sign(
