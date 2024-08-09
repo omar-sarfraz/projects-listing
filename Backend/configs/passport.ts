@@ -17,6 +17,7 @@ passport.use(
         try {
             const record = await User.findOne({ where: { id: payload.id } });
             if (record) return done(null, record.dataValues);
+            else return done(null, false);
         } catch (e) {
             console.log("Error in passport config");
             return done(e);

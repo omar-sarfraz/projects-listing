@@ -1,37 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { object, string, ref } from "yup";
-
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { useToast } from "../../contexts/ToastContext";
 import axiosInstance from "../../lib/axios";
 import { AxiosResponse } from "axios";
-
-export type SignUpError = {
-    type?: "firstName" | "lastName" | "email" | "password" | "confirmPassword";
-    message: string;
-};
-
-export type User = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-};
-
-let userSchema = object().shape({
-    firstName: string().required("First Name is required."),
-    lastName: string().required("Last Name is required."),
-    email: string().email().required("Email is required."),
-    password: string()
-        .required("Please enter your password.")
-        .min(8, "Your password must be at least 8 characters long."),
-    confirmPassword: string()
-        .required("Please retype your password.")
-        .oneOf([ref("password")], "Your passwords do not match."),
-});
+import { SignUpError, User } from "../../lib/types";
+import { signUpSchema } from "../../validations/User";
 
 export default function SignUp() {
     const [firstName, setFirstName] = useState<string>("");
@@ -49,7 +25,7 @@ export default function SignUp() {
         setError({ type: undefined, message: "" });
 
         try {
-            await userSchema.validate(
+            await signUpSchema.validate(
                 {
                     firstName,
                     lastName,

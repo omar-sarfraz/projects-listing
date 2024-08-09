@@ -2,19 +2,14 @@ import { Request, Response } from "express";
 import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcrypt";
 
-import { UserType } from "../../routes/auth/auth";
+import { UserType } from "../../lib/types";
 import { User } from "../../models/User";
+import { signUpSchema } from "../../validation/User";
+import { createJoiError } from "../../lib/utils";
 
 const signup = async (req: Request, res: Response) => {
-    const userData: UserType = req.body;
-
-    if (!userData.email || !userData.firstName || !userData.lastName || !userData.password)
-        return res.status(400).json({
-            message: "firstName, lastName, email and password is required!",
-            error: true,
-        });
-
     try {
+        const userData: UserType = await signUpSchema.validateAsync(req.body);
         const key: number = parseInt(process.env.KEY || "");
         if (!key) {
             console.error("Key is required!");
@@ -45,7 +40,9 @@ const signup = async (req: Request, res: Response) => {
         else return res.status(400).json({ message: "Failed to add user", error: true });
     } catch (e) {
         console.log("SignUp Error", e);
-        return res.status(500).json({ message: "Internal Server Error", error: true });
+        return res
+            .status(500)
+            .json({ message: createJoiError(e) || "Internal Server Error", error: true });
     }
 };
 
