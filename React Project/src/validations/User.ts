@@ -1,4 +1,5 @@
-import { object, string, ref } from "yup";
+import { object, string, ref, mixed } from "yup";
+import { USER_ROLES } from "../lib/utils";
 
 export const loginSchema = object().shape({
     email: string().email().required("Email is required."),
@@ -15,4 +16,7 @@ export const signUpSchema = object().shape({
     confirmPassword: string()
         .required("Please retype your password.")
         .oneOf([ref("password")], "Your passwords do not match."),
+    role: mixed()
+        .oneOf([USER_ROLES.freelancer, USER_ROLES.client])
+        .required("Role is required. yo"),
 });

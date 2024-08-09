@@ -33,6 +33,7 @@ const signup = async (req: Request, res: Response) => {
             lastName: userData.lastName,
             email: encryptedEmail,
             password: encryptedPassword,
+            role: userData.role,
         });
 
         if (user)

@@ -6,6 +6,7 @@ import { AxiosResponse } from "axios";
 import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
+import { USER_ROLES } from "../../lib/utils";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -64,15 +65,17 @@ export default function ProjectsList() {
 
     return (
         <div>
-            <div className="flex justify-between items-center">
-                <h1 className="text-3xl">All Project Listings</h1>
-                <Link
-                    to="/projects/add"
-                    className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md cursor-pointer"
-                >
-                    Add Project
-                </Link>
-            </div>
+            {user?.role === USER_ROLES.client && (
+                <div className="flex justify-between items-center">
+                    <h1 className="text-3xl">All Project Listings</h1>
+                    <Link
+                        to="/projects/add"
+                        className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md cursor-pointer"
+                    >
+                        Add Project
+                    </Link>
+                </div>
+            )}
             <form
                 id="search_form"
                 className="flex items-center border-2 border-gray-300 rounded-full my-4 px-4"
