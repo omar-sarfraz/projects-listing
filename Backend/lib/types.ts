@@ -4,6 +4,7 @@ export type UserType = {
     lastName: string;
     email: string;
     password: string;
+    role: "FREELANCER" | "CLIENT";
 };
 
 export type ProjectType = {
