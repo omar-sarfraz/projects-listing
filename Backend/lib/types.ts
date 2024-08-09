@@ -5,3 +5,11 @@ export type UserType = {
     email: string;
     password: string;
 };
+
+export type ProjectType = {
+    id?: number;
+    name: string;
+    budget: number;
+    deadline: string;
+    description: string;
+};
