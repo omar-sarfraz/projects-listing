@@ -16,5 +16,7 @@ export const signUpSchema = object().shape({
     confirmPassword: string()
         .required("Please retype your password.")
         .oneOf([ref("password")], "Your passwords do not match."),
-    role: mixed().oneOf([USER_ROLES.freelancer, USER_ROLES.clint]).required("Role is required. yo"),
+    role: mixed()
+        .oneOf([USER_ROLES.freelancer, USER_ROLES.client])
+        .required("Role is required. yo"),
 });

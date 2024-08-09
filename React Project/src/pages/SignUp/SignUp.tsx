@@ -125,7 +125,7 @@ export default function SignUp() {
                             className="w-full px-2 py-3 rounded-md"
                         >
                             <option value={USER_ROLES.freelancer}>Freelancer</option>
-                            <option value={USER_ROLES.clint}>Client</option>
+                            <option value={USER_ROLES.client}>Client</option>
                         </select>
                     </div>
                     <div className="mt-4">
