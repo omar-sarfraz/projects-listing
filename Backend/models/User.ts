@@ -1,5 +1,6 @@
 import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
+import { USER_ROLES } from "../lib/utils";
 
 export const User = sequelize.define("User", {
     id: {
@@ -26,7 +27,7 @@ export const User = sequelize.define("User", {
     },
     role: {
         type: DataTypes.ENUM(),
-        values: ["FREELANCER", "CLIENT"],
+        values: [USER_ROLES.freelancer, USER_ROLES.clint],
         allowNull: false,
     },
 });
