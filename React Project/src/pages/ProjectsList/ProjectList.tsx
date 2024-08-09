@@ -1,14 +1,11 @@
 import { BASE_URL } from "../../configs/urls";
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-export type Project = {
-    ProjectId: number;
-    Name: string;
-    Budget: string;
-    Timeline: string;
-    Description: string;
-};
+import { useToast } from "../../contexts/ToastContext";
+import { AxiosResponse } from "axios";
+import axiosInstance from "../../lib/axios";
+import { useAuth } from "../../contexts/AuthContext";
+import { Project } from "../../lib/types";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -17,16 +14,34 @@ export default function ProjectsList() {
     const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
+    const { user } = useAuth();
+
+    const { toast } = useToast();
+
     useEffect(() => {
         fetchProjects();
     }, []);
 
     const fetchProjects = async () => {
-        const response: Response = await fetch(BASE_URL);
-        const projects: Project[] = await response.json();
-        setProjects(projects);
-        setSearchedProjects(projects);
-        setLoading(false);
+        try {
+            const response: AxiosResponse = await axiosInstance.get(BASE_URL + "/projects", {
+                headers: { Authorization: "Bearer " + user?.token },
+            });
+
+            console.log(response);
+            if (response.status === 200) {
+                const projects: Project[] = await response.data.data;
+                setProjects(projects);
+                setSearchedProjects(projects);
+            } else {
+                toast(response.data?.message || "An error has occurred", "error");
+            }
+        } catch (e) {
+            console.log(e);
+            toast("Failed to load projects", "error");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSearch = (e: FormEvent) => {

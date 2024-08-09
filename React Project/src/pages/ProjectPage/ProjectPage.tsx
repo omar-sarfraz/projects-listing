@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { Project } from "../ProjectsList/ProjectList";
+import { Project } from "../../lib/types";
 
 export default function ProjectPage() {
     let { state }: { state: Project } = useLocation();
