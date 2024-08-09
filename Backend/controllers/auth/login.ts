@@ -5,17 +5,12 @@ import jwt from "jsonwebtoken";
 
 import { UserType } from "../../lib/types";
 import { User } from "../../models/User";
+import { loginSchema } from "../../validation/User";
+import { createJoiError } from "../../lib/utils";
 
 const login = async (req: Request, res: Response) => {
-    const userData = req.body;
-
-    if (!userData.email || !userData.password)
-        return res.status(400).json({
-            message: "email and password is required!",
-            error: true,
-        });
-
     try {
+        const userData = await loginSchema.validateAsync(req.body);
         const key: number = parseInt(process.env.KEY || "");
         if (!key) {
             console.error("Key is required!");
@@ -66,7 +61,9 @@ const login = async (req: Request, res: Response) => {
             .json({ message: "Logged in successfully", error: false, token, user: userToSend });
     } catch (e) {
         console.log("Login Error", e);
-        return res.status(500).json({ message: "Internal Server Error", error: true });
+        return res
+            .status(500)
+            .json({ message: createJoiError(e) || "Internal Server Error", error: true });
     }
 };
 
