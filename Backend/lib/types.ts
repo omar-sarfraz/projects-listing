@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export type UserType = {
     id?: number;
     firstName: string;
@@ -14,3 +16,7 @@ export type ProjectType = {
     deadline: string;
     description: string;
 };
+
+export interface CustomRequest extends Request {
+    user: UserType;
+}

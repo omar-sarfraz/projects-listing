@@ -5,5 +5,5 @@ export const createJoiError = (e: any) => {
 
 export const USER_ROLES = {
     freelancer: "FREELANCER",
-    clint: "CLIENT",
+    client: "CLIENT",
 };

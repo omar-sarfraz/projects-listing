@@ -27,7 +27,7 @@ export const User = sequelize.define("User", {
     },
     role: {
         type: DataTypes.ENUM(),
-        values: [USER_ROLES.freelancer, USER_ROLES.clint],
+        values: [USER_ROLES.freelancer, USER_ROLES.client],
         allowNull: false,
     },
 });
