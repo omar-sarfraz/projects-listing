@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth";
 import projectRoutes from "./routes/projects";
 import "./configs/passport";
 import { sequelize } from "./lib/sequelize";
+import bidsRouter from "./routes/bids";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use("/", authRoutes);
 app.use("/projects", projectRoutes);
+app.use("/bids", bidsRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 
