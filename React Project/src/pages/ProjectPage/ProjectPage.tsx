@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { Project } from "../../lib/types";
 import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
+
+import NextIcon from "../../assets/next-icon.svg";
 
 export default function ProjectPage() {
     const [project, setProject] = useState<Project>();
@@ -37,18 +39,25 @@ export default function ProjectPage() {
     return (
         <>
             <div className="flex gap-4 justify-between py-4">
-                <div className="flex items-center gap-2">
-                    <h2 className="text-2xl italic">Budget </h2>
-                    <p className="border-cyan-500 text-cyan-500 border-[1px] rounded-xl text-xl px-4 font-semibold">
-                        {project.budget} $
-                    </p>
+                <div className="flex items-center gap-2 border-[1px] border-cyan-500 rounded-xl py-2 px-4">
+                    <h2 className="text-xl">Budget </h2>
+                    <p className=" text-cyan-500 text-2xl font-semibold">{project.budget} $</p>
                 </div>
-                <div className="flex items-center gap-2">
-                    <h2 className="text-2xl italic">Deadline </h2>
-                    <p className="border-cyan-500 text-cyan-500 border-[1px] rounded-xl text-xl px-4 font-semibold">
+                <div className="flex items-center gap-2 border-[1px] border-cyan-500 rounded-xl py-2 px-4">
+                    <h2 className="text-xl">Deadline </h2>
+                    <p className="text-cyan-500 text-2xl font-semibold">
                         {new Date(project.deadline).toDateString()}
                     </p>
                 </div>
+                <Link
+                    to={`/projects/${params.id}/bid`}
+                    className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
+                >
+                    <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
+                        Bid on this project
+                    </div>
+                    <img src={NextIcon} className="w-6" />
+                </Link>
             </div>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>
             <p className="text-2xl mt-4">{project.name}</p>

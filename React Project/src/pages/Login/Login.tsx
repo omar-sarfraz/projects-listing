@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import TextField from "../../components/TextField";
+import AuthTextField from "../../components/AuthTextField";
 import Button from "../../components/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
@@ -55,7 +55,7 @@ export default function Login() {
                     <p>Login to access thousands of projects</p>
                 </div>
                 <div className="my-10">
-                    <TextField
+                    <AuthTextField
                         currentValue={email}
                         setCurrentValue={setEmail}
                         type="email"
@@ -64,7 +64,7 @@ export default function Login() {
                         label="Email"
                         errorType="email"
                     />
-                    <TextField
+                    <AuthTextField
                         currentValue={password}
                         setCurrentValue={setPassword}
                         type="password"

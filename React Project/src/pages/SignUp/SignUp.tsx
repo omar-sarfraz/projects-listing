@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import TextField from "../../components/TextField";
+import AuthTextField from "../../components/AuthTextField";
 import Button from "../../components/Button";
 import { useToast } from "../../contexts/ToastContext";
 import axiosInstance from "../../lib/axios";
@@ -73,7 +73,7 @@ export default function SignUp() {
                     <p>SignUp to access thousands of projects</p>
                 </div>
                 <div className="my-10">
-                    <TextField
+                    <AuthTextField
                         currentValue={firstName}
                         setCurrentValue={setFirstName}
                         type="text"
@@ -82,7 +82,7 @@ export default function SignUp() {
                         label="First Name"
                         errorType="firstName"
                     />
-                    <TextField
+                    <AuthTextField
                         currentValue={lastName}
                         setCurrentValue={setLastName}
                         type="text"
@@ -91,7 +91,7 @@ export default function SignUp() {
                         label="Last Name"
                         errorType="lastName"
                     />
-                    <TextField
+                    <AuthTextField
                         currentValue={email}
                         setCurrentValue={setEmail}
                         type="email"
@@ -100,7 +100,7 @@ export default function SignUp() {
                         label="Email"
                         errorType="email"
                     />
-                    <TextField
+                    <AuthTextField
                         currentValue={password}
                         setCurrentValue={setPassword}
                         type="password"
@@ -109,7 +109,7 @@ export default function SignUp() {
                         label="Password"
                         errorType="password"
                     />
-                    <TextField
+                    <AuthTextField
                         currentValue={confirmPassword}
                         setCurrentValue={setConfirmPassword}
                         type="password"
