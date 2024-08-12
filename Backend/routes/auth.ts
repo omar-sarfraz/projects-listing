@@ -3,9 +3,9 @@ import passport from "passport";
 import signup from "../controllers/auth/signup";
 import login from "../controllers/auth/login";
 
-const router = Router();
+const authRouter = Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
+authRouter.post("/signup", signup);
+authRouter.post("/login", login);
 
-export default router;
+export default authRouter;
