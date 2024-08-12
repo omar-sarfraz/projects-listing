@@ -1,15 +1,12 @@
 import { Request, Response } from "express";
-import { CustomRequest, ProjectType, UserType } from "../../lib/types";
+import { ProjectType } from "../../lib/types";
 import { Project } from "../../models/Project";
 import projectSchema from "../../validation/Project";
-import { createJoiError, USER_ROLES } from "../../lib/utils";
+import { createJoiError } from "../../lib/utils";
 
-export const addProject = async (expressReq: Request, res: Response) => {
-    const req = expressReq as CustomRequest;
+export const addProject = async (req: Request, res: Response) => {
     const project: ProjectType = req.body;
 
-    if (req.user?.role !== USER_ROLES.client)
-        return res.status(403).json({ message: "Only clients can post a project", error: true });
     try {
         const validatedProject = await projectSchema.validateAsync(project);
         const createdProject = await Project.create({ ...validatedProject });
