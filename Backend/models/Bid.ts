@@ -1,16 +1,11 @@
 import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
-import { Bid } from "./Bid";
 
-export const Project = sequelize.define("project", {
+export const Bid = sequelize.define("bid", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false,
     },
     budget: {
         type: DataTypes.FLOAT,
@@ -25,7 +20,3 @@ export const Project = sequelize.define("project", {
         allowNull: false,
     },
 });
-
-// Project can have many bids
-Project.hasMany(Bid, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
-Bid.belongsTo(Project);

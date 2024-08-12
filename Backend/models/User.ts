@@ -1,8 +1,10 @@
 import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
 import { USER_ROLES } from "../lib/utils";
+import { Project } from "./Project";
+import { Bid } from "./Bid";
 
-export const User = sequelize.define("User", {
+export const User = sequelize.define("user", {
     id: {
         type: DataTypes.INTEGER(),
         autoIncrement: true,
@@ -31,3 +33,11 @@ export const User = sequelize.define("User", {
         allowNull: false,
     },
 });
+
+// User can have many project
+User.hasMany(Project, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+Project.belongsTo(User);
+
+// User can have many bids
+User.hasMany(Bid, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+Bid.belongsTo(User);
