@@ -7,6 +7,7 @@ import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
+import SearchIcon from "../../assets/search-icon.svg";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -88,6 +89,7 @@ export default function ProjectsList() {
                     type="text"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                <img src={SearchIcon} onClick={handleSearch} className="cursor-pointer" />
             </form>
             {loading ? (
                 <div>Loading...</div>
