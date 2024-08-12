@@ -18,10 +18,18 @@ export type User = {
     token?: string;
 };
 
+export type Bid = {
+    id: number;
+    budget: string;
+    deadline: string;
+    description: string;
+};
+
 export type Project = {
     id: number;
     name: string;
     budget: string;
     deadline: string;
     description: string;
+    bids?: [Bid];
 };

@@ -66,6 +66,22 @@ export default function ProjectPage() {
             <p className="text-2xl mt-4">{project.name}</p>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Description </h2>
             <p className="text-xl mt-4">{project.description}</p>
+            {project.bids?.length && (
+                <div>
+                    <h2 className="text-xl underline underline-offset-8 mt-8">Project Bids</h2>
+                    {project.bids.map((bid) => (
+                        <div className="bg-gray-100 p-4 mt-4 rounded-md">
+                            <div className="flex justify-between">
+                                <div className="flex gap-2">
+                                    Amount: <div className="font-bold">{bid.budget} $</div>
+                                </div>
+                                <div>{new Date(bid.deadline).toDateString()}</div>
+                            </div>
+                            <div>{bid.description}</div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </>
     );
 }
