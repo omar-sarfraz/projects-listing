@@ -3,8 +3,8 @@ import { addProject } from "../controllers/projects/addProject";
 import passport from "passport";
 import getProjects from "../controllers/projects/getProjects";
 
-import isClient from "../middlewares/isClient";
 import getProjectById from "../controllers/projects/getProjectById";
+import isClient from "../middlewares/isClient";
 
 const router = Router();
 
