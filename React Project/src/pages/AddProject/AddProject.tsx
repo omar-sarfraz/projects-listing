@@ -48,7 +48,7 @@ export default function AddProject() {
 
             let response: AxiosResponse = await axiosInstance.post(
                 BASE_URL + "/projects",
-                { name, budget, deadline, description },
+                { name, budget, deadline, description, userId: user?.id },
                 { headers: { Authorization: "Bearer " + user?.token } }
             );
 
