@@ -6,6 +6,7 @@ import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 
 import NextIcon from "../../assets/next-icon.svg";
+import { USER_ROLES } from "../../lib/utils";
 
 export default function ProjectPage() {
     const [project, setProject] = useState<Project>();
@@ -49,15 +50,17 @@ export default function ProjectPage() {
                         {new Date(project.deadline).toDateString()}
                     </p>
                 </div>
-                <Link
-                    to={`/projects/${params.id}/bid`}
-                    className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
-                >
-                    <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
-                        Bid on this project
-                    </div>
-                    <img src={NextIcon} className="w-6" />
-                </Link>
+                {user?.role === USER_ROLES.freelancer && (
+                    <Link
+                        to={`/projects/${params.id}/bid`}
+                        className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
+                    >
+                        <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
+                            Bid on this project
+                        </div>
+                        <img src={NextIcon} className="w-6" />
+                    </Link>
+                )}
             </div>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>
             <p className="text-2xl mt-4">{project.name}</p>
