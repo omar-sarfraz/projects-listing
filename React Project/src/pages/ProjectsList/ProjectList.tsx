@@ -125,7 +125,6 @@ export default function ProjectsList() {
                                     </div>
                                     <Link
                                         to={`/projects/${project.id}`}
-                                        state={project}
                                         className="absolute left-0 w-full cursor-pointer bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-md text-center py-2 mt-4 opacity-0 group-hover:-translate-y-full group-hover:opacity-100 transition duration-500 ease-in-out"
                                     >
                                         Apply Now
