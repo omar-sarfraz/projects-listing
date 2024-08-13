@@ -29,3 +29,7 @@ export const Project = sequelize.define("project", {
 // Project can have many bids
 Project.hasMany(Bid, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
 Bid.belongsTo(Project);
+
+// Project can have 1 accepted bid | Foreign key defined in Project Model
+Bid.hasOne(Project, { foreignKey: "acceptedBid" });
+Project.belongsTo(Bid, { foreignKey: "acceptedBid" });

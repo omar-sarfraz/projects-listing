@@ -1,5 +1,6 @@
 import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
+import { Project } from "./Project";
 
 export const Bid = sequelize.define("bid", {
     id: {
