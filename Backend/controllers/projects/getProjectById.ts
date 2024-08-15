@@ -17,7 +17,14 @@ const getProjectById = async (expressReq: Request, res: Response) => {
                 .json({ message: "Project with the given Id not found!", error: true });
 
         if (req.user.id === project.dataValues.userId) {
+            // Loading bids with Project for Project Owner
             project = await Project.findOne({ where: { id: projectId }, include: Bid });
+        } else {
+            // Loading the freelancer's bid
+            project = await Project.findOne({
+                where: { id: projectId },
+                include: { model: Bid, where: { userId: req.user.id }, required: false },
+            });
         }
 
         res.status(200).json({ data: project, error: false });

@@ -6,7 +6,6 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
 import { USER_ROLES } from "../../lib/utils";
 import axiosInstance from "../../lib/axios";
-import { BASE_URL } from "../../configs/urls";
 import { bidSchema } from "../../validations/Bid";
 import TextField from "../../components/TextField";
 
@@ -44,7 +43,7 @@ export default function AddBid() {
             setLoading(true);
 
             let response: AxiosResponse = await axiosInstance.post(
-                BASE_URL + `projects/${params.id}/bids`,
+                `projects/${params.id}/bids`,
                 { budget, deadline, description, userId: user?.id },
                 { headers: { Authorization: "Bearer " + user?.token } }
             );

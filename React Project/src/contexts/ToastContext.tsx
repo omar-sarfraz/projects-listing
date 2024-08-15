@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 
 type MessageVariant = undefined | "success" | "error";
 type Color = "green-500" | "red-500";

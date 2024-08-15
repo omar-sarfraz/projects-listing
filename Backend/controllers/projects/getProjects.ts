@@ -3,7 +3,7 @@ import { Project } from "../../models/Project";
 
 const getProjects = async (req: Request, res: Response) => {
     try {
-        const projects = await Project.findAll();
+        const projects = await Project.findAll({ order: [["createdAt", "DESC"]] });
         res.status(200).json({ data: projects, error: false });
     } catch (e: any) {
         console.log("Failed to get projects", e);

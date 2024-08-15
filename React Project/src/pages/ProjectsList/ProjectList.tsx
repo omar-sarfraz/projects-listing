@@ -1,4 +1,3 @@
-import { BASE_URL } from "../../configs/urls";
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../contexts/ToastContext";
@@ -26,7 +25,7 @@ export default function ProjectsList() {
 
     const fetchProjects = async () => {
         try {
-            const response: AxiosResponse = await axiosInstance.get(BASE_URL + "/projects", {
+            const response: AxiosResponse = await axiosInstance.get("/projects", {
                 headers: { Authorization: "Bearer " + user?.token },
             });
 
@@ -95,7 +94,7 @@ export default function ProjectsList() {
                 <div>Loading...</div>
             ) : (
                 <ul id="list" className="flex flex-wrap justify-start gap-2">
-                    {searchedProjects?.length &&
+                    {searchedProjects?.length ? (
                         searchedProjects.map((project, index) => (
                             <li
                                 className="relative bg-gray-100 flex flex-col grow justify-between rounded-md p-4 sm:w-full lg:w-1/4 group"
@@ -133,7 +132,10 @@ export default function ProjectsList() {
                                     </Link>
                                 </div>
                             </li>
-                        ))}
+                        ))
+                    ) : (
+                        <div>No projects</div>
+                    )}
                 </ul>
             )}
         </div>

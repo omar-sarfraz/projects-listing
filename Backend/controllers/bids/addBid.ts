@@ -9,6 +9,7 @@ import { createJoiError } from "../../lib/utils";
 export const addBid = async (req: Request, res: Response) => {
     const bid: BidType = req.body;
     const projectId: number = parseInt(req.params.projectId);
+    console.log("first", req.params);
 
     try {
         const validatedBid = await bidSchema.validateAsync(bid);
@@ -22,7 +23,7 @@ export const addBid = async (req: Request, res: Response) => {
                 .status(400)
                 .json({ message: "You have already applied to this project", error: true });
 
-        const createdBid = await Bid.create(validatedBid);
+        const createdBid = await Bid.create({ ...validatedBid, projectId });
         return res.status(200).json({ data: createdBid, error: false });
     } catch (e) {
         console.log("Error while adding bid", e);

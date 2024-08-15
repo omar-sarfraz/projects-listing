@@ -5,7 +5,6 @@ import { projectSchema } from "../../validations/Project";
 
 import { AxiosResponse } from "axios";
 import axiosInstance from "../../lib/axios";
-import { BASE_URL } from "../../configs/urls";
 import { useAuth } from "../../contexts/AuthContext";
 import { USER_ROLES } from "../../lib/utils";
 import TextField from "../../components/TextField";
@@ -48,7 +47,7 @@ export default function AddProject() {
             setLoading(true);
 
             let response: AxiosResponse = await axiosInstance.post(
-                BASE_URL + "/projects",
+                "/projects",
                 { name, budget, deadline, description, userId: user?.id },
                 { headers: { Authorization: "Bearer " + user?.token } }
             );
