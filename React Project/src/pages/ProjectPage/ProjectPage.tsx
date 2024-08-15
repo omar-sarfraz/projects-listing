@@ -67,7 +67,12 @@ export default function ProjectPage() {
             <p className="text-2xl mt-4">{project.name}</p>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Description </h2>
             <p className="text-xl mt-4">{project.description}</p>
-            {project.bids?.length && <BidsList bids={project.bids} />}
+            {project.bids?.length && (
+                <BidsList
+                    bids={project.bids}
+                    canAccept={user?.role === USER_ROLES.client && user.id === project.userId}
+                />
+            )}
         </>
     );
 }
