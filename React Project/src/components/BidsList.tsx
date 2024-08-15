@@ -28,14 +28,13 @@ export default function BidsList({
                 null,
                 { headers: { Authorization: "Bearer " + userToken } }
             );
+
             const updatedProject: Project = response.data.data;
-            console.log(1);
             setProject((project) => {
                 if (project) {
                     return { ...project, acceptedBid: updatedProject.acceptedBid };
                 }
             });
-            console.log(2);
             toast("Bid accepted successfully", "success");
         } catch (e: any) {
             console.log("Accept Bid response", e);
