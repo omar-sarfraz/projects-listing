@@ -32,5 +32,6 @@ export type Project = {
     deadline: string;
     description: string;
     userId?: number;
+    acceptedBid?: number;
     bids?: [Bid];
 };

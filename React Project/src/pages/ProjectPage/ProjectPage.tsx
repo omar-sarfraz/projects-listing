@@ -70,7 +70,15 @@ export default function ProjectPage() {
             {project.bids?.length && (
                 <BidsList
                     bids={project.bids}
-                    canAccept={user?.role === USER_ROLES.client && user.id === project.userId}
+                    canAccept={
+                        user?.role === USER_ROLES.client &&
+                        user.id === project.userId &&
+                        !project.acceptedBid
+                    }
+                    acceptedBid={project.acceptedBid}
+                    projectId={project.id}
+                    userToken={user?.token}
+                    setProject={setProject}
                 />
             )}
         </>
