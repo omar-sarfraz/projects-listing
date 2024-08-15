@@ -20,7 +20,7 @@ app.use("/", authRouter);
 app.use(passport.authenticate("jwt", { session: false }));
 
 app.use("/projects", projectsRouter);
-app.use("/bids", bidsRouter);
+app.use("/projects/:projectId/bids", bidsRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 

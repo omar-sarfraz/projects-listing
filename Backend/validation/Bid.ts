@@ -5,7 +5,6 @@ const bidSchema = Joi.object({
     deadline: Joi.date().required(),
     description: Joi.string().required(),
     userId: Joi.number().required(),
-    projectId: Joi.number().required(),
 });
 
 export default bidSchema;

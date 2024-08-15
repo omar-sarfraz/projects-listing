@@ -9,6 +9,6 @@ const projectsRouter = Router();
 
 projectsRouter.post("/", isClient, addProject);
 projectsRouter.get("/", getProjects);
-projectsRouter.get("/:id", getProjectById);
+projectsRouter.get("/:projectId", getProjectById);
 
 export default projectsRouter;

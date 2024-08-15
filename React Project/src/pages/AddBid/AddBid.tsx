@@ -44,8 +44,8 @@ export default function AddBid() {
             setLoading(true);
 
             let response: AxiosResponse = await axiosInstance.post(
-                BASE_URL + "/bids",
-                { budget, deadline, description, userId: user?.id, projectId: params.id },
+                BASE_URL + `projects/${params.id}/bids`,
+                { budget, deadline, description, userId: user?.id },
                 { headers: { Authorization: "Bearer " + user?.token } }
             );
 

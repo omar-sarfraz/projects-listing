@@ -6,7 +6,7 @@ import { Bid } from "../../models/Bid";
 
 const getProjectById = async (expressReq: Request, res: Response) => {
     const req = expressReq as CustomRequest;
-    const projectId = req.params.id;
+    const projectId = req.params.projectId;
 
     try {
         let project = await Project.findOne({ where: { id: projectId } });

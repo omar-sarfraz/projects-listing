@@ -8,12 +8,13 @@ import { createJoiError } from "../../lib/utils";
 
 export const addBid = async (req: Request, res: Response) => {
     const bid: BidType = req.body;
+    const projectId: number = parseInt(req.params.projectId);
 
     try {
         const validatedBid = await bidSchema.validateAsync(bid);
 
         const existingBid = await Bid.findOne({
-            where: { [Op.and]: [{ userId: bid.userId }, { projectId: bid.projectId }] },
+            where: { [Op.and]: [{ userId: bid.userId }, { projectId }] },
         });
 
         if (existingBid)
