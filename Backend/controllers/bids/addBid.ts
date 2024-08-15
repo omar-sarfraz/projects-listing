@@ -14,7 +14,7 @@ export const addBid = async (req: Request, res: Response) => {
         const validatedBid = await bidSchema.validateAsync(bid);
 
         const existingBid = await Bid.findOne({
-            where: { [Op.and]: [{ userId: bid.userId }, { projectId }] },
+            where: { [Op.and]: [{ userId: bid.userId }, { projectId: projectId }] },
         });
 
         if (existingBid)
@@ -25,10 +25,10 @@ export const addBid = async (req: Request, res: Response) => {
         const createdBid = await Bid.create(validatedBid);
         return res.status(200).json({ data: createdBid, error: false });
     } catch (e) {
-        console.log("Error while adding project", e);
+        console.log("Error while adding bid", e);
 
         return res.status(500).json({
-            message: createJoiError(e) || "An error has occured while creating project",
+            message: createJoiError(e) || "An error has occured while adding bid",
             error: true,
         });
     }
