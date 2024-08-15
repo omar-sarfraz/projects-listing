@@ -16,6 +16,12 @@ export const acceptBid = async (req: Request, res: Response) => {
 
         if (!existingBid) return res.status(404).json({ message: "Bid not found!", error: true });
 
+        const existingProject = await Project.findByPk(projectId);
+        if (existingProject?.dataValues.acceptedBid)
+            return res
+                .status(403)
+                .json({ message: "You have already accepted a bid for this project", error: true });
+
         const updateResponse = await Project.update(
             { acceptedBid: bidId },
             { where: { id: projectId }, returning: true }
