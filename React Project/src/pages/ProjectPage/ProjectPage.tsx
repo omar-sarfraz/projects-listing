@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { Project } from "../../lib/types";
+import { Bid, Project } from "../../lib/types";
 import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -13,6 +13,7 @@ import Description from "../../components/Description";
 export default function ProjectPage() {
     const [project, setProject] = useState<Project>();
     const [loading, setLoading] = useState<boolean>(false);
+    const [canBid, setCanBid] = useState<boolean>(false);
 
     const params = useParams();
     const { user } = useAuth();
@@ -27,7 +28,19 @@ export default function ProjectPage() {
             const response = await axiosInstance.get("/projects/" + params.id, {
                 headers: { Authorization: `Bearer ${user?.token}` },
             });
-            setProject(response.data.data);
+            const project: Project = response.data.data;
+            setProject(project);
+
+            // Check to see if the current user can bid or not
+            if (user?.role === USER_ROLES.client || project.acceptedBid) return;
+
+            let bids: Bid[] | undefined = project.bids;
+            if (!bids) return;
+
+            let currentUserBids = bids.filter((bid) => bid.user?.id === user?.id);
+            if (currentUserBids.length) return;
+
+            setCanBid(true);
         } catch (e) {
             console.log(e);
         } finally {
@@ -52,7 +65,7 @@ export default function ProjectPage() {
                         {new Date(project.deadline).toDateString()}
                     </p>
                 </div>
-                {user?.role === USER_ROLES.freelancer && !project.acceptedBid && (
+                {canBid && (
                     <Link
                         to={`/projects/${params.id}/bid`}
                         className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
