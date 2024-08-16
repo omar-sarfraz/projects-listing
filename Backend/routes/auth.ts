@@ -1,15 +1,7 @@
 import { Router, Request, Response } from "express";
 import passport from "passport";
-import signup from "../../controllers/auth/signup";
-import login from "../../controllers/auth/login";
-
-export type UserType = {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-};
+import signup from "../controllers/auth/signup";
+import login from "../controllers/auth/login";
 
 const router = Router();
 

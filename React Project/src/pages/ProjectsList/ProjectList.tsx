@@ -1,14 +1,11 @@
 import { BASE_URL } from "../../configs/urls";
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-export type Project = {
-    ProjectId: number;
-    Name: string;
-    Budget: string;
-    Timeline: string;
-    Description: string;
-};
+import { useToast } from "../../contexts/ToastContext";
+import { AxiosResponse } from "axios";
+import axiosInstance from "../../lib/axios";
+import { useAuth } from "../../contexts/AuthContext";
+import { Project } from "../../lib/types";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -17,16 +14,33 @@ export default function ProjectsList() {
     const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
     const [searchTerm, setSearchTerm] = useState<string>("");
 
+    const { user } = useAuth();
+
+    const { toast } = useToast();
+
     useEffect(() => {
         fetchProjects();
     }, []);
 
     const fetchProjects = async () => {
-        const response: Response = await fetch(BASE_URL);
-        const projects: Project[] = await response.json();
-        setProjects(projects);
-        setSearchedProjects(projects);
-        setLoading(false);
+        try {
+            const response: AxiosResponse = await axiosInstance.get(BASE_URL + "/projects", {
+                headers: { Authorization: "Bearer " + user?.token },
+            });
+
+            if (response.status === 200) {
+                const projects: Project[] = await response.data.data;
+                setProjects(projects);
+                setSearchedProjects(projects);
+            } else {
+                toast(response.data?.message || "An error has occurred", "error");
+            }
+        } catch (e) {
+            console.log(e);
+            toast("Failed to load projects", "error");
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSearch = (e: FormEvent) => {
@@ -36,7 +50,7 @@ export default function ProjectsList() {
             if (!projects) return;
 
             const projectList: Project[] | [] = projects.filter((project) => {
-                let name = project.Name.toLowerCase();
+                let name = project.name.toLowerCase();
                 let regex = new RegExp(searchTerm, "i");
 
                 return name.match(regex) ? true : false;
@@ -84,11 +98,11 @@ export default function ProjectsList() {
                             >
                                 <div>
                                     <h3 className="text-2xl font-medium">
-                                        {project.ProjectId}: {project.Name}
+                                        {project.id}: {project.name}
                                     </h3>
                                     <div className="my-4">
                                         <div className="font-bold">Description:</div>
-                                        {project.Description}
+                                        {project.description}
                                     </div>
                                 </div>
                                 <div>
@@ -96,19 +110,18 @@ export default function ProjectsList() {
                                         <div>
                                             <h3 className="font-bold">Budget</h3>
                                             <div className="bg-cyan-500 rounded-full px-3 mt-1 text-white">
-                                                {project.Budget}
+                                                {project.budget} $
                                             </div>
                                         </div>
                                         <div>
-                                            <h3 className="font-bold">Timeline</h3>
+                                            <h3 className="font-bold">Deadline</h3>
                                             <div className="bg-emerald-500 rounded-full px-3 mt-1 text-white">
-                                                {project.Timeline}
+                                                {new Date(project.deadline).toDateString()}
                                             </div>
                                         </div>
                                     </div>
                                     <Link
-                                        to={`/projects/${project.ProjectId}`}
-                                        state={project}
+                                        to={`/projects/${project.id}`}
                                         className="absolute left-0 w-full cursor-pointer bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-md text-center py-2 mt-4 opacity-0 group-hover:-translate-y-full group-hover:opacity-100 transition duration-500 ease-in-out"
                                     >
                                         Apply Now

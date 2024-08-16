@@ -4,19 +4,10 @@ import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
-import { object, string } from "yup";
 import { AxiosResponse } from "axios";
 import axiosInstance from "../../lib/axios";
-
-export type LoginError = {
-    type?: "email" | "password";
-    message: string;
-};
-
-const loginSchema = object().shape({
-    email: string().email().required("Email is required."),
-    password: string().required("Please enter your password."),
-});
+import { LoginError } from "../../lib/types";
+import { loginSchema } from "../../validations/User";
 
 export default function Login() {
     const [email, setEmail] = useState<string>("test@gmail.com");

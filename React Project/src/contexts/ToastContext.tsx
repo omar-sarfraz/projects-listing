@@ -6,12 +6,12 @@ type Color = "black" | "green-500" | "red-500";
 const ToastContext = createContext<{
     showToast: boolean;
     toastMessage: string;
-    toast: Function;
+    toast: (message: string, type: MessageVariant) => void;
     color: Color;
 }>({
     showToast: false,
     toastMessage: "",
-    toast: () => {},
+    toast: (message: string, type: MessageVariant) => {},
     color: "black",
 });
 

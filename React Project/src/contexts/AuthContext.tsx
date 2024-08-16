@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { User } from "../pages/SignUp/SignUp";
+import { User } from "../lib/types";
 
 const AuthContext = createContext<{
     user: User | undefined;
