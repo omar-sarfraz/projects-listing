@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../contexts/ToastContext";
 import { projectSchema } from "../../validations/Project";
@@ -7,6 +7,7 @@ import { AxiosResponse } from "axios";
 import axiosInstance from "../../lib/axios";
 import { BASE_URL } from "../../configs/urls";
 import { useAuth } from "../../contexts/AuthContext";
+import { USER_ROLES } from "../../lib/utils";
 
 export default function AddProject() {
     const [name, setName] = useState<string>();
@@ -20,6 +21,13 @@ export default function AddProject() {
     const { user } = useAuth();
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user?.role !== USER_ROLES.client) {
+            toast("Only clients can post a project", "error");
+            navigate("/");
+        }
+    }, []);
 
     const handleProjectSubmit = async (e: FormEvent) => {
         e.preventDefault();

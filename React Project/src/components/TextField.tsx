@@ -1,5 +1,4 @@
-import { LoginError } from "../pages/Login/Login";
-import { SignUpError } from "../pages/SignUp/SignUp";
+import { LoginError, SignUpError } from "../lib/types";
 
 type TextFieldProps = {
     currentValue: string;

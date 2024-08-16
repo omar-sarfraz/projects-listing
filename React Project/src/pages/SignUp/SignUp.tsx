@@ -8,6 +8,7 @@ import axiosInstance from "../../lib/axios";
 import { AxiosResponse } from "axios";
 import { SignUpError, User } from "../../lib/types";
 import { signUpSchema } from "../../validations/User";
+import { USER_ROLES } from "../../lib/utils";
 
 export default function SignUp() {
     const [firstName, setFirstName] = useState<string>("");
@@ -15,6 +16,7 @@ export default function SignUp() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [role, setRole] = useState<string>(USER_ROLES.freelancer);
     const [error, setError] = useState<SignUpError>({ type: undefined, message: "" });
 
     const { toast } = useToast();
@@ -32,6 +34,7 @@ export default function SignUp() {
                     email,
                     password,
                     confirmPassword,
+                    role,
                 },
                 { abortEarly: false }
             );
@@ -47,6 +50,7 @@ export default function SignUp() {
                 lastName,
                 email,
                 password,
+                role,
             };
 
             let response: AxiosResponse = await axiosInstance.post("/signup", userData);
@@ -114,6 +118,16 @@ export default function SignUp() {
                         label="Confirm Password"
                         errorType="confirmPassword"
                     />
+                    <div className="flex flex-col gap-1 mt-3">
+                        <label className="text-xl">Sign Up As</label>
+                        <select
+                            onChange={(e) => setRole(e.target.value)}
+                            className="w-full px-2 py-3 rounded-md"
+                        >
+                            <option value={USER_ROLES.freelancer}>Freelancer</option>
+                            <option value={USER_ROLES.client}>Client</option>
+                        </select>
+                    </div>
                     <div className="mt-4">
                         <div className="text-end">
                             Already have an account?{" "}
