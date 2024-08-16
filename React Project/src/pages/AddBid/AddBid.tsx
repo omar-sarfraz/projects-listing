@@ -50,7 +50,7 @@ export default function AddBid() {
 
             if (response.status === 200) {
                 toast("Bid Submitted Successfully!", "success");
-                navigate("/");
+                navigate("/projects/" + params.id);
             } else {
                 toast("An error has occured. Please try again.", "error");
             }

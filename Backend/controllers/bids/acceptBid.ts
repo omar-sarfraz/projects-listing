@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import { Op } from "sequelize";
 
 import { Bid } from "../../models/Bid";
-import { createJoiError } from "../../lib/utils";
 import { Project } from "../../models/Project";
 
 export const acceptBid = async (req: Request, res: Response) => {
@@ -30,11 +28,11 @@ export const acceptBid = async (req: Request, res: Response) => {
         const updatedProject = updateResponse[1][0];
 
         return res.status(200).json({ data: updatedProject, error: false });
-    } catch (e) {
+    } catch (e: any) {
         console.log("Error while accepting bid", e);
 
         return res.status(500).json({
-            message: createJoiError(e) || "An error has occured while accepting bid",
+            message: e?.message || "An error has occured while accepting bid",
             error: true,
         });
     }

@@ -34,5 +34,5 @@ export type Project = {
     description: string;
     userId?: number;
     acceptedBid?: number;
-    bids?: [Bid];
+    bids?: Bid[];
 };

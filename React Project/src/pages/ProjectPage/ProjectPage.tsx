@@ -80,9 +80,9 @@ export default function ProjectPage() {
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>
             <p className="text-2xl mt-4">{project.name}</p>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Description </h2>
-            <p className="mt-4">
+            <div className="mt-4">
                 <Description description={project.description} customClasses="text-xl" />
-            </p>
+            </div>
             {project.bids?.length ? (
                 <BidsList
                     bids={project.bids}

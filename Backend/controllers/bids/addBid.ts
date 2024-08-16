@@ -9,7 +9,6 @@ import { createJoiError } from "../../lib/utils";
 export const addBid = async (req: Request, res: Response) => {
     const bid: BidType = req.body;
     const projectId: number = parseInt(req.params.projectId);
-    console.log("first", req.params);
 
     try {
         const validatedBid = await bidSchema.validateAsync(bid);
