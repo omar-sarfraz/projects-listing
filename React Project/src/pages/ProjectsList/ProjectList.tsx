@@ -106,7 +106,9 @@ export default function ProjectsList() {
                                     </h3>
                                     <div className="my-4">
                                         <div className="font-bold">Description:</div>
-                                        {project.description}
+                                        {project.description.length > 200
+                                            ? project.description.slice(0, 200) + "..."
+                                            : project.description}
                                     </div>
                                 </div>
                                 <div>

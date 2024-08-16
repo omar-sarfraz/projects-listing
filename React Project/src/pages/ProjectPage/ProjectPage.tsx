@@ -8,6 +8,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import NextIcon from "../../assets/next-icon.svg";
 import { USER_ROLES } from "../../lib/utils";
 import BidsList from "../../components/BidsList";
+import Description from "../../components/Description";
 
 export default function ProjectPage() {
     const [project, setProject] = useState<Project>();
@@ -51,7 +52,7 @@ export default function ProjectPage() {
                         {new Date(project.deadline).toDateString()}
                     </p>
                 </div>
-                {user?.role === USER_ROLES.freelancer && (
+                {user?.role === USER_ROLES.freelancer && !project.acceptedBid && (
                     <Link
                         to={`/projects/${params.id}/bid`}
                         className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
@@ -66,7 +67,9 @@ export default function ProjectPage() {
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>
             <p className="text-2xl mt-4">{project.name}</p>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Description </h2>
-            <p className="text-xl mt-4">{project.description}</p>
+            <p className="mt-4">
+                <Description description={project.description} customClasses="text-xl" />
+            </p>
             {project.bids?.length ? (
                 <BidsList
                     bids={project.bids}

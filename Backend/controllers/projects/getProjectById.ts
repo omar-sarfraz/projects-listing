@@ -3,6 +3,7 @@ import { Project } from "../../models/Project";
 import { error } from "console";
 import { CustomRequest } from "../../lib/types";
 import { Bid } from "../../models/Bid";
+import { User } from "../../models/User";
 
 const getProjectById = async (expressReq: Request, res: Response) => {
     const req = expressReq as CustomRequest;
@@ -18,12 +19,33 @@ const getProjectById = async (expressReq: Request, res: Response) => {
 
         if (req.user.id === project.dataValues.userId) {
             // Loading bids with Project for Project Owner
-            project = await Project.findOne({ where: { id: projectId }, include: Bid });
+            project = await Project.findOne({
+                where: { id: projectId },
+                include: {
+                    model: Bid,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ["id", "firstName", "lastName", "email", "role"],
+                        },
+                    ],
+                },
+            });
         } else {
             // Loading the freelancer's bid
             project = await Project.findOne({
                 where: { id: projectId },
-                include: { model: Bid, where: { userId: req.user.id }, required: false },
+                include: {
+                    model: Bid,
+                    where: { userId: req.user.id },
+                    required: false,
+                    include: [
+                        {
+                            model: User,
+                            attributes: ["id", "firstName", "lastName", "email", "role"],
+                        },
+                    ],
+                },
             });
         }
 

@@ -23,6 +23,7 @@ export type Bid = {
     budget: string;
     deadline: string;
     description: string;
+    user?: User;
 };
 
 export type Project = {

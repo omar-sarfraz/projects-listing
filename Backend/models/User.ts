@@ -3,6 +3,9 @@ import { DataTypes } from "sequelize";
 import { USER_ROLES } from "../lib/utils";
 import { Project } from "./Project";
 import { Bid } from "./Bid";
+import { decrypt } from "@omar-sarfraz/caesar-cipher";
+
+const key = parseInt(process.env.PORT || "0");
 
 export const User = sequelize.define("user", {
     id: {
@@ -22,6 +25,9 @@ export const User = sequelize.define("user", {
         type: DataTypes.STRING(150),
         allowNull: false,
         unique: true,
+        get() {
+            return decrypt(key, this.dataValues.email);
+        },
     },
     password: {
         type: DataTypes.STRING(150),
