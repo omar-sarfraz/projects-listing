@@ -4,6 +4,10 @@ import { Bid } from "../../models/Bid";
 export const deleteBid = async (req: Request, res: Response) => {
     const bidId: number = parseInt(req.params.bidId);
 
+    if (!bidId) {
+        return res.status(400).json({ message: "Invalid bidId" });
+    }
+
     try {
         await Bid.destroy({ where: { id: bidId } });
         return res.status(200).json({ message: "Bid deleted Successfully!", error: false });

@@ -7,15 +7,12 @@ import { Bid } from "../models/Bid";
 const isBidOwner = async (req: Request, res: Response, next: NextFunction) => {
     const customRequest = req as CustomRequest;
 
-    const projectId: number = parseInt(customRequest.params.projectId);
     const bidId: number = parseInt(customRequest.params.bidId);
     const freelancerId: number | undefined = customRequest.user.id;
 
-    // const existingProject = Project.findOne({
-    //     where: {
-    //         [Op.and]: [{ id: projectId }],
-    //     },
-    // });
+    if (!bidId || !freelancerId) {
+        return res.status(400).json({ message: "Invalid bidId or freelancerId" });
+    }
 
     const existingBid = await Bid.findOne({
         where: {

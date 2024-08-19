@@ -7,6 +7,10 @@ export const acceptBid = async (req: Request, res: Response) => {
     const bidId: number = parseInt(req.params.bidId);
     const projectId: number = parseInt(req.params.projectId);
 
+    if (!bidId || !projectId) {
+        return res.status(400).json({ message: "Invalid bidId or projectId" });
+    }
+
     try {
         const existingBid = await Bid.findOne({
             where: { id: bidId },

@@ -10,6 +10,10 @@ export const addBid = async (req: Request, res: Response) => {
     const bid: BidType = req.body;
     const projectId: number = parseInt(req.params.projectId);
 
+    if (!projectId) {
+        return res.status(400).json({ message: "Invalid projectId" });
+    }
+
     try {
         const validatedBid = await bidSchema.validateAsync(bid);
 
