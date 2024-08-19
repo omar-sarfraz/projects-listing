@@ -12,7 +12,11 @@ export const addProject = async (req: Request, res: Response) => {
 
         if (req.files) {
             const files = req.files as Express.Multer.File[];
-            validatedProject.files = files.map((file) => file.path);
+            validatedProject.files = files.map((file) => {
+                let path = file.path;
+                let firstSlash = path.indexOf("/");
+                return path.slice(firstSlash + 1);
+            });
         }
 
         const createdProject = await Project.create({ ...validatedProject });
