@@ -15,7 +15,8 @@ export type ProjectType = {
     budget: number;
     deadline: string;
     description: string;
-    userId: string;
+    userId: number;
+    bids?: BidType[];
 };
 
 export type BidType = {

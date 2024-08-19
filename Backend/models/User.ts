@@ -5,7 +5,7 @@ import { Project } from "./Project";
 import { Bid } from "./Bid";
 import { decrypt } from "@omar-sarfraz/caesar-cipher";
 
-const key = parseInt(process.env.PORT || "0");
+const key = parseInt(process.env.KEY || "0");
 
 export const User = sequelize.define("user", {
     id: {
