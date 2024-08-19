@@ -11,12 +11,12 @@ import { signUpSchema } from "./validationSchema";
 import { USER_ROLES } from "../../lib/utils";
 
 export default function SignUp() {
-    const [firstName, setFirstName] = useState<string>("");
-    const [lastName, setLastName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [role, setRole] = useState<string>(USER_ROLES.freelancer);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [role, setRole] = useState(USER_ROLES.freelancer);
     const [error, setError] = useState<SignUpError>({ type: undefined, message: "" });
 
     const { toast } = useToast();

@@ -13,7 +13,7 @@ export default function AddBid() {
     const [budget, setBudget] = useState<string>();
     const [deadline, setDeadline] = useState<string>();
     const [description, setDescription] = useState<string>();
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState(false);
 
     const params = useParams();
     const navigate = useNavigate();

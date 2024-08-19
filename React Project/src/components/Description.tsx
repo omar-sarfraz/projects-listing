@@ -10,7 +10,7 @@ export default function Description({
     description: string;
     customClasses?: string;
 }) {
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState(false);
 
     const shouldShowMore = description.length > MAX_CHAR_LENGTH ? true : false;
 

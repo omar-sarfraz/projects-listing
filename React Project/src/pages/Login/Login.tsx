@@ -10,8 +10,8 @@ import { LoginError } from "../../lib/types";
 import { loginSchema } from "./validationSchema";
 
 export default function Login() {
-    const [email, setEmail] = useState<string>("test@gmail.com");
-    const [password, setPassword] = useState<string>("12345678");
+    const [email, setEmail] = useState("test@gmail.com");
+    const [password, setPassword] = useState("12345678");
     const [error, setError] = useState<LoginError>({ type: undefined, message: "" });
     const { setUser } = useAuth();
     const { toast } = useToast();

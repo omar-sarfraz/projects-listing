@@ -10,10 +10,10 @@ import SearchIcon from "../../assets/search-icon.svg";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
 
     const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
-    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searchTerm, setSearchTerm] = useState("");
 
     const { user } = useAuth();
 

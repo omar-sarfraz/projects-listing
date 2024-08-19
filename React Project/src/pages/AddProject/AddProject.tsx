@@ -15,7 +15,7 @@ export default function AddProject() {
     const [deadline, setDeadline] = useState<string>();
     const [description, setDescription] = useState<string>();
 
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState(false);
     const { toast } = useToast();
 
     const { user } = useAuth();

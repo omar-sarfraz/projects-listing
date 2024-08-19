@@ -12,8 +12,8 @@ import Description from "../../components/Description";
 
 export default function ProjectPage() {
     const [project, setProject] = useState<Project>();
-    const [loading, setLoading] = useState<boolean>(false);
-    const [canBid, setCanBid] = useState<boolean>(false);
+    const [loading, setLoading] = useState(false);
+    const [canBid, setCanBid] = useState(false);
 
     const params = useParams();
     const { user } = useAuth();
