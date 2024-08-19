@@ -1,72 +1,21 @@
-import { AxiosResponse } from "axios";
-import { useToast } from "../contexts/ToastContext";
-import axiosInstance from "../lib/axios";
-import { Bid, Project } from "../lib/types";
-import { Dispatch, SetStateAction } from "react";
+import { Bid } from "../lib/types";
 import Description from "./Description";
-import { useNavigate } from "react-router-dom";
 
 type PropType = {
     bids: Bid[];
     canAccept: boolean;
     acceptedBid: number | undefined;
-    projectId: number;
-    userToken: string | undefined;
-    setProject: Dispatch<SetStateAction<Project | undefined>>;
+    handleAcceptBid: (id: number) => void;
+    handleDeleteBid: (id: number) => void;
 };
 
 export default function BidsList({
     bids,
     canAccept,
     acceptedBid,
-    projectId,
-    userToken,
-    setProject,
+    handleAcceptBid,
+    handleDeleteBid,
 }: PropType) {
-    const { toast } = useToast();
-    const navigate = useNavigate();
-
-    const handleAcceptBid = async (id: number) => {
-        try {
-            const response: AxiosResponse = await axiosInstance.post(
-                `/projects/${projectId}/bids/${id}/accept`,
-                null,
-                { headers: { Authorization: "Bearer " + userToken } }
-            );
-
-            const updatedProject: Project = response.data.data;
-            setProject((project) => {
-                if (project) {
-                    return { ...project, acceptedBid: updatedProject.acceptedBid };
-                }
-            });
-            toast("Bid accepted successfully", "success");
-        } catch (e: any) {
-            console.log("Accept Bid response", e);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
-        }
-    };
-
-    const handleDeleteBid = async (id: number) => {
-        try {
-            const response: AxiosResponse = await axiosInstance.delete(
-                `/projects/${projectId}/bids/${id}`,
-                { headers: { Authorization: "Bearer " + userToken } }
-            );
-            toast(response.data.message, "success");
-            setProject((project) => {
-                if (project && project.bids?.length) {
-                    let newBids = project.bids.filter((bid) => bid.id !== id);
-                    return { ...project, bids: newBids };
-                }
-            });
-            navigate("/projects/" + projectId);
-        } catch (e: any) {
-            console.log("Delete bid response", e);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
-        }
-    };
-
     return (
         <div>
             <h2 className="text-xl underline underline-offset-8 mt-8">Project Bids</h2>

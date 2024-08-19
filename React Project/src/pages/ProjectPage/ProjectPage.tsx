@@ -1,52 +1,17 @@
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-
-import { Bid, Project } from "../../lib/types";
-import axiosInstance from "../../lib/axios";
-import { useAuth } from "../../contexts/AuthContext";
 
 import NextIcon from "../../assets/next-icon.svg";
 import { USER_ROLES } from "../../lib/utils";
 import BidsList from "../../components/BidsList";
 import Description from "../../components/Description";
+import useProject from "../../hooks/useProject";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function ProjectPage() {
-    const [project, setProject] = useState<Project>();
-    const [loading, setLoading] = useState(false);
-    const [canBid, setCanBid] = useState(false);
+    const { project, loading, canBid, handleAcceptBid, handleDeleteBid } = useProject();
 
     const params = useParams();
     const { user } = useAuth();
-
-    useEffect(() => {
-        fetchProject();
-    }, []);
-
-    const fetchProject = async () => {
-        setLoading(true);
-        try {
-            const response = await axiosInstance.get("/projects/" + params.id, {
-                headers: { Authorization: `Bearer ${user?.token}` },
-            });
-            const project: Project = response.data.data;
-            setProject(project);
-
-            // Check to see if the current user can bid or not
-            if (user?.role === USER_ROLES.client || project.acceptedBid) return;
-
-            let bids: Bid[] | undefined = project.bids;
-            if (!bids) return;
-
-            let currentUserBids = bids.filter((bid) => bid.user?.id === user?.id);
-            if (currentUserBids.length) return;
-
-            setCanBid(true);
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     if (loading) return <div>Loading</div>;
 
@@ -92,9 +57,8 @@ export default function ProjectPage() {
                         !project.acceptedBid
                     }
                     acceptedBid={project.acceptedBid}
-                    projectId={project.id}
-                    userToken={user?.token}
-                    setProject={setProject}
+                    handleAcceptBid={handleAcceptBid}
+                    handleDeleteBid={handleDeleteBid}
                 />
             ) : null}
         </>
