@@ -5,9 +5,9 @@ import passport from "passport";
 import "./configs/passport";
 import { sequelize } from "./lib/sequelize";
 
-import bidsRouter from "./routes/bids";
-import authRouter from "./routes/auth";
-import projectsRouter from "./routes/projects";
+import bidsRouter from "./controllers/bids";
+import authRouter from "./controllers/auth";
+import projectsRouter from "./controllers/projects";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;

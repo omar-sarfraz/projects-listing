@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Op } from "sequelize";
 
 import { BidType } from "../../lib/types";
-import bidSchema from "../../validation/Bid";
+import bidSchema from "./validationSchema";
 import { Bid } from "../../models/Bid";
 import { createJoiError } from "../../lib/utils";
 

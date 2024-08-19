@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
 import { USER_ROLES } from "../../lib/utils";
 import axiosInstance from "../../lib/axios";
-import { bidSchema } from "../../validations/Bid";
+import { bidSchema } from "./validationSchema";
 import TextField from "../../components/TextField";
 
 export default function AddBid() {

@@ -7,7 +7,7 @@ import { useToast } from "../../contexts/ToastContext";
 import axiosInstance from "../../lib/axios";
 import { AxiosResponse } from "axios";
 import { SignUpError, User } from "../../lib/types";
-import { signUpSchema } from "../../validations/User";
+import { signUpSchema } from "./validationSchema";
 import { USER_ROLES } from "../../lib/utils";
 
 export default function SignUp() {

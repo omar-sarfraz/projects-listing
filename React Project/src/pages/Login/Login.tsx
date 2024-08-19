@@ -7,7 +7,7 @@ import { useToast } from "../../contexts/ToastContext";
 import { AxiosResponse } from "axios";
 import axiosInstance from "../../lib/axios";
 import { LoginError } from "../../lib/types";
-import { loginSchema } from "../../validations/User";
+import { loginSchema } from "./validationSchema";
 
 export default function Login() {
     const [email, setEmail] = useState<string>("test@gmail.com");

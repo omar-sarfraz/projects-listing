@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ProjectType } from "../../lib/types";
 import { Project } from "../../models/Project";
-import projectSchema from "../../validation/Project";
+import projectSchema from "./validationSchema";
 import { createJoiError } from "../../lib/utils";
 
 export const addProject = async (req: Request, res: Response) => {

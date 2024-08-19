@@ -1,7 +1,7 @@
 import { FormEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../contexts/ToastContext";
-import { projectSchema } from "../../validations/Project";
+import { projectSchema } from "./validationSchema";
 
 import { AxiosResponse } from "axios";
 import axiosInstance from "../../lib/axios";

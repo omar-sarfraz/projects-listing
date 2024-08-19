@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { USER_ROLES } from "../lib/utils";
+import { USER_ROLES } from "../../lib/utils";
 
 export const signUpSchema = Joi.object({
     firstName: Joi.string().required(),
