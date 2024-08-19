@@ -41,9 +41,9 @@ export const User = sequelize.define("user", {
 });
 
 // User can have many project
-User.hasMany(Project, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+User.hasMany(Project, { foreignKey: { allowNull: false }, onDelete: "RESTRICT" });
 Project.belongsTo(User);
 
 // User can have many bids
-User.hasMany(Bid, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+User.hasMany(Bid, { foreignKey: { allowNull: false }, onDelete: "RESTRICT" });
 Bid.belongsTo(User);
