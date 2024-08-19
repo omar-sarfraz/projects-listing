@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import AuthTextField from "../../components/AuthTextField";
+import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
@@ -55,7 +55,8 @@ export default function Login() {
                     <p>Login to access thousands of projects</p>
                 </div>
                 <div className="my-10">
-                    <AuthTextField
+                    <TextField
+                        required={true}
                         currentValue={email}
                         setCurrentValue={setEmail}
                         type="email"
@@ -63,8 +64,10 @@ export default function Login() {
                         error={error}
                         label="Email"
                         errorType="email"
+                        vertical={true}
                     />
-                    <AuthTextField
+                    <TextField
+                        required={true}
                         currentValue={password}
                         setCurrentValue={setPassword}
                         type="password"
@@ -72,6 +75,7 @@ export default function Login() {
                         error={error}
                         label="Password"
                         errorType="password"
+                        vertical={true}
                     />
                     <div className="mt-4">
                         <div className="text-end">

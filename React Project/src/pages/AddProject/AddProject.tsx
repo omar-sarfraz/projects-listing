@@ -74,19 +74,23 @@ export default function AddProject() {
                 id="add_form"
             >
                 <TextField
+                    required={true}
                     setCurrentValue={setName}
                     type="text"
                     label="Name"
                     placeholder="e.g., Ecommerce Website"
                 />
                 <TextField
+                    required={true}
                     label="Budget"
                     type="number"
                     placeholder="e.g., 500"
                     setCurrentValue={setBudget}
                 />
                 <TextField
+                    required={true}
                     setCurrentValue={setDeadline}
+                    placeholder="Date"
                     label="Deadline"
                     type="date"
                     min={new Date().toISOString().split("T")[0]}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import AuthTextField from "../../components/AuthTextField";
+import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { useToast } from "../../contexts/ToastContext";
 import axiosInstance from "../../lib/axios";
@@ -73,50 +73,55 @@ export default function SignUp() {
                     <p>SignUp to access thousands of projects</p>
                 </div>
                 <div className="my-10">
-                    <AuthTextField
-                        currentValue={firstName}
+                    <TextField
+                        required={true}
                         setCurrentValue={setFirstName}
                         type="text"
                         placeholder="John"
                         error={error}
                         label="First Name"
                         errorType="firstName"
+                        vertical={true}
                     />
-                    <AuthTextField
-                        currentValue={lastName}
+                    <TextField
+                        required={true}
                         setCurrentValue={setLastName}
                         type="text"
                         placeholder="Doe"
                         error={error}
                         label="Last Name"
                         errorType="lastName"
+                        vertical={true}
                     />
-                    <AuthTextField
-                        currentValue={email}
+                    <TextField
+                        required={true}
                         setCurrentValue={setEmail}
                         type="email"
                         placeholder="johndoe@gmail.com"
                         error={error}
                         label="Email"
                         errorType="email"
+                        vertical={true}
                     />
-                    <AuthTextField
-                        currentValue={password}
+                    <TextField
+                        required={true}
                         setCurrentValue={setPassword}
                         type="password"
                         placeholder="Password"
                         error={error}
                         label="Password"
                         errorType="password"
+                        vertical={true}
                     />
-                    <AuthTextField
-                        currentValue={confirmPassword}
+                    <TextField
+                        required={true}
                         setCurrentValue={setConfirmPassword}
                         type="password"
                         placeholder="Confirm Password"
                         error={error}
                         label="Confirm Password"
                         errorType="confirmPassword"
+                        vertical={true}
                     />
                     <div className="flex flex-col gap-1 mt-3">
                         <label className="text-xl">Sign Up As</label>

@@ -67,12 +67,15 @@ export default function AddBid() {
             <h1 className="text-3xl mb-6">Bid on a project</h1>
             <form className="flex flex-col gap-4 items-end bg-gray-100 px-6 py-10 rounded-md">
                 <TextField
+                    required={true}
                     label="Budget"
                     type="number"
                     placeholder="e.g., 500"
                     setCurrentValue={setBudget}
                 />
                 <TextField
+                    required={true}
+                    placeholder="Date"
                     setCurrentValue={setDeadline}
                     label="Deadline"
                     type="date"
