@@ -24,6 +24,9 @@ export const Project = sequelize.define("project", {
         type: DataTypes.TEXT,
         allowNull: false,
     },
+    files: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+    },
 });
 
 // Project can have many bids

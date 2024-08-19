@@ -17,6 +17,7 @@ export type ProjectType = {
     description: string;
     userId: number;
     bids?: BidType[];
+    files?: string[];
 };
 
 export type BidType = {
