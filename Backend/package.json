@@ -3,10 +3,11 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "build": "npx tsc",
+        "build": "npx tsc && npm run sentry:sourcemaps",
         "start": "node dist/index.js",
         "dev": "nodemon -r dotenv/config index.ts dotenv_config_path=.env.local",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "sentry:sourcemaps": "sentry-cli sourcemaps inject --org arbisoft-m1 --project project-listings-backend ./dist && sentry-cli sourcemaps upload --org arbisoft-m1 --project project-listings-backend ./dist"
     },
     "keywords": [],
     "author": "",
