@@ -8,11 +8,12 @@ import { USER_ROLES } from "../../lib/utils";
 import axiosInstance from "../../lib/axios";
 import { bidSchema } from "./validationSchema";
 import TextField from "../../components/TextField";
+import TextEditor from "../../components/TextEditor";
 
 export default function AddBid() {
     const [budget, setBudget] = useState<string>();
     const [deadline, setDeadline] = useState<string>();
-    const [description, setDescription] = useState<string>();
+    const [description, setDescription] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
     const params = useParams();
@@ -83,13 +84,13 @@ export default function AddBid() {
                 />
                 <div className="flex flex-col w-full items-start md:flex-row">
                     <label className="w-full md:w-1/3 text-xl">Description</label>
-                    <textarea
-                        className="w-full md:w-2/3 border border-gray-300 rounded-md p-2 outline-none placeholder:text-gray-500 text-gray-500"
-                        name="Description"
-                        placeholder="e.g., I have experience in this kind of project..."
-                        required
-                        onChange={(e) => setDescription(e.target.value)}
-                    ></textarea>
+                    <div className="w-full md:w-2/3">
+                        <TextEditor
+                            value={description}
+                            setValue={setDescription}
+                            placeholder="e.g., I have experience in this kind of project..."
+                        />
+                    </div>
                 </div>
                 <button
                     type="submit"

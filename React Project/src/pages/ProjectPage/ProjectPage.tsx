@@ -50,7 +50,7 @@ export default function ProjectPage() {
             <div className="mt-4">
                 <Description description={project.description} customClasses="text-xl" />
             </div>
-            {project.files?.length && (
+            {project.files?.length ? (
                 <>
                     <h2 className="text-xl italic underline underline-offset-8 mt-8">
                         Project Files{" "}
@@ -69,7 +69,7 @@ export default function ProjectPage() {
                         ))}
                     </div>
                 </>
-            )}
+            ) : null}
             {project.bids?.length ? (
                 <BidsList
                     bids={project.bids}

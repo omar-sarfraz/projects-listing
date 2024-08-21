@@ -1,13 +1,16 @@
 import { FormEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "../../contexts/ToastContext";
-import { projectSchema } from "./validationSchema";
-
 import { AxiosResponse } from "axios";
-import axiosInstance from "../../lib/axios";
+
+import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
+
+import axiosInstance from "../../lib/axios";
 import { USER_ROLES } from "../../lib/utils";
+
 import TextField from "../../components/TextField";
+import { projectSchema } from "./validationSchema";
+import TextEditor from "../../components/TextEditor";
 
 export default function AddProject() {
     const [name, setName] = useState("");
@@ -113,14 +116,13 @@ export default function AddProject() {
                     <label className="w-full md:w-1/3 text-xl" htmlFor="project_description">
                         Project Description
                     </label>
-                    <textarea
-                        className="w-full md:w-2/3 border border-gray-300 rounded-md p-2 outline-none placeholder:text-gray-500 text-gray-500"
-                        id="project_description"
-                        name="Description"
-                        placeholder="e.g., I want you to create an Clothing Ecommerce Store using React"
-                        required
-                        onChange={(e) => setDescription(e.target.value)}
-                    ></textarea>
+                    <div className="w-full md:w-2/3">
+                        <TextEditor
+                            value={description}
+                            setValue={setDescription}
+                            placeholder="e.g., I want you to create an Clothing Ecommerce Store using React"
+                        />
+                    </div>
                 </div>
                 <div className="flex flex-col w-full items-start md:flex-row">
                     <label className="w-full md:w-1/3 text-xl" htmlFor="projectFiles">

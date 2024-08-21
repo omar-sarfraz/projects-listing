@@ -5,6 +5,7 @@ import { BidType } from "../../lib/types";
 import bidSchema from "./validationSchema";
 import { Bid } from "../../models/Bid";
 import { createJoiError } from "../../lib/utils";
+import { NodeHtmlMarkdown } from "node-html-markdown";
 
 export const addBid = async (req: Request, res: Response) => {
     const bid: BidType = req.body;
@@ -25,6 +26,9 @@ export const addBid = async (req: Request, res: Response) => {
             return res
                 .status(400)
                 .json({ message: "You have already applied to this project", error: true });
+
+        const nhm = new NodeHtmlMarkdown();
+        validatedBid.description = nhm.translate(validatedBid.description);
 
         const createdBid = await Bid.create({ ...validatedBid, projectId });
         return res.status(200).json({ data: createdBid, error: false });

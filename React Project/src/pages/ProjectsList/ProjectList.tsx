@@ -7,6 +7,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
 import SearchIcon from "../../assets/search-icon.svg";
+import Markdown from "react-markdown";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -106,9 +107,12 @@ export default function ProjectsList() {
                                     </h3>
                                     <div className="my-4">
                                         <div className="font-bold">Description:</div>
-                                        {project.description.length > 200
-                                            ? project.description.slice(0, 200) + "..."
-                                            : project.description}
+                                        <Markdown>
+                                            {project.description.slice(
+                                                0,
+                                                project.description.indexOf("\n")
+                                            )}
+                                        </Markdown>
                                     </div>
                                 </div>
                                 <div>
