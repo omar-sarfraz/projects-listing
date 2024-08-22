@@ -79,9 +79,18 @@ export default function useProject() {
             navigate("/projects/" + project?.id);
         } catch (e: any) {
             console.log("Delete bid response", e);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         }
     };
 
-    return { project, loading, canBid, handleAcceptBid, handleDeleteBid };
+    const handleDeleteProject = async () => {
+        try {
+            const response: AxiosResponse = await axiosInstance.delete(`/projects/${project?.id}`);
+            toast(response.data.message, "success");
+            navigate("/");
+        } catch (e: any) {
+            console.log("Delete project response", e);
+        }
+    };
+
+    return { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject };
 }

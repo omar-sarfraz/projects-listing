@@ -10,7 +10,8 @@ import { BASE_URL } from "../../configs/urls";
 import { Icon } from "@iconify/react";
 
 export default function ProjectPage() {
-    const { project, loading, canBid, handleAcceptBid, handleDeleteBid } = useProject();
+    const { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject } =
+        useProject();
 
     const params = useParams();
     const { user } = useAuth();
@@ -44,16 +45,26 @@ export default function ProjectPage() {
                     </Link>
                 )}
                 {project.userId === user?.id ? (
-                    <Link
-                        to={`/projects/submit`}
-                        state={project}
-                        className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
-                    >
-                        <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
-                            Edit
-                        </div>
-                        <img src={NextIcon} className="w-6" />
-                    </Link>
+                    <div className="flex gap-2">
+                        <Link
+                            to={`/projects/submit`}
+                            state={project}
+                            className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
+                        >
+                            <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
+                                Edit
+                            </div>
+                            <img src={NextIcon} className="w-6" />
+                        </Link>
+                        <button
+                            className="flex items-center bg-red-500 rounded-xl py-2 px-4"
+                            onClick={handleDeleteProject}
+                        >
+                            <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
+                                Delete
+                            </div>
+                        </button>
+                    </div>
                 ) : null}
             </div>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>

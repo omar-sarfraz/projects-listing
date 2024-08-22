@@ -83,12 +83,14 @@ export default function SubmitProject() {
             }
 
             const url = state ? `/projects/${state.id}` : "/projects";
-
-            await axiosInstance.post(url, formData, {
+            const requestOptions = {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
-            });
+            };
+
+            if (state) await axiosInstance.put(url, formData, requestOptions);
+            else await axiosInstance.post(url, formData, requestOptions);
 
             toast("Project Submitted Successfully!", "success");
             navigate("/");
