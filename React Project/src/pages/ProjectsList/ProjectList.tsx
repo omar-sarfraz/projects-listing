@@ -77,14 +77,6 @@ export default function ProjectsList() {
                     </Link>
                 </div>
             )}
-            <button
-                type="button"
-                onClick={() => {
-                    throw new Error("Sentry Test Error");
-                }}
-            >
-                Break the world
-            </button>
             <form
                 id="search_form"
                 className="flex items-center border-2 border-gray-300 rounded-full my-4 px-4"

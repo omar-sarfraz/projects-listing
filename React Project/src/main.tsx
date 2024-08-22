@@ -6,7 +6,7 @@ import "./index.css";
 import * as Sentry from "@sentry/react";
 
 Sentry.init({
-    dsn: "https://d668be27c24de3fbe2604aec955860ce@o4507815562903552.ingest.us.sentry.io/4507815565459456",
+    dsn: "https://135345e76b18109357d1bb6d8b7ee3a9@o4507815562903552.ingest.us.sentry.io/4507815594754048",
     integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
     // Tracing
     tracesSampleRate: 1.0, //  Capture 100% of the transactions
