@@ -25,9 +25,7 @@ export default function useProject() {
     const fetchProject = async () => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get("/projects/" + params.id, {
-                headers: { Authorization: `Bearer ${user?.token}` },
-            });
+            const response = await axiosInstance.get("/projects/" + params.id);
             const project: Project = response.data.data;
             setProject(project);
 
@@ -51,9 +49,7 @@ export default function useProject() {
     const handleAcceptBid = async (id: number) => {
         try {
             const response: AxiosResponse = await axiosInstance.post(
-                `/projects/${project?.id}/bids/${id}/accept`,
-                null,
-                { headers: { Authorization: "Bearer " + user?.token } }
+                `/projects/${project?.id}/bids/${id}/accept`
             );
 
             const updatedProject: Project = response.data.data;
@@ -71,8 +67,7 @@ export default function useProject() {
     const handleDeleteBid = async (id: number) => {
         try {
             const response: AxiosResponse = await axiosInstance.delete(
-                `/projects/${project?.id}/bids/${id}`,
-                { headers: { Authorization: "Bearer " + user?.token } }
+                `/projects/${project?.id}/bids/${id}`
             );
             toast(response.data.message, "success");
             setProject((project) => {

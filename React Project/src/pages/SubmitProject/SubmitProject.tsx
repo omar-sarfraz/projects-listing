@@ -1,5 +1,5 @@
 import { FormEvent, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -11,7 +11,9 @@ import { projectSchema } from "./validationSchema";
 import TextEditor from "../../components/TextEditor";
 import useAxios from "../../hooks/useAxios";
 
-export default function AddProject() {
+import * as marked from "marked";
+
+export default function SubmitProject() {
     const [name, setName] = useState("");
     const [budget, setBudget] = useState("");
     const [deadline, setDeadline] = useState("");
@@ -25,6 +27,7 @@ export default function AddProject() {
     const axiosInstance = useAxios();
 
     const navigate = useNavigate();
+    const { state } = useLocation();
 
     useEffect(() => {
         if (user?.role !== USER_ROLES.client) {
@@ -32,6 +35,23 @@ export default function AddProject() {
             navigate("/");
         }
     }, []);
+
+    useEffect(() => {
+        if (state) updateProjectFilds();
+    }, []);
+
+    const updateProjectFilds = async () => {
+        setName(state.name);
+        setBudget(state.budget);
+
+        const date = new Date(state.deadline);
+        const dateStr = date.toISOString().split("T")[0];
+
+        setDeadline(dateStr);
+
+        let html = await marked.parse(state.description);
+        setDescription(html);
+    };
 
     const handleProjectSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -62,9 +82,10 @@ export default function AddProject() {
                 }
             }
 
-            await axiosInstance.post("/projects", formData, {
+            const url = state ? `/projects/${state.id}` : "/projects";
+
+            await axiosInstance.post(url, formData, {
                 headers: {
-                    Authorization: "Bearer " + user?.token,
                     "Content-Type": "multipart/form-data",
                 },
             });
@@ -80,13 +101,14 @@ export default function AddProject() {
 
     return (
         <div>
-            <h1 className="text-3xl mb-6">Add a project</h1>
+            <h1 className="text-3xl mb-6">{state ? "Edit" : "Add"} a project</h1>
             <form
                 className="flex flex-col gap-4 items-end bg-gray-100 px-6 py-10 rounded-md"
                 id="add_form"
             >
                 <TextField
                     required={true}
+                    currentValue={name}
                     setCurrentValue={setName}
                     type="text"
                     label="Name"
@@ -94,6 +116,7 @@ export default function AddProject() {
                 />
                 <TextField
                     required={true}
+                    currentValue={budget}
                     label="Budget"
                     type="number"
                     placeholder="e.g., 500"
@@ -101,6 +124,7 @@ export default function AddProject() {
                 />
                 <TextField
                     required={true}
+                    currentValue={deadline}
                     setCurrentValue={setDeadline}
                     placeholder="Date"
                     label="Deadline"

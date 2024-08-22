@@ -43,6 +43,18 @@ export default function ProjectPage() {
                         <img src={NextIcon} className="w-6" />
                     </Link>
                 )}
+                {project.userId === user?.id ? (
+                    <Link
+                        to={`/projects/submit`}
+                        state={project}
+                        className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
+                    >
+                        <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
+                            Edit
+                        </div>
+                        <img src={NextIcon} className="w-6" />
+                    </Link>
+                ) : null}
             </div>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>
             <p className="text-2xl mt-4">{project.name}</p>

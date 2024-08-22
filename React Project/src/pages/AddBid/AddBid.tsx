@@ -43,11 +43,12 @@ export default function AddBid() {
         try {
             setLoading(true);
 
-            await axiosInstance.post(
-                `projects/${params.id}/bids`,
-                { budget, deadline, description, userId: user?.id },
-                { headers: { Authorization: "Bearer " + user?.token } }
-            );
+            await axiosInstance.post(`projects/${params.id}/bids`, {
+                budget,
+                deadline,
+                description,
+                userId: user?.id,
+            });
 
             toast("Bid Submitted Successfully!", "success");
             navigate("/projects/" + params.id);

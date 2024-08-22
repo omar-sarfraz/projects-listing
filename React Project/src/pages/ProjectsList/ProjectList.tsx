@@ -24,9 +24,7 @@ export default function ProjectsList() {
 
     const fetchProjects = async () => {
         try {
-            const response: AxiosResponse = await axiosInstance.get("/projects", {
-                headers: { Authorization: "Bearer " + user?.token },
-            });
+            const response: AxiosResponse = await axiosInstance.get("/projects");
 
             const projects: Project[] = await response.data.data;
             setProjects(projects);
@@ -63,7 +61,7 @@ export default function ProjectsList() {
                 <div className="flex justify-between items-center">
                     <h1 className="text-3xl">All Project Listings</h1>
                     <Link
-                        to="/projects/add"
+                        to="/projects/submit"
                         className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md cursor-pointer"
                     >
                         Add Project
