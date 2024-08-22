@@ -1,14 +1,13 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AxiosResponse } from "axios";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
 import { USER_ROLES } from "../../lib/utils";
-import axiosInstance from "../../lib/axios";
 import { bidSchema } from "./validationSchema";
 import TextField from "../../components/TextField";
 import TextEditor from "../../components/TextEditor";
+import useAxios from "../../hooks/useAxios";
 
 export default function AddBid() {
     const [budget, setBudget] = useState<string>();
@@ -21,6 +20,7 @@ export default function AddBid() {
 
     const { user } = useAuth();
     const { toast } = useToast();
+    const axiosInstance = useAxios();
 
     useEffect(() => {
         if (user?.role !== USER_ROLES.freelancer) {
@@ -43,21 +43,16 @@ export default function AddBid() {
         try {
             setLoading(true);
 
-            let response: AxiosResponse = await axiosInstance.post(
+            await axiosInstance.post(
                 `projects/${params.id}/bids`,
                 { budget, deadline, description, userId: user?.id },
                 { headers: { Authorization: "Bearer " + user?.token } }
             );
 
-            if (response.status === 200) {
-                toast("Bid Submitted Successfully!", "success");
-                navigate("/projects/" + params.id);
-            } else {
-                toast("An error has occured. Please try again.", "error");
-            }
+            toast("Bid Submitted Successfully!", "success");
+            navigate("/projects/" + params.id);
         } catch (e: any) {
             console.log(e?.response);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         } finally {
             setLoading(false);
         }

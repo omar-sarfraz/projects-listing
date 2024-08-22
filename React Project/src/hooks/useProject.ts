@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Bid, Project } from "../lib/types";
-import axiosInstance from "../lib/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { USER_ROLES } from "../lib/utils";
 import { useToast } from "../contexts/ToastContext";
 import { AxiosResponse } from "axios";
+import useAxios from "./useAxios";
 
 export default function useProject() {
     const [project, setProject] = useState<Project>();
@@ -15,6 +15,7 @@ export default function useProject() {
     const params = useParams();
     const { user } = useAuth();
     const { toast } = useToast();
+    const axiosInstance = useAxios();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -64,7 +65,6 @@ export default function useProject() {
             toast("Bid accepted successfully", "success");
         } catch (e: any) {
             console.log("Accept Bid response", e);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         }
     };
 

@@ -1,16 +1,15 @@
 import { FormEvent, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { AxiosResponse } from "axios";
 
 import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
 
-import axiosInstance from "../../lib/axios";
 import { USER_ROLES } from "../../lib/utils";
 
 import TextField from "../../components/TextField";
 import { projectSchema } from "./validationSchema";
 import TextEditor from "../../components/TextEditor";
+import useAxios from "../../hooks/useAxios";
 
 export default function AddProject() {
     const [name, setName] = useState("");
@@ -20,9 +19,10 @@ export default function AddProject() {
     const [files, setFiles] = useState<FileList | null>(null);
 
     const [loading, setLoading] = useState(false);
-    const { toast } = useToast();
 
+    const { toast } = useToast();
     const { user } = useAuth();
+    const axiosInstance = useAxios();
 
     const navigate = useNavigate();
 
@@ -62,22 +62,17 @@ export default function AddProject() {
                 }
             }
 
-            let response: AxiosResponse = await axiosInstance.post("/projects", formData, {
+            await axiosInstance.post("/projects", formData, {
                 headers: {
                     Authorization: "Bearer " + user?.token,
                     "Content-Type": "multipart/form-data",
                 },
             });
 
-            if (response.status === 200) {
-                toast("Project Submitted Successfully!", "success");
-                navigate("/");
-            } else {
-                toast("An error has occured. Please try again.", "error");
-            }
+            toast("Project Submitted Successfully!", "success");
+            navigate("/");
         } catch (e: any) {
             console.log(e?.response);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         } finally {
             setLoading(false);
         }

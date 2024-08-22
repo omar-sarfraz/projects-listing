@@ -5,16 +5,18 @@ import Button from "../../components/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
 import { AxiosResponse } from "axios";
-import axiosInstance from "../../lib/axios";
 import { LoginError } from "../../lib/types";
 import { loginSchema } from "./validationSchema";
+import useAxios from "../../hooks/useAxios";
 
 export default function Login() {
     const [email, setEmail] = useState("test@gmail.com");
     const [password, setPassword] = useState("12345678");
     const [error, setError] = useState<LoginError>({ type: undefined, message: "" });
+
     const { setUser } = useAuth();
     const { toast } = useToast();
+    const axiosInstance = useAxios();
 
     const navigate = useNavigate();
 
@@ -32,18 +34,13 @@ export default function Login() {
         try {
             let response: AxiosResponse = await axiosInstance.post("/login", { email, password });
 
-            if (response.status === 200) {
-                const user = { ...response.data.user, token: response.data.token };
-                setUser(user);
-                toast("Logged in successfully", "success");
-                localStorage.setItem("user", JSON.stringify(user));
-                navigate("/", { replace: true });
-            } else {
-                toast(response.data?.message || "An error has occurred", "error");
-            }
+            const user = { ...response.data.user, token: response.data.token };
+            setUser(user);
+            toast("Logged in successfully", "success");
+            localStorage.setItem("user", JSON.stringify(user));
+            navigate("/", { replace: true });
         } catch (e: any) {
             console.log("Login Error", e?.response);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         }
     };
 

@@ -1,13 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useToast } from "../../contexts/ToastContext";
 import { AxiosResponse } from "axios";
-import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
 import SearchIcon from "../../assets/search-icon.svg";
 import Markdown from "react-markdown";
+import useAxios from "../../hooks/useAxios";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -17,8 +16,7 @@ export default function ProjectsList() {
     const [searchTerm, setSearchTerm] = useState("");
 
     const { user } = useAuth();
-
-    const { toast } = useToast();
+    const axiosInstance = useAxios();
 
     useEffect(() => {
         fetchProjects();
@@ -30,16 +28,11 @@ export default function ProjectsList() {
                 headers: { Authorization: "Bearer " + user?.token },
             });
 
-            if (response.status === 200) {
-                const projects: Project[] = await response.data.data;
-                setProjects(projects);
-                setSearchedProjects(projects);
-            } else {
-                toast(response.data?.message || "An error has occurred", "error");
-            }
+            const projects: Project[] = await response.data.data;
+            setProjects(projects);
+            setSearchedProjects(projects);
         } catch (e) {
-            console.log(e);
-            toast("Failed to load projects", "error");
+            console.log("Error while fetching projects", e);
         } finally {
             setLoading(false);
         }

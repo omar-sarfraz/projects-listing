@@ -4,11 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
 import { useToast } from "../../contexts/ToastContext";
-import axiosInstance from "../../lib/axios";
-import { AxiosResponse } from "axios";
 import { SignUpError, User } from "../../lib/types";
 import { signUpSchema } from "./validationSchema";
 import { USER_ROLES } from "../../lib/utils";
+import useAxios from "../../hooks/useAxios";
 
 export default function SignUp() {
     const [firstName, setFirstName] = useState("");
@@ -20,6 +19,7 @@ export default function SignUp() {
     const [error, setError] = useState<SignUpError>({ type: undefined, message: "" });
 
     const { toast } = useToast();
+    const axiosInstance = useAxios();
 
     const navigate = useNavigate();
 
@@ -53,15 +53,11 @@ export default function SignUp() {
                 role,
             };
 
-            let response: AxiosResponse = await axiosInstance.post("/signup", userData);
-            if (response.status === 200) {
-                toast("Account registered successfully", "success");
-                navigate("/login");
-            } else {
-                toast(response.data?.message || "An error has occurred", "error");
-            }
+            await axiosInstance.post("/signup", userData);
+            toast("Account registered successfully", "success");
+            navigate("/login");
         } catch (e: any) {
-            toast(e?.response?.data?.message || "An error has occurred", "error");
+            console.log("Sign up error", e?.response);
         }
     };
 
