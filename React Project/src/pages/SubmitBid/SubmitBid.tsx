@@ -1,5 +1,5 @@
 import { useEffect, useState, FormEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
@@ -8,6 +8,7 @@ import { bidSchema } from "./validationSchema";
 import TextField from "../../components/TextField";
 import TextEditor from "../../components/TextEditor";
 import useAxios from "../../hooks/useAxios";
+import { marked } from "marked";
 
 export default function AddBid() {
     const [budget, setBudget] = useState<string>();
@@ -20,6 +21,7 @@ export default function AddBid() {
 
     const { user } = useAuth();
     const { toast } = useToast();
+    const { state } = useLocation();
     const axiosInstance = useAxios();
 
     useEffect(() => {
@@ -28,6 +30,22 @@ export default function AddBid() {
             navigate("/");
         }
     }, []);
+
+    useEffect(() => {
+        if (state) updateBidFilds();
+    }, []);
+
+    const updateBidFilds = async () => {
+        setBudget(state.budget);
+
+        const date = new Date(state.deadline);
+        const dateStr = date.toISOString().split("T")[0];
+
+        setDeadline(dateStr);
+
+        let html = await marked.parse(state.description);
+        setDescription(html);
+    };
 
     const handleProjectSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -43,12 +61,18 @@ export default function AddBid() {
         try {
             setLoading(true);
 
-            await axiosInstance.post(`projects/${params.id}/bids`, {
+            let url = `projects/${params.id}/bids`;
+            if (state) url += `/${state.id}`;
+
+            const requestData = {
                 budget,
                 deadline,
                 description,
                 userId: user?.id,
-            });
+            };
+
+            if (state) await axiosInstance.put(url, requestData);
+            else await axiosInstance.post(url, requestData);
 
             toast("Bid Submitted Successfully!", "success");
             navigate("/projects/" + params.id);
@@ -68,11 +92,13 @@ export default function AddBid() {
                     label="Budget"
                     type="number"
                     placeholder="e.g., 500"
+                    currentValue={budget}
                     setCurrentValue={setBudget}
                 />
                 <TextField
                     required={true}
                     placeholder="Date"
+                    currentValue={deadline}
                     setCurrentValue={setDeadline}
                     label="Deadline"
                     type="date"

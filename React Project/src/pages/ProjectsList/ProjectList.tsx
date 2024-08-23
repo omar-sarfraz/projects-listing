@@ -4,9 +4,9 @@ import { AxiosResponse } from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
-import SearchIcon from "../../assets/search-icon.svg";
 import Markdown from "react-markdown";
 import useAxios from "../../hooks/useAxios";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -80,7 +80,7 @@ export default function ProjectsList() {
                     type="text"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <img src={SearchIcon} onClick={handleSearch} className="cursor-pointer" />
+                <Icon icon="material-symbols:search" fontSize={30} onClick={handleSearch} />
             </form>
             {loading ? (
                 <div>Loading...</div>

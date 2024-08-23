@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 
-import NextIcon from "../../assets/next-icon.svg";
 import { USER_ROLES } from "../../lib/utils";
 import BidsList from "../../components/BidsList";
 import Description from "../../components/Description";
@@ -36,12 +35,10 @@ export default function ProjectPage() {
                 {canBid && (
                     <Link
                         to={`/projects/${params.id}/bid`}
-                        className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
+                        className="flex items-center bg-emerald-500 rounded-xl py-2 px-4 gap-2"
                     >
-                        <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
-                            Bid on this project
-                        </div>
-                        <img src={NextIcon} className="w-6" />
+                        <div className="text-white font-semibold text-xl">Bid on this project</div>
+                        <Icon icon="carbon:next-filled" fontSize={24} color="white" />
                     </Link>
                 )}
                 {project.userId === user?.id ? (
@@ -49,20 +46,21 @@ export default function ProjectPage() {
                         <Link
                             to={`/projects/submit`}
                             state={project}
-                            className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
+                            className="flex items-center bg-emerald-500 rounded-xl py-2 px-4 gap-2"
                         >
-                            <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
-                                Edit
-                            </div>
-                            <img src={NextIcon} className="w-6" />
+                            <div className="text-white font-semibold text-xl">Edit</div>
+                            <Icon icon="basil:edit-solid" fontSize={24} color="white" />
                         </Link>
                         <button
-                            className="flex items-center bg-red-500 rounded-xl py-2 px-4"
+                            className="flex items-center bg-red-500 rounded-xl py-2 px-4 gap-1"
                             onClick={handleDeleteProject}
                         >
-                            <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
-                                Delete
-                            </div>
+                            <div className="text-white font-semibold text-xl">Delete</div>
+                            <Icon
+                                icon="material-symbols-light:delete"
+                                fontSize={28}
+                                color="white"
+                            />
                         </button>
                     </div>
                 ) : null}
