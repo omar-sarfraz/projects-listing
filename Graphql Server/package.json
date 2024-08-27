@@ -1,0 +1,15 @@
+{
+    "name": "graphql-server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "compile": "tsc && node ./dist/index.js",
+        "dev": "nodemon -e ts  --exec \"npm run compile\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "type": "module",
+    "dependencies": {}
+}
