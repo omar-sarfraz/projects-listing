@@ -1,53 +1,60 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 
 type MessageVariant = undefined | "success" | "error";
-type Color = "black" | "green-500" | "red-500";
+type Color = "green-500" | "red-500";
+
+type Toast = {
+    color: Color;
+    type: MessageVariant;
+    toastMessage: string;
+    showToast: boolean;
+};
 
 const ToastContext = createContext<{
-    showToast: boolean;
-    toastMessage: string;
+    toastState: Toast;
     toast: (message: string, type: MessageVariant) => void;
-    color: Color;
 }>({
-    showToast: false,
-    toastMessage: "",
+    toastState: {
+        color: "green-500",
+        type: "success",
+        toastMessage: "",
+        showToast: false,
+    },
     toast: (message: string, type: MessageVariant) => {},
-    color: "black",
 });
 
 export function ToastContextProvider({ children }: { children: React.ReactNode }) {
-    const [showToast, setShowToast] = useState<boolean>(false);
-    const [toastMessage, setToastMessage] = useState<string>("");
-    const [type, setType] = useState<MessageVariant>();
-    const [color, setColor] = useState<Color>("black");
+    const [toastState, setToastState] = useState<Toast>({
+        color: "green-500",
+        type: "success",
+        toastMessage: "",
+        showToast: false,
+    });
     const toastRef = useRef<any>();
-
-    useEffect(() => {
-        let typeColor: Color = "black";
-        if (type === "success") typeColor = "green-500";
-        else if (type === "error") typeColor = "red-500";
-        setColor(typeColor);
-    }, [type]);
 
     const toast = (message: string, type: MessageVariant) => {
         if (toastRef.current) clearTimeout(toastRef.current);
 
-        setShowToast(true);
-        setToastMessage(message);
-        setType(type ?? undefined);
+        let typeColor: Color = "green-500";
+        if (type === "error") typeColor = "red-500";
+        setToastState({
+            showToast: true,
+            toastMessage: message,
+            color: typeColor,
+            type,
+        });
 
         toastRef.current = setTimeout(() => {
-            setShowToast(false);
-            setToastMessage("");
-            setType(undefined);
+            setToastState((prev) => ({
+                ...prev,
+                showToast: false,
+                toastMessage: "",
+                type: undefined,
+            }));
         }, 4000);
     };
 
-    return (
-        <ToastContext.Provider value={{ showToast, toastMessage, toast, color }}>
-            {children}
-        </ToastContext.Provider>
-    );
+    return <ToastContext.Provider value={{ toastState, toast }}>{children}</ToastContext.Provider>;
 }
 
 export function useToast() {

@@ -7,6 +7,7 @@ import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import { useAuth } from "../contexts/AuthContext";
 import ProjectPage from "../pages/ProjectPage/ProjectPage";
+import AddBid from "../pages/AddBid/AddBid";
 
 export default function MainNavigator() {
     const { user, loading } = useAuth();
@@ -21,6 +22,7 @@ export default function MainNavigator() {
                         <Route index element={<ProjectsList />} />
                         <Route path="projects/add" element={<AddProject />} />
                         <Route path="projects/:id" element={<ProjectPage />} />
+                        <Route path="projects/:id/bid" element={<AddBid />} />
                     </>
                 ) : (
                     <>

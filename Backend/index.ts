@@ -1,10 +1,13 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 
-import authRoutes from "./routes/auth";
-import projectRoutes from "./routes/projects";
+import passport from "passport";
 import "./configs/passport";
 import { sequelize } from "./lib/sequelize";
+
+import bidsRouter from "./controllers/bids";
+import authRouter from "./controllers/auth";
+import projectsRouter from "./controllers/projects";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -12,8 +15,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors());
 
-app.use("/", authRoutes);
-app.use("/projects", projectRoutes);
+app.use("/", authRouter);
+
+app.use(passport.authenticate("jwt", { session: false }));
+
+app.use("/projects", projectsRouter);
+app.use("/projects/:projectId/bids", bidsRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 

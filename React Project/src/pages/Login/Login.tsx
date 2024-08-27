@@ -7,11 +7,11 @@ import { useToast } from "../../contexts/ToastContext";
 import { AxiosResponse } from "axios";
 import axiosInstance from "../../lib/axios";
 import { LoginError } from "../../lib/types";
-import { loginSchema } from "../../validations/User";
+import { loginSchema } from "./validationSchema";
 
 export default function Login() {
-    const [email, setEmail] = useState<string>("test@gmail.com");
-    const [password, setPassword] = useState<string>("12345678");
+    const [email, setEmail] = useState("test@gmail.com");
+    const [password, setPassword] = useState("12345678");
     const [error, setError] = useState<LoginError>({ type: undefined, message: "" });
     const { setUser } = useAuth();
     const { toast } = useToast();
@@ -56,6 +56,7 @@ export default function Login() {
                 </div>
                 <div className="my-10">
                     <TextField
+                        required={true}
                         currentValue={email}
                         setCurrentValue={setEmail}
                         type="email"
@@ -63,8 +64,10 @@ export default function Login() {
                         error={error}
                         label="Email"
                         errorType="email"
+                        vertical={true}
                     />
                     <TextField
+                        required={true}
                         currentValue={password}
                         setCurrentValue={setPassword}
                         type="password"
@@ -72,6 +75,7 @@ export default function Login() {
                         error={error}
                         label="Password"
                         errorType="password"
+                        vertical={true}
                     />
                     <div className="mt-4">
                         <div className="text-end">

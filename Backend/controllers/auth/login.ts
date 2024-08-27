@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 import { UserType } from "../../lib/types";
 import { User } from "../../models/User";
-import { loginSchema } from "../../validation/User";
+import { loginSchema } from "./validationSchema";
 import { createJoiError } from "../../lib/utils";
 
 const login = async (req: Request, res: Response) => {

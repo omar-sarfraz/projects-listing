@@ -9,6 +9,7 @@ export type LoginError = {
 };
 
 export type User = {
+    id?: number;
     firstName: string;
     lastName: string;
     email: string;
@@ -17,10 +18,21 @@ export type User = {
     token?: string;
 };
 
+export type Bid = {
+    id: number;
+    budget: string;
+    deadline: string;
+    description: string;
+    user?: User;
+};
+
 export type Project = {
     id: number;
     name: string;
     budget: string;
     deadline: string;
     description: string;
+    userId?: number;
+    acceptedBid?: number;
+    bids?: Bid[];
 };

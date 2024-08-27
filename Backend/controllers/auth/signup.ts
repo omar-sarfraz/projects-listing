@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 import { UserType } from "../../lib/types";
 import { User } from "../../models/User";
-import { signUpSchema } from "../../validation/User";
+import { signUpSchema } from "./validationSchema";
 import { createJoiError } from "../../lib/utils";
 
 const signup = async (req: Request, res: Response) => {

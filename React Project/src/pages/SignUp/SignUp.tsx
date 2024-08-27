@@ -7,16 +7,16 @@ import { useToast } from "../../contexts/ToastContext";
 import axiosInstance from "../../lib/axios";
 import { AxiosResponse } from "axios";
 import { SignUpError, User } from "../../lib/types";
-import { signUpSchema } from "../../validations/User";
+import { signUpSchema } from "./validationSchema";
 import { USER_ROLES } from "../../lib/utils";
 
 export default function SignUp() {
-    const [firstName, setFirstName] = useState<string>("");
-    const [lastName, setLastName] = useState<string>("");
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
-    const [role, setRole] = useState<string>(USER_ROLES.freelancer);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [role, setRole] = useState(USER_ROLES.freelancer);
     const [error, setError] = useState<SignUpError>({ type: undefined, message: "" });
 
     const { toast } = useToast();
@@ -74,49 +74,54 @@ export default function SignUp() {
                 </div>
                 <div className="my-10">
                     <TextField
-                        currentValue={firstName}
+                        required={true}
                         setCurrentValue={setFirstName}
                         type="text"
                         placeholder="John"
                         error={error}
                         label="First Name"
                         errorType="firstName"
+                        vertical={true}
                     />
                     <TextField
-                        currentValue={lastName}
+                        required={true}
                         setCurrentValue={setLastName}
                         type="text"
                         placeholder="Doe"
                         error={error}
                         label="Last Name"
                         errorType="lastName"
+                        vertical={true}
                     />
                     <TextField
-                        currentValue={email}
+                        required={true}
                         setCurrentValue={setEmail}
                         type="email"
                         placeholder="johndoe@gmail.com"
                         error={error}
                         label="Email"
                         errorType="email"
+                        vertical={true}
                     />
                     <TextField
-                        currentValue={password}
+                        required={true}
                         setCurrentValue={setPassword}
                         type="password"
                         placeholder="Password"
                         error={error}
                         label="Password"
                         errorType="password"
+                        vertical={true}
                     />
                     <TextField
-                        currentValue={confirmPassword}
+                        required={true}
                         setCurrentValue={setConfirmPassword}
                         type="password"
                         placeholder="Confirm Password"
                         error={error}
                         label="Confirm Password"
                         errorType="confirmPassword"
+                        vertical={true}
                     />
                     <div className="flex flex-col gap-1 mt-3">
                         <label className="text-xl">Sign Up As</label>

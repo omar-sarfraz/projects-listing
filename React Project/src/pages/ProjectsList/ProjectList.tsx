@@ -1,4 +1,3 @@
-import { BASE_URL } from "../../configs/urls";
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "../../contexts/ToastContext";
@@ -7,13 +6,14 @@ import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
+import SearchIcon from "../../assets/search-icon.svg";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
 
     const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
-    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [searchTerm, setSearchTerm] = useState("");
 
     const { user } = useAuth();
 
@@ -25,7 +25,7 @@ export default function ProjectsList() {
 
     const fetchProjects = async () => {
         try {
-            const response: AxiosResponse = await axiosInstance.get(BASE_URL + "/projects", {
+            const response: AxiosResponse = await axiosInstance.get("/projects", {
                 headers: { Authorization: "Bearer " + user?.token },
             });
 
@@ -88,12 +88,13 @@ export default function ProjectsList() {
                     type="text"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                <img src={SearchIcon} onClick={handleSearch} className="cursor-pointer" />
             </form>
             {loading ? (
                 <div>Loading...</div>
             ) : (
                 <ul id="list" className="flex flex-wrap justify-start gap-2">
-                    {searchedProjects?.length &&
+                    {searchedProjects?.length ? (
                         searchedProjects.map((project, index) => (
                             <li
                                 className="relative bg-gray-100 flex flex-col grow justify-between rounded-md p-4 sm:w-full lg:w-1/4 group"
@@ -105,7 +106,9 @@ export default function ProjectsList() {
                                     </h3>
                                     <div className="my-4">
                                         <div className="font-bold">Description:</div>
-                                        {project.description}
+                                        {project.description.length > 200
+                                            ? project.description.slice(0, 200) + "..."
+                                            : project.description}
                                     </div>
                                 </div>
                                 <div>
@@ -127,11 +130,14 @@ export default function ProjectsList() {
                                         to={`/projects/${project.id}`}
                                         className="absolute left-0 w-full cursor-pointer bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-md text-center py-2 mt-4 opacity-0 group-hover:-translate-y-full group-hover:opacity-100 transition duration-500 ease-in-out"
                                     >
-                                        Apply Now
+                                        View More
                                     </Link>
                                 </div>
                             </li>
-                        ))}
+                        ))
+                    ) : (
+                        <div>No projects</div>
+                    )}
                 </ul>
             )}
         </div>

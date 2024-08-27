@@ -1,10 +1,5 @@
 import { object, string, ref, mixed } from "yup";
-import { USER_ROLES } from "../lib/utils";
-
-export const loginSchema = object().shape({
-    email: string().email().required("Email is required."),
-    password: string().required("Please enter your password."),
-});
+import { USER_ROLES } from "../../lib/utils";
 
 export const signUpSchema = object().shape({
     firstName: string().required("First Name is required."),

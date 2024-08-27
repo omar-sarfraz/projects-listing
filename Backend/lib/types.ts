@@ -15,6 +15,17 @@ export type ProjectType = {
     budget: number;
     deadline: string;
     description: string;
+    userId: number;
+    bids?: BidType[];
+};
+
+export type BidType = {
+    id?: number;
+    budget: number;
+    deadline: string;
+    description: string;
+    userId: number;
+    projectId: number;
 };
 
 export interface CustomRequest extends Request {
