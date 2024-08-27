@@ -11,6 +11,8 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { PubSub } from "graphql-subscriptions";
 
+import utils from "./lib/utils.js";
+
 const PORT = 4000;
 const pubsub = new PubSub();
 
@@ -46,11 +48,21 @@ const serverCleanup = useServer(
     {
         schema,
         onConnect: async (ctx) => {
-            console.log(ctx.connectionParams);
+            try {
+                const authHeader: string | undefined = ctx.connectionParams?.Authorization as
+                    | string
+                    | undefined;
 
-            // if (tokenIsNotValid(ctx.connectionParams)) {
-            //     throw new Error("Auth token missing!");
-            // }
+                if (!authHeader) throw new Error("Auth token is required!");
+                const token: string = authHeader.split(" ")[1];
+                if (!token) throw new Error("Missing Token!");
+
+                const data = await utils.verifyUser(token);
+                console.log(data);
+            } catch (error: any) {
+                console.error("Connection error:", error.message);
+                return false;
+            }
         },
         onDisconnect(ctx, code, reason) {
             console.log("Disconnected!");
