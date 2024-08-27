@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 
-import NextIcon from "../../assets/next-icon.svg";
 import { USER_ROLES } from "../../lib/utils";
 import BidsList from "../../components/BidsList";
 import Description from "../../components/Description";
@@ -10,7 +9,8 @@ import { BASE_URL } from "../../configs/urls";
 import { Icon } from "@iconify/react";
 
 export default function ProjectPage() {
-    const { project, loading, canBid, handleAcceptBid, handleDeleteBid } = useProject();
+    const { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject } =
+        useProject();
 
     const params = useParams();
     const { user } = useAuth();
@@ -35,14 +35,35 @@ export default function ProjectPage() {
                 {canBid && (
                     <Link
                         to={`/projects/${params.id}/bid`}
-                        className="flex items-center bg-emerald-500 rounded-xl py-2 px-4"
+                        className="flex items-center bg-emerald-500 rounded-xl py-2 px-4 gap-2"
                     >
-                        <div className="text-white font-semibold text-xl py-2 px-4 rounded-full">
-                            Bid on this project
-                        </div>
-                        <img src={NextIcon} className="w-6" />
+                        <div className="text-white font-semibold text-xl">Bid on this project</div>
+                        <Icon icon="carbon:next-filled" fontSize={24} color="white" />
                     </Link>
                 )}
+                {project.userId === user?.id ? (
+                    <div className="flex gap-2">
+                        <Link
+                            to={`/projects/submit`}
+                            state={project}
+                            className="flex items-center bg-emerald-500 rounded-xl py-2 px-4 gap-2"
+                        >
+                            <div className="text-white font-semibold text-xl">Edit</div>
+                            <Icon icon="basil:edit-solid" fontSize={24} color="white" />
+                        </Link>
+                        <button
+                            className="flex items-center bg-red-500 rounded-xl py-2 px-4 gap-1"
+                            onClick={handleDeleteProject}
+                        >
+                            <div className="text-white font-semibold text-xl">Delete</div>
+                            <Icon
+                                icon="material-symbols-light:delete"
+                                fontSize={28}
+                                color="white"
+                            />
+                        </button>
+                    </div>
+                ) : null}
             </div>
             <h2 className="text-xl italic underline underline-offset-8 mt-8">Project Name</h2>
             <p className="text-2xl mt-4">{project.name}</p>
@@ -50,7 +71,7 @@ export default function ProjectPage() {
             <div className="mt-4">
                 <Description description={project.description} customClasses="text-xl" />
             </div>
-            {project.files?.length && (
+            {project.files?.length ? (
                 <>
                     <h2 className="text-xl italic underline underline-offset-8 mt-8">
                         Project Files{" "}
@@ -69,7 +90,7 @@ export default function ProjectPage() {
                         ))}
                     </div>
                 </>
-            )}
+            ) : null}
             {project.bids?.length ? (
                 <BidsList
                     bids={project.bids}

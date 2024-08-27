@@ -1,15 +1,19 @@
 import { FormEvent, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { useToast } from "../../contexts/ToastContext";
-import { projectSchema } from "./validationSchema";
-
-import { AxiosResponse } from "axios";
-import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
-import { USER_ROLES } from "../../lib/utils";
-import TextField from "../../components/TextField";
 
-export default function AddProject() {
+import { USER_ROLES } from "../../lib/utils";
+
+import TextField from "../../components/TextField";
+import { projectSchema } from "./validationSchema";
+import TextEditor from "../../components/TextEditor";
+import useAxios from "../../hooks/useAxios";
+
+import * as marked from "marked";
+
+export default function SubmitProject() {
     const [name, setName] = useState("");
     const [budget, setBudget] = useState("");
     const [deadline, setDeadline] = useState("");
@@ -17,11 +21,13 @@ export default function AddProject() {
     const [files, setFiles] = useState<FileList | null>(null);
 
     const [loading, setLoading] = useState(false);
-    const { toast } = useToast();
 
+    const { toast } = useToast();
     const { user } = useAuth();
+    const axiosInstance = useAxios();
 
     const navigate = useNavigate();
+    const { state } = useLocation();
 
     useEffect(() => {
         if (user?.role !== USER_ROLES.client) {
@@ -29,6 +35,23 @@ export default function AddProject() {
             navigate("/");
         }
     }, []);
+
+    useEffect(() => {
+        if (state) updateProjectFilds();
+    }, []);
+
+    const updateProjectFilds = async () => {
+        setName(state.name);
+        setBudget(state.budget);
+
+        const date = new Date(state.deadline);
+        const dateStr = date.toISOString().split("T")[0];
+
+        setDeadline(dateStr);
+
+        let html = await marked.parse(state.description);
+        setDescription(html);
+    };
 
     const handleProjectSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -59,22 +82,20 @@ export default function AddProject() {
                 }
             }
 
-            let response: AxiosResponse = await axiosInstance.post("/projects", formData, {
+            const url = state ? `/projects/${state.id}` : "/projects";
+            const requestOptions = {
                 headers: {
-                    Authorization: "Bearer " + user?.token,
                     "Content-Type": "multipart/form-data",
                 },
-            });
+            };
 
-            if (response.status === 200) {
-                toast("Project Submitted Successfully!", "success");
-                navigate("/");
-            } else {
-                toast("An error has occured. Please try again.", "error");
-            }
+            if (state) await axiosInstance.put(url, formData, requestOptions);
+            else await axiosInstance.post(url, formData, requestOptions);
+
+            toast("Project Submitted Successfully!", "success");
+            navigate("/");
         } catch (e: any) {
             console.log(e?.response);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         } finally {
             setLoading(false);
         }
@@ -82,13 +103,14 @@ export default function AddProject() {
 
     return (
         <div>
-            <h1 className="text-3xl mb-6">Add a project</h1>
+            <h1 className="text-3xl mb-6">{state ? "Edit" : "Add"} a project</h1>
             <form
                 className="flex flex-col gap-4 items-end bg-gray-100 px-6 py-10 rounded-md"
                 id="add_form"
             >
                 <TextField
                     required={true}
+                    currentValue={name}
                     setCurrentValue={setName}
                     type="text"
                     label="Name"
@@ -96,6 +118,7 @@ export default function AddProject() {
                 />
                 <TextField
                     required={true}
+                    currentValue={budget}
                     label="Budget"
                     type="number"
                     placeholder="e.g., 500"
@@ -103,6 +126,7 @@ export default function AddProject() {
                 />
                 <TextField
                     required={true}
+                    currentValue={deadline}
                     setCurrentValue={setDeadline}
                     placeholder="Date"
                     label="Deadline"
@@ -113,14 +137,13 @@ export default function AddProject() {
                     <label className="w-full md:w-1/3 text-xl" htmlFor="project_description">
                         Project Description
                     </label>
-                    <textarea
-                        className="w-full md:w-2/3 border border-gray-300 rounded-md p-2 outline-none placeholder:text-gray-500 text-gray-500"
-                        id="project_description"
-                        name="Description"
-                        placeholder="e.g., I want you to create an Clothing Ecommerce Store using React"
-                        required
-                        onChange={(e) => setDescription(e.target.value)}
-                    ></textarea>
+                    <div className="w-full md:w-2/3">
+                        <TextEditor
+                            value={description}
+                            setValue={setDescription}
+                            placeholder="e.g., I want you to create an Clothing Ecommerce Store using React"
+                        />
+                    </div>
                 </div>
                 <div className="flex flex-col w-full items-start md:flex-row">
                     <label className="w-full md:w-1/3 text-xl" htmlFor="projectFiles">

@@ -1,5 +1,8 @@
+import "./configs/instrument";
+
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
+import * as Sentry from "@sentry/node";
 
 import passport from "passport";
 import "./configs/passport";
@@ -24,6 +27,8 @@ app.use("/projects", projectsRouter);
 app.use("/projects/:projectId/bids", bidsRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
+
+Sentry.setupExpressErrorHandler(app);
 
 app.listen(PORT, async () => {
     console.log(`Server started on http://localhost:${PORT}`);

@@ -20,7 +20,7 @@ const ToastContext = createContext<{
         toastMessage: "",
         showToast: false,
     },
-    toast: (message: string, type: MessageVariant) => {},
+    toast: () => {},
 });
 
 export function ToastContextProvider({ children }: { children: React.ReactNode }) {

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import Markdown from "react-markdown";
 
-const MAX_CHAR_LENGTH = 300;
+const MAX_CHAR_LENGTH = 100;
 
 export default function Description({
     description,
@@ -17,10 +18,15 @@ export default function Description({
     return (
         <>
             <div className={customClasses ?? ""}>
-                {shouldShowMore && !open
-                    ? description.slice(0, MAX_CHAR_LENGTH) + "..."
-                    : description}
+                {shouldShowMore && !open ? (
+                    <Markdown className="reactMarkDown">
+                        {description.slice(0, description.indexOf("\n")) + " ..."}
+                    </Markdown>
+                ) : (
+                    <Markdown className="reactMarkDown">{description}</Markdown>
+                )}
             </div>
+
             {shouldShowMore && (
                 <div className="w-full my-2 flex gap-1 justify-center items-center">
                     <button className="text-lg font-medium" onClick={() => setOpen(!open)}>

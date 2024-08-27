@@ -1,18 +1,19 @@
 import { useEffect, useState, FormEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { AxiosResponse } from "axios";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
 import { USER_ROLES } from "../../lib/utils";
-import axiosInstance from "../../lib/axios";
 import { bidSchema } from "./validationSchema";
 import TextField from "../../components/TextField";
+import TextEditor from "../../components/TextEditor";
+import useAxios from "../../hooks/useAxios";
+import { marked } from "marked";
 
 export default function AddBid() {
     const [budget, setBudget] = useState<string>();
     const [deadline, setDeadline] = useState<string>();
-    const [description, setDescription] = useState<string>();
+    const [description, setDescription] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
     const params = useParams();
@@ -20,6 +21,8 @@ export default function AddBid() {
 
     const { user } = useAuth();
     const { toast } = useToast();
+    const { state } = useLocation();
+    const axiosInstance = useAxios();
 
     useEffect(() => {
         if (user?.role !== USER_ROLES.freelancer) {
@@ -27,6 +30,22 @@ export default function AddBid() {
             navigate("/");
         }
     }, []);
+
+    useEffect(() => {
+        if (state) updateBidFilds();
+    }, []);
+
+    const updateBidFilds = async () => {
+        setBudget(state.budget);
+
+        const date = new Date(state.deadline);
+        const dateStr = date.toISOString().split("T")[0];
+
+        setDeadline(dateStr);
+
+        let html = await marked.parse(state.description);
+        setDescription(html);
+    };
 
     const handleProjectSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -42,21 +61,23 @@ export default function AddBid() {
         try {
             setLoading(true);
 
-            let response: AxiosResponse = await axiosInstance.post(
-                `projects/${params.id}/bids`,
-                { budget, deadline, description, userId: user?.id },
-                { headers: { Authorization: "Bearer " + user?.token } }
-            );
+            let url = `projects/${params.id}/bids`;
+            if (state) url += `/${state.id}`;
 
-            if (response.status === 200) {
-                toast("Bid Submitted Successfully!", "success");
-                navigate("/projects/" + params.id);
-            } else {
-                toast("An error has occured. Please try again.", "error");
-            }
+            const requestData = {
+                budget,
+                deadline,
+                description,
+                userId: user?.id,
+            };
+
+            if (state) await axiosInstance.put(url, requestData);
+            else await axiosInstance.post(url, requestData);
+
+            toast("Bid Submitted Successfully!", "success");
+            navigate("/projects/" + params.id);
         } catch (e: any) {
             console.log(e?.response);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         } finally {
             setLoading(false);
         }
@@ -71,11 +92,13 @@ export default function AddBid() {
                     label="Budget"
                     type="number"
                     placeholder="e.g., 500"
+                    currentValue={budget}
                     setCurrentValue={setBudget}
                 />
                 <TextField
                     required={true}
                     placeholder="Date"
+                    currentValue={deadline}
                     setCurrentValue={setDeadline}
                     label="Deadline"
                     type="date"
@@ -83,13 +106,13 @@ export default function AddBid() {
                 />
                 <div className="flex flex-col w-full items-start md:flex-row">
                     <label className="w-full md:w-1/3 text-xl">Description</label>
-                    <textarea
-                        className="w-full md:w-2/3 border border-gray-300 rounded-md p-2 outline-none placeholder:text-gray-500 text-gray-500"
-                        name="Description"
-                        placeholder="e.g., I have experience in this kind of project..."
-                        required
-                        onChange={(e) => setDescription(e.target.value)}
-                    ></textarea>
+                    <div className="w-full md:w-2/3">
+                        <TextEditor
+                            value={description}
+                            setValue={setDescription}
+                            placeholder="e.g., I have experience in this kind of project..."
+                        />
+                    </div>
                 </div>
                 <button
                     type="submit"

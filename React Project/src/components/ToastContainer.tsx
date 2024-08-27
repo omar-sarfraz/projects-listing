@@ -10,6 +10,10 @@ export default function ToastContainer() {
             } rounded-md p-6 w-72 text-wrap fixed top-10 transition-all duration-500 ${
                 toastState.showToast ? "right-10" : "-right-full"
             }`}
+            style={{
+                borderColor: toastState.color === "green-500" ? "green" : "red",
+                color: toastState.color === "green-500" ? "green" : "red",
+            }}
         >
             {toastState.toastMessage}
         </div>

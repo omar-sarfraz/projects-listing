@@ -12,3 +12,18 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+.reactMarkDown ol {
+    list-style: decimal;
+    padding-left: 2rem;
+}
+
+.reactMarkDown ul {
+    list-style: circle;
+    padding-left: 2rem;
+}
+
+.reactMarkDown a {
+    color: blue;
+    text-decoration: underline;
+}

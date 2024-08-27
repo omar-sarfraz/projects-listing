@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useToast } from "../../contexts/ToastContext";
 import { AxiosResponse } from "axios";
-import axiosInstance from "../../lib/axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
-import SearchIcon from "../../assets/search-icon.svg";
+import Markdown from "react-markdown";
+import useAxios from "../../hooks/useAxios";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -16,8 +16,7 @@ export default function ProjectsList() {
     const [searchTerm, setSearchTerm] = useState("");
 
     const { user } = useAuth();
-
-    const { toast } = useToast();
+    const axiosInstance = useAxios();
 
     useEffect(() => {
         fetchProjects();
@@ -25,20 +24,13 @@ export default function ProjectsList() {
 
     const fetchProjects = async () => {
         try {
-            const response: AxiosResponse = await axiosInstance.get("/projects", {
-                headers: { Authorization: "Bearer " + user?.token },
-            });
+            const response: AxiosResponse = await axiosInstance.get("/projects");
 
-            if (response.status === 200) {
-                const projects: Project[] = await response.data.data;
-                setProjects(projects);
-                setSearchedProjects(projects);
-            } else {
-                toast(response.data?.message || "An error has occurred", "error");
-            }
+            const projects: Project[] = await response.data.data;
+            setProjects(projects);
+            setSearchedProjects(projects);
         } catch (e) {
-            console.log(e);
-            toast("Failed to load projects", "error");
+            console.log("Error while fetching projects", e);
         } finally {
             setLoading(false);
         }
@@ -69,7 +61,7 @@ export default function ProjectsList() {
                 <div className="flex justify-between items-center">
                     <h1 className="text-3xl">All Project Listings</h1>
                     <Link
-                        to="/projects/add"
+                        to="/projects/submit"
                         className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md cursor-pointer"
                     >
                         Add Project
@@ -88,7 +80,7 @@ export default function ProjectsList() {
                     type="text"
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <img src={SearchIcon} onClick={handleSearch} className="cursor-pointer" />
+                <Icon icon="material-symbols:search" fontSize={30} onClick={handleSearch} />
             </form>
             {loading ? (
                 <div>Loading...</div>
@@ -106,9 +98,12 @@ export default function ProjectsList() {
                                     </h3>
                                     <div className="my-4">
                                         <div className="font-bold">Description:</div>
-                                        {project.description.length > 200
-                                            ? project.description.slice(0, 200) + "..."
-                                            : project.description}
+                                        <Markdown>
+                                            {project.description.slice(
+                                                0,
+                                                project.description.indexOf("\n")
+                                            )}
+                                        </Markdown>
                                     </div>
                                 </div>
                                 <div>

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Bid, Project } from "../lib/types";
-import axiosInstance from "../lib/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { USER_ROLES } from "../lib/utils";
 import { useToast } from "../contexts/ToastContext";
 import { AxiosResponse } from "axios";
+import useAxios from "./useAxios";
 
 export default function useProject() {
     const [project, setProject] = useState<Project>();
@@ -15,6 +15,7 @@ export default function useProject() {
     const params = useParams();
     const { user } = useAuth();
     const { toast } = useToast();
+    const axiosInstance = useAxios();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,9 +25,7 @@ export default function useProject() {
     const fetchProject = async () => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get("/projects/" + params.id, {
-                headers: { Authorization: `Bearer ${user?.token}` },
-            });
+            const response = await axiosInstance.get("/projects/" + params.id);
             const project: Project = response.data.data;
             setProject(project);
 
@@ -50,9 +49,7 @@ export default function useProject() {
     const handleAcceptBid = async (id: number) => {
         try {
             const response: AxiosResponse = await axiosInstance.post(
-                `/projects/${project?.id}/bids/${id}/accept`,
-                null,
-                { headers: { Authorization: "Bearer " + user?.token } }
+                `/projects/${project?.id}/bids/${id}/accept`
             );
 
             const updatedProject: Project = response.data.data;
@@ -64,15 +61,13 @@ export default function useProject() {
             toast("Bid accepted successfully", "success");
         } catch (e: any) {
             console.log("Accept Bid response", e);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         }
     };
 
     const handleDeleteBid = async (id: number) => {
         try {
             const response: AxiosResponse = await axiosInstance.delete(
-                `/projects/${project?.id}/bids/${id}`,
-                { headers: { Authorization: "Bearer " + user?.token } }
+                `/projects/${project?.id}/bids/${id}`
             );
             toast(response.data.message, "success");
             setProject((project) => {
@@ -84,9 +79,18 @@ export default function useProject() {
             navigate("/projects/" + project?.id);
         } catch (e: any) {
             console.log("Delete bid response", e);
-            toast(e?.response?.data?.message || "An error has occurred", "error");
         }
     };
 
-    return { project, loading, canBid, handleAcceptBid, handleDeleteBid };
+    const handleDeleteProject = async () => {
+        try {
+            const response: AxiosResponse = await axiosInstance.delete(`/projects/${project?.id}`);
+            toast(response.data.message, "success");
+            navigate("/");
+        } catch (e: any) {
+            console.log("Delete project response", e);
+        }
+    };
+
+    return { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject };
 }
