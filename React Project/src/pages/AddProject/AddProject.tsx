@@ -10,10 +10,11 @@ import { USER_ROLES } from "../../lib/utils";
 import TextField from "../../components/TextField";
 
 export default function AddProject() {
-    const [name, setName] = useState<string>();
-    const [budget, setBudget] = useState<string>();
-    const [deadline, setDeadline] = useState<string>();
-    const [description, setDescription] = useState<string>();
+    const [name, setName] = useState("");
+    const [budget, setBudget] = useState("");
+    const [deadline, setDeadline] = useState("");
+    const [description, setDescription] = useState("");
+    const [files, setFiles] = useState<FileList | null>(null);
 
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
@@ -46,11 +47,24 @@ export default function AddProject() {
         try {
             setLoading(true);
 
-            let response: AxiosResponse = await axiosInstance.post(
-                "/projects",
-                { name, budget, deadline, description, userId: user?.id },
-                { headers: { Authorization: "Bearer " + user?.token } }
-            );
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("budget", budget);
+            formData.append("deadline", deadline);
+            formData.append("description", description);
+            if (user?.id) formData.append("userId", String(user.id));
+            if (files?.length) {
+                for (let i = 0; i < files.length; i++) {
+                    formData.append("projectFiles", files[i]);
+                }
+            }
+
+            let response: AxiosResponse = await axiosInstance.post("/projects", formData, {
+                headers: {
+                    Authorization: "Bearer " + user?.token,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
 
             if (response.status === 200) {
                 toast("Project Submitted Successfully!", "success");
@@ -107,6 +121,18 @@ export default function AddProject() {
                         required
                         onChange={(e) => setDescription(e.target.value)}
                     ></textarea>
+                </div>
+                <div className="flex flex-col w-full items-start md:flex-row">
+                    <label className="w-full md:w-1/3 text-xl" htmlFor="projectFiles">
+                        Upload relevant files
+                    </label>
+                    <input
+                        className="w-full md:w-2/3 border border-gray-300 rounded-md p-2 outline-none placeholder:text-gray-500 text-gray-500"
+                        id="projectFiles"
+                        type="file"
+                        multiple
+                        onChange={(e) => setFiles(e.target.files)}
+                    />
                 </div>
                 <button
                     type="submit"

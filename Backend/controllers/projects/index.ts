@@ -4,10 +4,11 @@ import getProjects from "./getProjects";
 
 import getProjectById from "./getProjectById";
 import isClient from "../../middlewares/isClient";
+import { uploadFile } from "../../middlewares/uploadFiles";
 
 const projectsRouter = Router();
 
-projectsRouter.post("/", isClient, addProject);
+projectsRouter.post("/", isClient, uploadFile("projectFiles", 5), addProject);
 projectsRouter.get("/", getProjects);
 projectsRouter.get("/:projectId", getProjectById);
 

@@ -6,6 +6,8 @@ import BidsList from "../../components/BidsList";
 import Description from "../../components/Description";
 import useProject from "../../hooks/useProject";
 import { useAuth } from "../../contexts/AuthContext";
+import { BASE_URL } from "../../configs/urls";
+import { Icon } from "@iconify/react";
 
 export default function ProjectPage() {
     const { project, loading, canBid, handleAcceptBid, handleDeleteBid } = useProject();
@@ -48,6 +50,26 @@ export default function ProjectPage() {
             <div className="mt-4">
                 <Description description={project.description} customClasses="text-xl" />
             </div>
+            {project.files?.length && (
+                <>
+                    <h2 className="text-xl italic underline underline-offset-8 mt-8">
+                        Project Files{" "}
+                    </h2>
+                    <div className="mt-4 flex gap-4">
+                        {project.files.map((file) => (
+                            <a
+                                href={`${BASE_URL}/${file}`}
+                                key={file}
+                                className="flex gap-2 items-center border-[1px] py-1 px-2 rounded-md"
+                                target="_blank"
+                            >
+                                <Icon icon="akar-icons:file" />
+                                {file.split("/").pop()}
+                            </a>
+                        ))}
+                    </div>
+                </>
+            )}
             {project.bids?.length ? (
                 <BidsList
                     bids={project.bids}
