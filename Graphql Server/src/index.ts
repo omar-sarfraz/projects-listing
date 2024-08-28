@@ -9,9 +9,10 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { useServer } from "graphql-ws/lib/use/ws";
-import { PubSub } from "graphql-subscriptions";
+import { PubSub, withFilter } from "graphql-subscriptions";
 
-import utils from "./lib/utils.js";
+import { verifyUser, channels, events, getUser } from "./lib/utils.js";
+import { db } from "./lib/db.js";
 
 const PORT = 4000;
 const pubsub = new PubSub();
@@ -22,14 +23,37 @@ const typeDefs = `
   }
 
   type Subscription {
-    numberIncremented: Int
+    projectUpdate(projectIds: [Int!]!): Notification
+  }
+
+  type Notification {
+    message: String
+    type: String
   }
 `;
 
 const resolvers = {
     Subscription: {
-        numberIncremented: {
-            subscribe: () => pubsub.asyncIterator(["NUMBER_INCREMENTED"]),
+        projectUpdate: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator([channels.PROJECT_UPDATE]),
+                (payload, variables, { user }) => {
+                    if (
+                        user.data.role === "CLIENT" &&
+                        payload.projectUpdate.type === events.BID_CREATE
+                    ) {
+                        // Only send event to clients who have subscribed to this project
+
+                        let validProject = variables.projectIds.filter(
+                            (id: number) => id === payload.projectUpdate.data.projectId
+                        ).length;
+
+                        return validProject ? true : false;
+                    }
+
+                    return false;
+                }
+            ),
         },
     },
 };
@@ -47,22 +71,13 @@ const wsServer = new WebSocketServer({
 const serverCleanup = useServer(
     {
         schema,
+        context: async (ctx) => {
+            const user = await getUser(ctx);
+            return { user };
+        },
         onConnect: async (ctx) => {
-            try {
-                const authHeader: string | undefined = ctx.connectionParams?.Authorization as
-                    | string
-                    | undefined;
-
-                if (!authHeader) throw new Error("Auth token is required!");
-                const token: string = authHeader.split(" ")[1];
-                if (!token) throw new Error("Missing Token!");
-
-                const data = await utils.verifyUser(token);
-                console.log(data);
-            } catch (error: any) {
-                console.error("Connection error:", error.message);
-                return false;
-            }
+            const user = await getUser(ctx);
+            if (!user) return false;
         },
         onDisconnect(ctx, code, reason) {
             console.log("Disconnected!");
@@ -90,16 +105,41 @@ const server = new ApolloServer({
 await server.start();
 app.use("/", cors(), express.json(), expressMiddleware(server));
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, async () => {
     console.log(`🚀 Subscription endpoint ready at ws://localhost:${PORT}/`);
+    try {
+        await db.connect();
+        console.log("Database connection has been established successfully.");
+
+        // Listen to the specified channel
+        await db.query(`LISTEN ${events.BID_UPDATE}`);
+        await db.query(`LISTEN ${events.BID_CREATE}`);
+
+        // Listen for notifications
+        db.on("notification", (msg) => {
+            let payload = msg.payload ? JSON.parse(msg.payload) : null;
+
+            // if (msg.channel === events.BID_UPDATE && payload.acceptedBid) {
+            //     pubsub.publish(channels.PROJECT_UPDATE, {
+            //         projectUpdate: {
+            //             message: "Your bid has been accepted",
+            //             type: events.BID_UPDATE,
+            //             data: payload,
+            //         },
+            //     });
+            // }
+
+            if (msg.channel === events.BID_CREATE) {
+                pubsub.publish(channels.PROJECT_UPDATE, {
+                    projectUpdate: {
+                        message: "A new bid has been added",
+                        type: events.BID_CREATE,
+                        data: payload,
+                    },
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Unable to connect to the database:", error);
+    }
 });
-
-let currentNumber = 0;
-
-function incrementNumber() {
-    currentNumber++;
-    pubsub.publish("NUMBER_INCREMENTED", { numberIncremented: currentNumber });
-    setTimeout(incrementNumber, 1000);
-}
-
-incrementNumber();

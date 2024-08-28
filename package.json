@@ -7,13 +7,15 @@
     "private": true,
     "workspaces": [
         "React Project",
-        "Backend"
+        "Backend",
+        "Graphql Server"
     ],
     "keywords": [],
     "author": "",
     "license": "ISC",
     "description": "",
     "dependencies": {
+        "@apollo/client": "^3.11.4",
         "@apollo/server": "^4.11.0",
         "@graphql-tools/schema": "^10.0.6",
         "@omar-sarfraz/caesar-cipher": "^2.0.1",

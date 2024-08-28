@@ -1,4 +1,5 @@
-import { Sequelize } from "sequelize";
+import pkg from "pg";
+const { Client } = pkg;
 
 const db_name = process.env.DB_NAME;
 const username = process.env.DB_USER;
@@ -10,9 +11,10 @@ if (!db_name || !username) {
     process.exit(1);
 }
 
-export const sequelize = new Sequelize(db_name, username, "", {
-    host,
-    port,
-    dialect: "postgres",
-    logging: false,
+export const db = new Client({
+    user: username,
+    host: host,
+    database: db_name,
+    password: "",
+    port: port,
 });

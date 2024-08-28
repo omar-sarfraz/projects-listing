@@ -29,7 +29,7 @@ export const updateBid = async (req: Request, res: Response) => {
         const nhm = new NodeHtmlMarkdown();
         validatedBid.description = nhm.translate(validatedBid.description);
 
-        await Bid.update({ ...validatedBid }, { where: { id: bidId } });
+        await Bid.update({ ...validatedBid }, { where: { id: bidId }, individualHooks: true });
         return res.status(200).json({ message: "Bid updated successfully", error: false });
     } catch (e) {
         console.log("Error while updating bid", e);
