@@ -78,9 +78,10 @@ const serverCleanup = useServer(
         onConnect: async (ctx) => {
             const user = await getUser(ctx);
             if (!user) return false;
+            console.log("Connected WebSocket");
         },
         onDisconnect(ctx, code, reason) {
-            console.log("Disconnected!");
+            console.log("Disconnected WebSocket");
         },
     },
     wsServer

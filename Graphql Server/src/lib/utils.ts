@@ -21,15 +21,13 @@ export const verifyUser = async (token: string) => {
 
 export const getUser = async (context: Context) => {
     try {
-        const authHeader: string | undefined = context.connectionParams?.Authorization as
+        const authToken: string | undefined = context.connectionParams?.authToken as
             | string
             | undefined;
 
-        if (!authHeader) throw new Error("Auth token is required!");
-        const token: string = authHeader.split(" ")[1];
-        if (!token) throw new Error("Missing Token!");
+        if (!authToken) throw new Error("Auth token is required!");
 
-        const data = await verifyUser(token);
+        const data = await verifyUser(authToken);
         return data;
     } catch (error: any) {
         return null;

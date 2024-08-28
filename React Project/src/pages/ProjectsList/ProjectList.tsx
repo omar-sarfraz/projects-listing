@@ -7,6 +7,7 @@ import { USER_ROLES } from "../../lib/utils";
 import Markdown from "react-markdown";
 import useAxios from "../../hooks/useAxios";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useMyProjectSubscription } from "../../hooks/useSubscription";
 
 export default function ProjectsList() {
     const [projects, setProjects] = useState<Project[] | undefined>();
@@ -17,6 +18,8 @@ export default function ProjectsList() {
 
     const { user } = useAuth();
     const axiosInstance = useAxios();
+
+    useMyProjectSubscription();
 
     useEffect(() => {
         fetchProjects();
