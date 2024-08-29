@@ -26,7 +26,7 @@ export const acceptBid = async (req: Request, res: Response) => {
 
         const updateResponse = await Project.update(
             { acceptedBid: bidId },
-            { where: { id: projectId }, returning: true }
+            { where: { id: projectId }, returning: true, individualHooks: true }
         );
 
         const updatedProject = updateResponse[1][0];

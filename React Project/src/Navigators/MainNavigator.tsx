@@ -14,6 +14,7 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 
 import { createClient } from "graphql-ws";
 import { WEBSOCKET_URL } from "../configs/urls";
+import { Subscription } from "../components/Subscription";
 
 export default function MainNavigator() {
     const { user, loading } = useAuth();
@@ -34,25 +35,27 @@ export default function MainNavigator() {
 
     return (
         <ApolloProvider client={client}>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    {user ? (
-                        <>
-                            <Route index element={<ProjectsList />} />
-                            <Route path="projects/submit" element={<SubmitProject />} />
-                            <Route path="projects/:id" element={<ProjectPage />} />
-                            <Route path="projects/:id/bid" element={<SubmitBid />} />
-                        </>
-                    ) : (
-                        <>
-                            <Route index element={<Login />} />
-                            <Route path="login" element={<Login />} />
-                            <Route path="sign-up" element={<SignUp />} />
-                        </>
-                    )}
-                    <Route path="*" element={<NotFound />} />
-                </Route>
-            </Routes>
+            <Subscription>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        {user ? (
+                            <>
+                                <Route index element={<ProjectsList />} />
+                                <Route path="projects/submit" element={<SubmitProject />} />
+                                <Route path="projects/:id" element={<ProjectPage />} />
+                                <Route path="projects/:id/bid" element={<SubmitBid />} />
+                            </>
+                        ) : (
+                            <>
+                                <Route index element={<Login />} />
+                                <Route path="login" element={<Login />} />
+                                <Route path="sign-up" element={<SignUp />} />
+                            </>
+                        )}
+                        <Route path="*" element={<NotFound />} />
+                    </Route>
+                </Routes>
+            </Subscription>
         </ApolloProvider>
     );
 }

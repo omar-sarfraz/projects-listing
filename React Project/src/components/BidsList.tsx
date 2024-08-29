@@ -6,6 +6,7 @@ type PropType = {
     bids: Bid[];
     canAccept: boolean;
     acceptedBid: number | undefined;
+    isFreelancer: boolean;
     handleAcceptBid: (id: number) => void;
     handleDeleteBid: (id: number) => void;
 };
@@ -14,6 +15,7 @@ export default function BidsList({
     bids,
     canAccept,
     acceptedBid,
+    isFreelancer,
     handleAcceptBid,
     handleDeleteBid,
 }: PropType) {
@@ -24,21 +26,23 @@ export default function BidsList({
                 <div className="bg-gray-100 p-4 mt-4 rounded-md" key={bid.id}>
                     <div className="flex justify-between items-center border-b-[1px] border-gray-200 pb-2 mb-3">
                         <div>Freelancer: {bid.user?.firstName + " " + bid.user?.lastName}</div>
-                        <div className="flex gap-2">
-                            <Link
-                                className="bg-emerald-50 border-emerald-600 border-[1px] text-emerald-600 rounded-md px-4 py-1"
-                                to={`/projects/${bid?.projectId}/bid`}
-                                state={bid}
-                            >
-                                Edit
-                            </Link>
-                            <button
-                                className="bg-red-50 border-red-500 border-[1px] text-red-500 rounded-md px-4 py-1"
-                                onClick={() => handleDeleteBid(bid.id)}
-                            >
-                                Delete
-                            </button>
-                        </div>
+                        {isFreelancer ? (
+                            <div className="flex gap-2">
+                                <Link
+                                    className="bg-emerald-50 border-emerald-600 border-[1px] text-emerald-600 rounded-md px-4 py-1"
+                                    to={`/projects/${bid?.projectId}/bid`}
+                                    state={bid}
+                                >
+                                    Edit
+                                </Link>
+                                <button
+                                    className="bg-red-50 border-red-500 border-[1px] text-red-500 rounded-md px-4 py-1"
+                                    onClick={() => handleDeleteBid(bid.id)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        ) : null}
                     </div>
                     <div className="flex justify-between">
                         <div className="flex gap-1">

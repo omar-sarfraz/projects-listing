@@ -1,4 +1,7 @@
+import { PubSub } from "graphql-subscriptions";
 import { Context } from "graphql-ws/lib/server";
+
+export const pubsub = new PubSub();
 
 export const verifyUser = async (token: string) => {
     try {
@@ -36,6 +39,7 @@ export const getUser = async (context: Context) => {
 
 export const channels = {
     PROJECT_UPDATE: "project_update",
+    BID_UPDATE: "bid_update",
 };
 
 export const events = {

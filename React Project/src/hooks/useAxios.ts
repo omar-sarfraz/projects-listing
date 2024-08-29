@@ -3,7 +3,7 @@ import { BASE_URL } from "../configs/urls";
 import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../contexts/ToastContext";
 
-const useAxios = () => {
+const useAxios = (shouldDisplayError: boolean = true) => {
     const { user } = useAuth();
     const { toast } = useToast();
 
@@ -20,7 +20,7 @@ const useAxios = () => {
         (response) => response,
         (error) => {
             console.log(error);
-            toast(error.response?.data?.message || error?.message, "error");
+            shouldDisplayError && toast(error.response?.data?.message || error?.message, "error");
             return Promise.reject(error);
         }
     );

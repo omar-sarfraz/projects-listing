@@ -28,10 +28,6 @@ export const Bid = sequelize.define(
             afterCreate: async (bid, options) => {
                 await sequelize.query(`NOTIFY ${events.BID_CREATE}, '${JSON.stringify(bid)}'`);
             },
-
-            afterUpdate: async (bid, options) => {
-                await sequelize.query(`NOTIFY ${events.BID_UPDATE}, '${JSON.stringify(bid)}'`);
-            },
         },
     }
 );
