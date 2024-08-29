@@ -4,7 +4,6 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
-import { PubSub } from "graphql-subscriptions";
 
 import cors from "cors";
 import express from "express";
@@ -14,6 +13,7 @@ import { getUser } from "./lib/utils.js";
 import { setupDatabase } from "./lib/db.js";
 import resolvers from "./resolvers/index.js";
 import typeDefs from "./typeDefs/index.js";
+import { GraphQLError } from "graphql";
 
 const PORT = 4000;
 
@@ -32,6 +32,15 @@ const serverCleanup = useServer(
         schema,
         context: async (ctx) => {
             const user = await getUser(ctx);
+
+            if (!user)
+                throw new GraphQLError("User is not authenticated", {
+                    extensions: {
+                        code: "UNAUTHENTICATED",
+                        http: { status: 401 },
+                    },
+                });
+
             return { user };
         },
         onConnect: async (ctx) => {
@@ -63,7 +72,27 @@ const server = new ApolloServer({
 });
 
 await server.start();
-app.use("/", cors(), express.json(), expressMiddleware(server));
+app.use(
+    "/",
+    cors(),
+    express.json(),
+    expressMiddleware(server, {
+        context: async ({ req }) => {
+            const token: string = req.headers.authtoken as string;
+            const user = await getUser(undefined, token);
+
+            if (!user)
+                throw new GraphQLError("User is not authenticated", {
+                    extensions: {
+                        code: "UNAUTHENTICATED",
+                        http: { status: 401 },
+                    },
+                });
+
+            return { user };
+        },
+    })
+);
 
 httpServer.listen(PORT, async () => {
     console.log(`🚀 Subscription endpoint ready at ws://localhost:${PORT}/`);

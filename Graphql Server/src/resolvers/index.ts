@@ -1,7 +1,22 @@
 import { withFilter } from "graphql-subscriptions";
 import { channels, events, pubsub } from "../lib/utils.js";
+import { ContextType, MessageType } from "../lib/types.js";
+import { Message } from "../models/Message.js";
 
 const resolvers = {
+    Query: {
+        messages: async (_: any, { projectId }: { projectId: number }, ctx: ContextType) => {
+            const messages = await Message.findAll({ where: { projectId: projectId } });
+            return messages;
+        },
+    },
+    Mutation: {
+        postMessage: async (_: any, { message }: { message: MessageType }, ctx: ContextType) => {
+            const data = { ...message, userId: ctx.user.data.id };
+            const createdMessage = await Message.create(data);
+            return createdMessage.dataValues;
+        },
+    },
     Subscription: {
         projectUpdate: {
             subscribe: withFilter(

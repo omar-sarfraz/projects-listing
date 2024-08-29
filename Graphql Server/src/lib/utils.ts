@@ -22,11 +22,11 @@ export const verifyUser = async (token: string) => {
     }
 };
 
-export const getUser = async (context: Context) => {
+export const getUser = async (context: Context | undefined, token?: string) => {
     try {
-        const authToken: string | undefined = context.connectionParams?.authToken as
-            | string
-            | undefined;
+        const authToken: string | undefined = context
+            ? (context.connectionParams?.authToken as string | undefined)
+            : token;
 
         if (!authToken) throw new Error("Auth token is required!");
 
@@ -40,6 +40,7 @@ export const getUser = async (context: Context) => {
 export const channels = {
     PROJECT_UPDATE: "project_update",
     BID_UPDATE: "bid_update",
+    MESSAGE_CREATED: "message_created",
 };
 
 export const events = {

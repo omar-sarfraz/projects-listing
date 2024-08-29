@@ -2,6 +2,7 @@ import pkg from "pg";
 const { Client } = pkg;
 
 import { channels, events, pubsub } from "./utils.js";
+import { sequelize } from "./sequelize.js";
 
 const db_name = process.env.DB_NAME;
 const username = process.env.DB_USER;
@@ -54,7 +55,11 @@ const setupNotifications = async () => {
 
 export const setupDatabase = async () => {
     await db.connect();
+    await sequelize.authenticate();
     console.log("Database connection has been established successfully.");
+
+    // await sequelize.sync({ alter: true });
+    // console.log("Models have been synchronized!");
 
     await setupListeners();
     await setupNotifications();
