@@ -22,6 +22,7 @@ input MessageInput {
 type Subscription {
   projectUpdate(projectIds: [Int!]!): Notification
   bidUpdate(bidIds: [Int!]!): Notification
+  messageCreated(projectId: Int!): Message
 }
 
 type Notification {

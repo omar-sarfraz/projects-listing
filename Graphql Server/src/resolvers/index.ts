@@ -14,6 +14,11 @@ const resolvers = {
         postMessage: async (_: any, { message }: { message: MessageType }, ctx: ContextType) => {
             const data = { ...message, userId: ctx.user.data.id };
             const createdMessage = await Message.create(data);
+
+            pubsub.publish(channels.MESSAGE_CREATED, {
+                messageCreated: createdMessage.dataValues,
+            });
+
             return createdMessage.dataValues;
         },
     },
@@ -52,6 +57,22 @@ const resolvers = {
                         ).length;
 
                         return validBid ? true : false;
+                    }
+
+                    return false;
+                }
+            ),
+        },
+        messageCreated: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator([channels.MESSAGE_CREATED]),
+                (payload, variables, { user }) => {
+                    if (
+                        payload.messageCreated.projectId === variables.projectId &&
+                        user.data.id !== payload.messageCreated.userId
+                    ) {
+                        // Only send message to users who have subscribed to project channel
+                        return true;
                     }
 
                     return false;

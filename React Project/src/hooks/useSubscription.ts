@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useSubscription, gql } from "@apollo/client";
 
 import useAxios from "./useAxios";
 import { useToast } from "../contexts/ToastContext";
 import { useAuth } from "../contexts/AuthContext";
 import { USER_ROLES } from "../lib/utils";
+import { MessageType } from "../lib/types";
 
 const PROJECT_UPDATES_SUBSCRIPTION = gql`
     subscription ($projectIds: [Int!]!) {
@@ -20,6 +21,17 @@ const BID_UPDATES_SUBSCRIPTION = gql`
         bidUpdate(bidIds: $bidIds) {
             message
             type
+        }
+    }
+`;
+
+const MESSAGE_SUBSCRIPTION_QUERY = gql`
+    subscription ($projectId: Int!) {
+        messageCreated(projectId: $projectId) {
+            id
+            text
+            projectId
+            userId
         }
     }
 `;
@@ -96,6 +108,21 @@ export const useMyBidSubscription = () => {
     useEffect(() => {
         if (!loading && data) {
             toast(data.bidUpdate.message, "success");
+        }
+    }, [data, loading]);
+};
+
+export const useMessageSubscription = (
+    projectId: number,
+    setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>
+) => {
+    const { data, loading } = useSubscription(MESSAGE_SUBSCRIPTION_QUERY, {
+        variables: { projectId },
+    });
+
+    useEffect(() => {
+        if (!loading && data) {
+            setMessages((prev) => [...prev, data.messageCreated]);
         }
     }, [data, loading]);
 };
