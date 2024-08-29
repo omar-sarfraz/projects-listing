@@ -65,9 +65,12 @@ export default function BidsList({
                         </button>
                     )}
                     {bid.id === acceptedBid && (
-                        <div className="bg-emerald-500 text-white px-4 py-1 mt-2 rounded-md text-center">
-                            Accepted
-                        </div>
+                        <Link
+                            to={`/projects/${bid?.projectId}/chat`}
+                            className="bg-emerald-500 text-white px-4 py-1 mt-2 rounded-md text-center"
+                        >
+                            Bid Accepted: Chat Now
+                        </Link>
                     )}
                 </div>
             ))}

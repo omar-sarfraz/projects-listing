@@ -15,6 +15,7 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { WEBSOCKET_URL } from "../configs/urls";
 import { Subscription } from "../components/Subscription";
+import ChatPage from "../pages/Chat/ChatPage";
 
 export default function MainNavigator() {
     const { user, loading } = useAuth();
@@ -44,6 +45,7 @@ export default function MainNavigator() {
                                 <Route path="projects/submit" element={<SubmitProject />} />
                                 <Route path="projects/:id" element={<ProjectPage />} />
                                 <Route path="projects/:id/bid" element={<SubmitBid />} />
+                                <Route path="projects/:id/chat" element={<ChatPage />} />
                             </>
                         ) : (
                             <>

@@ -38,3 +38,10 @@ export type Project = {
     bids?: Bid[];
     files?: string[];
 };
+
+export type MessageType = {
+    id: number;
+    text: String;
+    projectId: number;
+    userId: number;
+};
