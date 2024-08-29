@@ -32,9 +32,9 @@ export const useMyProjectSubscription = () => {
     const { toast } = useToast();
     const { user } = useAuth();
 
-    if (user?.role === USER_ROLES.freelancer) return;
-
     useEffect(() => {
+        if (!user || user.role === USER_ROLES.freelancer) return;
+
         const fetchProjectIds = async () => {
             try {
                 const response = await axiosInstance.get("/users/projects");
@@ -70,9 +70,9 @@ export const useMyBidSubscription = () => {
     const { toast } = useToast();
     const { user } = useAuth();
 
-    if (user?.role === USER_ROLES.client) return;
-
     useEffect(() => {
+        if (!user || user.role === USER_ROLES.client) return;
+
         const fetchBidIds = async () => {
             try {
                 const response = await axiosInstance.get("/users/bids");
