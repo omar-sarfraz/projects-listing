@@ -5,10 +5,13 @@ import tailwindcss from "tailwindcss";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react(), sentryVitePlugin({
-        org: "arbisoft-m1",
-        project: "project-listings-frontend"
-    })],
+    plugins: [
+        react(),
+        sentryVitePlugin({
+            org: "arbisoft-m1",
+            project: "project-listings-frontend",
+        }),
+    ],
 
     css: {
         postcss: {
@@ -21,6 +24,10 @@ export default defineConfig({
     },
 
     build: {
-        sourcemap: true
-    }
+        sourcemap: true,
+    },
+
+    define: {
+        APP_VERSION: JSON.stringify(process.env.npm_package_version),
+    },
 });

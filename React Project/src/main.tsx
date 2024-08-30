@@ -8,7 +8,8 @@ import * as Sentry from "@sentry/react";
 Sentry.init({
     dsn: "https://135345e76b18109357d1bb6d8b7ee3a9@o4507815562903552.ingest.us.sentry.io/4507815594754048",
     integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-    // Tracing
+    environment: import.meta.env.VITE_ENVIRONMENT,
+    release: "project-listing-frontend@" + APP_VERSION,
     tracesSampleRate: 1.0, //  Capture 100% of the transactions
     // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
     tracePropagationTargets: ["localhost"],
