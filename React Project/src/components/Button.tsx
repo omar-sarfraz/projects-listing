@@ -1,15 +1,14 @@
-import { MouseEventHandler } from "react";
+import { ButtonHTMLAttributes } from "react";
 
-type ButtonProps = {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     text: string;
-    handleClick: MouseEventHandler;
-};
+}
 
-export default function Button({ text, handleClick }: ButtonProps) {
+export default function Button({ text, ...props }: ButtonProps) {
     return (
         <button
             className="bg-emerald-500 text-white w-full py-2 text-xl font-medium rounded-md"
-            onClick={handleClick}
+            {...props}
         >
             {text}
         </button>
