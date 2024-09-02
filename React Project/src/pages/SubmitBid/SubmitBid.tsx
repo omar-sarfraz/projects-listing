@@ -1,4 +1,4 @@
-import { useEffect, useState, FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
@@ -9,11 +9,17 @@ import TextField from "../../components/TextField";
 import TextEditor from "../../components/TextEditor";
 import useAxios from "../../hooks/useAxios";
 import { marked } from "marked";
+import { Form, Formik, FormikHelpers } from "formik";
+
+type BidInput = {
+    budget: string;
+    deadline: string;
+    description: string;
+};
 
 export default function AddBid() {
-    const [budget, setBudget] = useState<string>();
-    const [deadline, setDeadline] = useState<string>();
-    const [description, setDescription] = useState<string>("");
+    const [deadline, setDeadline] = useState("");
+    const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
 
     const params = useParams();
@@ -23,6 +29,12 @@ export default function AddBid() {
     const { toast } = useToast();
     const { state } = useLocation();
     const axiosInstance = useAxios();
+
+    const initialValues = {
+        budget: state ? state.budget : "",
+        deadline: deadline,
+        description: description,
+    };
 
     useEffect(() => {
         if (user?.role !== USER_ROLES.freelancer) {
@@ -36,8 +48,6 @@ export default function AddBid() {
     }, []);
 
     const updateBidFilds = async () => {
-        setBudget(state.budget);
-
         const date = new Date(state.deadline);
         const dateStr = date.toISOString().split("T")[0];
 
@@ -47,17 +57,10 @@ export default function AddBid() {
         setDescription(html);
     };
 
-    const handleProjectSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-
-        try {
-            await bidSchema.validate({ budget, deadline, description }, { abortEarly: false });
-        } catch (e: any) {
-            const firstError = e.inner[0];
-            toast(firstError.errors[0], "error");
-            return;
-        }
-
+    const handleBidSubmit = async (
+        { deadline, description, budget }: BidInput,
+        actions: FormikHelpers<BidInput>
+    ) => {
         try {
             setLoading(true);
 
@@ -74,6 +77,7 @@ export default function AddBid() {
             if (state) await axiosInstance.put(url, requestData);
             else await axiosInstance.post(url, requestData);
 
+            actions.resetForm();
             toast("Bid Submitted Successfully!", "success");
             navigate("/projects/" + params.id);
         } catch (e: any) {
@@ -86,43 +90,46 @@ export default function AddBid() {
     return (
         <div>
             <h1 className="text-3xl mb-6">Bid on a project</h1>
-            <form className="flex flex-col gap-4 items-end bg-gray-100 px-6 py-10 rounded-md">
-                <TextField
-                    required={true}
-                    label="Budget"
-                    type="number"
-                    placeholder="e.g., 500"
-                    currentValue={budget}
-                    setCurrentValue={setBudget}
-                />
-                <TextField
-                    required={true}
-                    placeholder="Date"
-                    currentValue={deadline}
-                    setCurrentValue={setDeadline}
-                    label="Deadline"
-                    type="date"
-                    min={new Date().toISOString().split("T")[0]}
-                />
-                <div className="flex flex-col w-full items-start md:flex-row">
-                    <label className="w-full md:w-1/3 text-xl">Description</label>
-                    <div className="w-full md:w-2/3">
-                        <TextEditor
-                            value={description}
-                            setValue={setDescription}
-                            placeholder="e.g., I have experience in this kind of project..."
-                        />
+            <Formik
+                initialValues={initialValues}
+                onSubmit={handleBidSubmit}
+                validationSchema={bidSchema}
+                enableReinitialize={true}
+            >
+                <Form className="flex flex-col gap-4 items-end bg-gray-100 px-6 py-10 rounded-md">
+                    <TextField
+                        required={true}
+                        label="Budget"
+                        type="number"
+                        placeholder="e.g., 500"
+                        name="budget"
+                    />
+                    <TextField
+                        name="deadline"
+                        required={true}
+                        placeholder="Date"
+                        label="Deadline"
+                        type="date"
+                        min={new Date().toISOString().split("T")[0]}
+                    />
+                    <div className="flex flex-col w-full items-start md:flex-row">
+                        <label className="w-full md:w-1/3 text-xl">Description</label>
+                        <div className="w-full md:w-2/3">
+                            <TextEditor
+                                name="description"
+                                placeholder="e.g., I have experience in this kind of project..."
+                            />
+                        </div>
                     </div>
-                </div>
-                <button
-                    type="submit"
-                    className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md w-full md:w-1/3 mt-4 outline-none"
-                    onClick={handleProjectSubmit}
-                    disabled={loading}
-                >
-                    {loading ? "Loading..." : "Submit"}
-                </button>
-            </form>
+                    <button
+                        type="submit"
+                        className="bg-green-600 font-semibold text-white text-md px-4 py-2 rounded-md w-full md:w-1/3 mt-4 outline-none"
+                        disabled={loading}
+                    >
+                        {loading ? "Loading..." : "Submit"}
+                    </button>
+                </Form>
+            </Formik>
         </div>
     );
 }
