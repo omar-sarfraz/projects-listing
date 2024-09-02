@@ -8,6 +8,8 @@ import { NodeHtmlMarkdown } from "node-html-markdown";
 export const addProject = async (req: Request, res: Response) => {
     const project: ProjectType = req.body;
 
+    console.log(project, req.files);
+
     try {
         let validatedProject = await projectSchema.validateAsync(project);
 

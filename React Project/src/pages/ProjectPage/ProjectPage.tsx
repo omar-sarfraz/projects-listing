@@ -76,7 +76,7 @@ export default function ProjectPage() {
                     <h2 className="text-xl italic underline underline-offset-8 mt-8">
                         Project Files{" "}
                     </h2>
-                    <div className="mt-4 flex gap-4">
+                    <div className="mt-4 flex gap-4 flex-wrap">
                         {project.files.map((file) => (
                             <a
                                 href={`${BASE_URL}/${file}`}
