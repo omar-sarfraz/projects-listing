@@ -104,7 +104,7 @@ export default function ChatPage() {
             <div>
                 <div className="flex flex-col gap-2 py-4 my-4 w-full overflow-scroll h-[60vh]">
                     {messages.map((message: MessageType) => (
-                        <Message message={message} userId={user?.id} />
+                        <Message message={message} userId={user?.id} key={message.id} />
                     ))}
                     <div ref={endRef}></div>
                 </div>
