@@ -108,7 +108,7 @@ export default function ChatPage() {
                     ))}
                     <div ref={endRef}></div>
                 </div>
-                <div className="flex w-full gap-2">
+                <form className="flex w-full gap-2" onSubmit={handleSend}>
                     <Input
                         placeholder="Type you message"
                         value={text}
@@ -116,6 +116,7 @@ export default function ChatPage() {
                         className="grow"
                     />
                     <Button
+                        type="submit"
                         leftSection={<Icon icon="ion:send-sharp" fontSize={14} color="white" />}
                         variant="default"
                         className="bg-emerald-500 text-white"
@@ -124,7 +125,7 @@ export default function ChatPage() {
                     >
                         Send
                     </Button>
-                </div>
+                </form>
             </div>
         </Box>
     );
