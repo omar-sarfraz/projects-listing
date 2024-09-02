@@ -13,6 +13,7 @@ import useAxios from "../../hooks/useAxios";
 
 import * as marked from "marked";
 import { Field, Form, Formik, FormikHelpers } from "formik";
+import dayjs from "dayjs";
 
 type ProjectInput = {
     name: string;
@@ -54,9 +55,7 @@ export default function SubmitProject() {
     }, []);
 
     const updateProjectFilds = async () => {
-        const date = new Date(state.deadline);
-        const dateStr = date.toISOString().split("T")[0];
-
+        const dateStr = dayjs(state.deadline).format("YYYY-MM-DD");
         setDeadline(dateStr);
 
         let html = await marked.parse(state.description);
@@ -70,10 +69,12 @@ export default function SubmitProject() {
         try {
             setLoading(true);
 
+            const deadlineWithTimezone = dayjs(deadline).toISOString();
+
             const formData = new FormData();
             formData.append("name", name);
             formData.append("budget", budget);
-            formData.append("deadline", deadline);
+            formData.append("deadline", deadlineWithTimezone);
             formData.append("description", description);
             if (user?.id) formData.append("userId", String(user.id));
             if (files?.length) {
@@ -136,7 +137,7 @@ export default function SubmitProject() {
                         placeholder="Date"
                         label="Deadline"
                         type="date"
-                        min={new Date().toISOString().split("T")[0]}
+                        min={dayjs().format("YYYY-MM-DD")}
                     />
                     <div className="flex flex-col w-full items-start md:flex-row">
                         <label className="w-full md:w-1/3 text-xl" htmlFor="project_description">

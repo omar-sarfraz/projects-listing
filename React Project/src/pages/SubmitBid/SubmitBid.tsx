@@ -10,6 +10,7 @@ import TextEditor from "../../components/TextEditor";
 import useAxios from "../../hooks/useAxios";
 import { marked } from "marked";
 import { Form, Formik, FormikHelpers } from "formik";
+import dayjs from "dayjs";
 
 type BidInput = {
     budget: string;
@@ -48,9 +49,7 @@ export default function AddBid() {
     }, []);
 
     const updateBidFilds = async () => {
-        const date = new Date(state.deadline);
-        const dateStr = date.toISOString().split("T")[0];
-
+        const dateStr = dayjs(state.deadline).format("YYYY-MM-DD");
         setDeadline(dateStr);
 
         let html = await marked.parse(state.description);
@@ -67,11 +66,13 @@ export default function AddBid() {
             let url = `projects/${params.id}/bids`;
             if (state) url += `/${state.id}`;
 
+            const deadlineWithTimezone = dayjs(deadline).toISOString();
+
             const requestData = {
                 budget,
-                deadline,
                 description,
                 userId: user?.id,
+                deadline: deadlineWithTimezone,
             };
 
             if (state) await axiosInstance.put(url, requestData);
@@ -110,7 +111,7 @@ export default function AddBid() {
                         placeholder="Date"
                         label="Deadline"
                         type="date"
-                        min={new Date().toISOString().split("T")[0]}
+                        min={dayjs().format("YYYY-MM-DD")}
                     />
                     <div className="flex flex-col w-full items-start md:flex-row">
                         <label className="w-full md:w-1/3 text-xl">Description</label>
