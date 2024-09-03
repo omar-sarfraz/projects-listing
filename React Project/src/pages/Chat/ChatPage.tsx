@@ -88,7 +88,6 @@ export default function ChatPage() {
     }, [messages]);
 
     if (!loading && error) return <div>An error has occurred!</div>;
-    console.log("Chat Error", error);
 
     if (loading)
         return (
