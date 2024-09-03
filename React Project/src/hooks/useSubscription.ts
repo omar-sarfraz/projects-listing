@@ -116,7 +116,7 @@ export const useMessageSubscription = (
     projectId: number,
     setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>
 ) => {
-    const { data, loading, error } = useSubscription(MESSAGE_SUBSCRIPTION_QUERY, {
+    const { data, loading } = useSubscription(MESSAGE_SUBSCRIPTION_QUERY, {
         variables: { projectId },
     });
 
