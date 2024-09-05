@@ -1,4 +1,6 @@
 import { Outlet } from "react-router-dom";
+import { Suspense } from "react";
+
 import Navbar from "../components/Navbar";
 
 export default function Layout() {
@@ -7,7 +9,9 @@ export default function Layout() {
             <Navbar />
             <div className="flex justify-center">
                 <div className="container-2xl mt-10 mx-auto w-3/4">
-                    <Outlet />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Outlet />
+                    </Suspense>
                 </div>
             </div>
         </>
