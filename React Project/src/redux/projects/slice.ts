@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { Project } from "../../lib/types";
 import { RootState } from "../store";
 
@@ -16,19 +17,20 @@ const slice = createSlice({
     name: "projects",
     initialState,
     reducers: {
-        fetchDataRequest(state) {
+        fetchProjectsRequest(state) {
             state.loading = true;
         },
-        fetchDataSuccess(state, action: PayloadAction<Project[]>) {
+        fetchProjectsSuccess(state, action: PayloadAction<Project[]>) {
             state.projects = action.payload;
             state.loading = false;
         },
-        fetchDataFailure(state) {
+        fetchProjectsFailure(state) {
             state.loading = false;
         },
     },
 });
 
-export const { fetchDataRequest, fetchDataSuccess, fetchDataFailure } = slice.actions;
+export const { fetchProjectsRequest, fetchProjectsSuccess, fetchProjectsFailure } = slice.actions;
 export const selectProjects = (state: RootState) => state.projects;
+
 export default slice.reducer;

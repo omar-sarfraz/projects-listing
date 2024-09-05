@@ -1,95 +1,67 @@
 import { useState, useEffect } from "react";
-import { Bid, Project } from "../lib/types";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import { USER_ROLES } from "../lib/utils";
-import { useToast } from "../contexts/ToastContext";
-import { AxiosResponse } from "axios";
+import { useSelector } from "react-redux";
+
 import useAxios from "./useAxios";
 
+import { useAuth } from "../contexts/AuthContext";
+import { useToast } from "../contexts/ToastContext";
+
+import { Bid } from "../lib/types";
+import { USER_ROLES } from "../lib/utils";
+
+import { useAppDispatch } from "../redux/store";
+import {
+    acceptBidRequest,
+    deleteBidRequest,
+    deleteProjectRequest,
+    fetchProjectRequest,
+    selectProject,
+} from "../redux/project/slice";
+
 export default function useProject() {
-    const [project, setProject] = useState<Project>();
-    const [loading, setLoading] = useState(false);
+    const { project, loading } = useSelector(selectProject);
     const [canBid, setCanBid] = useState(false);
 
+    const dispatch = useAppDispatch();
+
     const params = useParams();
-    const { user } = useAuth();
-    const { toast } = useToast();
-    const axiosInstance = useAxios();
     const navigate = useNavigate();
 
+    const { user } = useAuth();
+
     useEffect(() => {
-        fetchProject();
+        if (params.id) {
+            const projectId = parseInt(params.id);
+            dispatch(fetchProjectRequest({ projectId }));
+        }
     }, []);
 
-    const fetchProject = async () => {
-        setLoading(true);
-        try {
-            const response = await axiosInstance.get("/projects/" + params.id);
-            const project: Project = response.data.data;
-            setProject(project);
+    useEffect(() => {
+        if (!project) return;
 
-            // Check to see if the current user can bid or not
-            if (user?.role === USER_ROLES.client || project.acceptedBid) return;
+        // Check to see if the current user can bid or not
+        if (user?.role === USER_ROLES.client || project.acceptedBid) return;
 
-            let bids: Bid[] | undefined = project.bids;
-            if (!bids) return;
+        let bids: Bid[] | undefined = project.bids;
+        if (!bids) return;
 
-            let currentUserBids = bids.filter((bid) => bid.user?.id === user?.id);
-            if (currentUserBids.length) return;
+        let currentUserBids = bids.filter((bid) => bid.user?.id === user?.id);
+        if (currentUserBids.length) return;
 
-            setCanBid(true);
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setLoading(false);
-        }
-    };
+        setCanBid(true);
+    }, [project]);
 
     const handleAcceptBid = async (id: number) => {
-        try {
-            const response: AxiosResponse = await axiosInstance.post(
-                `/projects/${project?.id}/bids/${id}/accept`
-            );
-
-            const updatedProject: Project = response.data.data;
-            setProject((project) => {
-                if (project) {
-                    return { ...project, acceptedBid: updatedProject.acceptedBid };
-                }
-            });
-            toast("Bid accepted successfully", "success");
-        } catch (e: any) {
-            console.log("Accept Bid response", e);
-        }
+        if (project?.id) dispatch(acceptBidRequest({ bidId: id, projectId: project.id }));
     };
 
     const handleDeleteBid = async (id: number) => {
-        try {
-            const response: AxiosResponse = await axiosInstance.delete(
-                `/projects/${project?.id}/bids/${id}`
-            );
-            toast(response.data.message, "success");
-            setProject((project) => {
-                if (project && project.bids?.length) {
-                    let newBids = project.bids.filter((bid) => bid.id !== id);
-                    return { ...project, bids: newBids };
-                }
-            });
-            navigate("/projects/" + project?.id);
-        } catch (e: any) {
-            console.log("Delete bid response", e);
-        }
+        if (project?.id) dispatch(deleteBidRequest({ bidId: id, projectId: project.id }));
     };
 
     const handleDeleteProject = async () => {
-        try {
-            const response: AxiosResponse = await axiosInstance.delete(`/projects/${project?.id}`);
-            toast(response.data.message, "success");
-            navigate("/");
-        } catch (e: any) {
-            console.log("Delete project response", e);
-        }
+        if (project?.id) dispatch(deleteProjectRequest({ projectId: project.id, navigate }));
     };
 
     return { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject };

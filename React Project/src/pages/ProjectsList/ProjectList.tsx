@@ -7,7 +7,7 @@ import Markdown from "react-markdown";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useMyProjectSubscription, useMyBidSubscription } from "../../hooks/useSubscription";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDataRequest, selectProjects } from "../../redux/projects/slice";
+import { fetchProjectsRequest, selectProjects } from "../../redux/projects/slice";
 
 export default function ProjectsList() {
     const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export default function ProjectsList() {
     useMyBidSubscription();
 
     useEffect(() => {
-        dispatch(fetchDataRequest());
+        dispatch(fetchProjectsRequest());
     }, []);
 
     useEffect(() => {

@@ -39,6 +39,7 @@ export default function Login() {
             navigate("/", { replace: true });
         } catch (e: any) {
             console.log("Login Error", e?.response);
+            toast(e?.response?.data?.message || "Login Error", "error");
         }
     };
 

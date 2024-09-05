@@ -47,6 +47,7 @@ export default function SignUp() {
             navigate("/login");
         } catch (e: any) {
             console.log("Sign up error", e?.response);
+            toast(e?.response?.data?.message || "Sign Up Error", "error");
         }
     };
 
