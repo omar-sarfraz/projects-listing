@@ -1,44 +1,33 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AxiosResponse } from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
 import Markdown from "react-markdown";
-import useAxios from "../../hooks/useAxios";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useMyProjectSubscription, useMyBidSubscription } from "../../hooks/useSubscription";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDataRequest, selectProjects } from "../../redux/projects/slice";
 
 export default function ProjectsList() {
-    const [projects, setProjects] = useState<Project[] | undefined>();
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+    const { projects, loading } = useSelector(selectProjects);
 
     const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
     const [searchTerm, setSearchTerm] = useState("");
 
     const { user } = useAuth();
-    const axiosInstance = useAxios();
 
     useMyProjectSubscription();
     useMyBidSubscription();
 
     useEffect(() => {
-        fetchProjects();
+        dispatch(fetchDataRequest());
     }, []);
 
-    const fetchProjects = async () => {
-        try {
-            const response: AxiosResponse = await axiosInstance.get("/projects");
-
-            const projects: Project[] = await response.data.data;
-            setProjects(projects);
-            setSearchedProjects(projects);
-        } catch (e) {
-            console.log("Error while fetching projects", e);
-        } finally {
-            setLoading(false);
-        }
-    };
+    useEffect(() => {
+        if (projects.length) setSearchedProjects(projects);
+    }, [projects]);
 
     const handleSearch = (e: FormEvent) => {
         e.preventDefault();
@@ -46,7 +35,7 @@ export default function ProjectsList() {
         if (searchTerm) {
             if (!projects) return;
 
-            const projectList: Project[] | [] = projects.filter((project) => {
+            const projectList: Project[] | [] = projects.filter((project: Project) => {
                 let name = project.name.toLowerCase();
                 let regex = new RegExp(searchTerm, "i");
 

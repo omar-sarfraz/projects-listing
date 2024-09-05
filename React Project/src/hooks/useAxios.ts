@@ -1,28 +1,24 @@
 import axios from "axios";
 import { BASE_URL } from "../configs/urls";
-import { useAuth } from "../contexts/AuthContext";
-import { useToast } from "../contexts/ToastContext";
+import { User } from "../lib/types";
 
-const useAxios = (shouldDisplayError: boolean = true) => {
-    const { user } = useAuth();
-    const { toast } = useToast();
+const useAxios = () => {
+    const user = localStorage.getItem("user");
+    let parsedUser: User;
+    if (user) parsedUser = JSON.parse(user);
 
     const axiosInstance = axios.create({
         baseURL: BASE_URL,
     });
 
     axiosInstance.interceptors.request.use((config) => {
-        if (user?.token) config.headers.Authorization = `Bearer ${user.token}`;
+        if (parsedUser?.token) config.headers.Authorization = `Bearer ${parsedUser.token}`;
         return config;
     });
 
     axiosInstance.interceptors.response.use(
         (response) => response,
-        (error) => {
-            console.log(error);
-            shouldDisplayError && toast(error.response?.data?.message || error?.message, "error");
-            return Promise.reject(error);
-        }
+        (error) => Promise.reject(error)
     );
 
     return axiosInstance;

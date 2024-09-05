@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 
 import Layout from "../pages/Layout";
 const ProjectsList = lazy(() => import("../pages/ProjectsList/ProjectList"));
@@ -18,9 +18,19 @@ import { createClient } from "graphql-ws";
 import { WEBSOCKET_URL } from "../configs/urls";
 import { Subscription } from "../components/Subscription";
 import { useAuth } from "../contexts/AuthContext";
+import { useSelector } from "react-redux";
+import { selectError } from "../redux/error/slice";
+import { useToast } from "../contexts/ToastContext";
 
 export default function MainNavigator() {
     const { user, loading } = useAuth();
+    const { toast } = useToast();
+
+    const error = useSelector(selectError);
+
+    useEffect(() => {
+        if (error) toast(error, "error");
+    }, [error]);
 
     if (loading) return <div>Loading</div>;
 
