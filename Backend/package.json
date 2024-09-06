@@ -4,7 +4,7 @@
     "main": "index.js",
     "scripts": {
         "build": "npx tsc && npm run sentry:sourcemaps",
-        "start": "node dist/index.js",
+        "start": "node -r dotenv/config dist/index.js dotenv_config_path=.env.local",
         "dev": "nodemon -r dotenv/config index.ts dotenv_config_path=.env.local",
         "test": "echo \"Error: no test specified\" && exit 1",
         "sentry:sourcemaps": "sentry-cli sourcemaps inject --org arbisoft-m1 --project project-listings-backend ./dist && sentry-cli sourcemaps upload --org arbisoft-m1 --project project-listings-backend ./dist"

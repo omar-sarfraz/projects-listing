@@ -8,13 +8,16 @@ import { uploadFile } from "../../middlewares/uploadFiles";
 import { updateProject } from "./updateProject";
 import isProjectOwner from "../../middlewares/isProjectOwner";
 import { deleteProject } from "./deleteProject";
+import { deleteFiles } from "./deleteFiles";
 
 const projectsRouter = Router();
 
 projectsRouter.post("/", isClient, uploadFile("projectFiles", 5), addProject);
-projectsRouter.put("/:projectId", isClient, uploadFile("projectFiles", 5), updateProject);
-projectsRouter.delete("/:projectId", isClient, isProjectOwner, deleteProject);
 projectsRouter.get("/", getProjects);
+
+projectsRouter.put("/:projectId", isClient, uploadFile("projectFiles", 5), updateProject);
 projectsRouter.get("/:projectId", getProjectById);
+projectsRouter.delete("/:projectId/files", isClient, isProjectOwner, deleteFiles);
+projectsRouter.delete("/:projectId", isClient, isProjectOwner, deleteProject);
 
 export default projectsRouter;

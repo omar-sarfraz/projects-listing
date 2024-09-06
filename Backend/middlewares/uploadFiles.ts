@@ -25,7 +25,6 @@ export const uploadFile =
         const upload = multer({ storage }).array(fieldName, maxFile);
 
         upload(req, res, function (err) {
-            console.log(err);
             if (err instanceof multer.MulterError && err.code === "LIMIT_UNEXPECTED_FILE") {
                 return res
                     .status(400)

@@ -9,7 +9,7 @@ export const signUpSchema = object().shape({
         .required("Please enter your password.")
         .min(8, "Your password must be at least 8 characters long."),
     confirmPassword: string()
-        .required("Please retype your password.")
+        .required("Please confirm your password.")
         .oneOf([ref("password")], "Your passwords do not match."),
     role: mixed()
         .oneOf([USER_ROLES.freelancer, USER_ROLES.client])

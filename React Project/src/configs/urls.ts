@@ -1,2 +1,2 @@
-export const BASE_URL = "http://localhost:5000";
-export const WEBSOCKET_URL = "ws://localhost:4000";
+export const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const WEBSOCKET_URL = import.meta.env.VITE_WEBSOCKET_URL;

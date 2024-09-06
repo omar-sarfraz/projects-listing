@@ -1,21 +1,23 @@
 import { Routes, Route } from "react-router-dom";
-import ProjectsList from "../pages/ProjectsList/ProjectList";
-import SubmitProject from "../pages/SubmitProject/SubmitProject";
+import { lazy } from "react";
+
 import Layout from "../pages/Layout";
-import NotFound from "../pages/NotFound";
-import Login from "../pages/Login/Login";
-import SignUp from "../pages/SignUp/SignUp";
-import { useAuth } from "../contexts/AuthContext";
-import ProjectPage from "../pages/ProjectPage/ProjectPage";
-import SubmitBid from "../pages/SubmitBid/SubmitBid";
+const ProjectsList = lazy(() => import("../pages/ProjectsList/ProjectList"));
+const SubmitProject = lazy(() => import("../pages/SubmitProject/SubmitProject"));
+const NotFound = lazy(() => import("../pages/NotFound"));
+const Login = lazy(() => import("../pages/Login/Login"));
+const SignUp = lazy(() => import("../pages/SignUp/SignUp"));
+const ProjectPage = lazy(() => import("../pages/ProjectPage/ProjectPage"));
+const SubmitBid = lazy(() => import("../pages/SubmitBid/SubmitBid"));
+const ChatPage = lazy(() => import("../pages/Chat/ChatPage"));
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-
 import { createClient } from "graphql-ws";
+
 import { WEBSOCKET_URL } from "../configs/urls";
 import { Subscription } from "../components/Subscription";
-import ChatPage from "../pages/Chat/ChatPage";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function MainNavigator() {
     const { user, loading } = useAuth();
