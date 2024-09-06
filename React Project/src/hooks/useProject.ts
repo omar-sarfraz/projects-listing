@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import useAxios from "./useAxios";
-
 import { useAuth } from "../contexts/AuthContext";
-import { useToast } from "../contexts/ToastContext";
 
 import { Bid } from "../lib/types";
 import { USER_ROLES } from "../lib/utils";
