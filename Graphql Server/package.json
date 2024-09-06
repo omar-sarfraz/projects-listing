@@ -1,0 +1,15 @@
+{
+    "name": "graphql-server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "compile": "tsc && node -r dotenv/config ./dist/index.js dotenv_config_path=.env.local",
+        "dev": "nodemon -e ts  --exec \"npm run compile\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "type": "module",
+    "dependencies": {}
+}

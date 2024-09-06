@@ -5,16 +5,21 @@ import MainNavigator from "./Navigators/MainNavigator";
 import { ToastContextProvider } from "./contexts/ToastContext";
 import ToastContainer from "./components/ToastContainer";
 
+import "@mantine/core/styles.css";
+import { MantineProvider } from "@mantine/core";
+
 function App() {
     return (
-        <AuthContextProvider>
-            <ToastContextProvider>
-                <BrowserRouter>
-                    <MainNavigator />
-                </BrowserRouter>
-                <ToastContainer />
-            </ToastContextProvider>
-        </AuthContextProvider>
+        <MantineProvider>
+            <AuthContextProvider>
+                <ToastContextProvider>
+                    <BrowserRouter>
+                        <MainNavigator />
+                    </BrowserRouter>
+                    <ToastContainer />
+                </ToastContextProvider>
+            </AuthContextProvider>
+        </MantineProvider>
     );
 }
 

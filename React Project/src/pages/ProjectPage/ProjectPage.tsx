@@ -99,6 +99,7 @@ export default function ProjectPage() {
                         user.id === project.userId &&
                         !project.acceptedBid
                     }
+                    isFreelancer={user?.role === USER_ROLES.freelancer}
                     acceptedBid={project.acceptedBid}
                     handleAcceptBid={handleAcceptBid}
                     handleDeleteBid={handleDeleteBid}

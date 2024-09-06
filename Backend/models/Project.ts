@@ -1,6 +1,7 @@
 import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
 import { Bid } from "./Bid";
+import { events } from "../lib/utils";
 
 export const Project = sequelize.define(
     "project",
@@ -30,7 +31,14 @@ export const Project = sequelize.define(
             type: DataTypes.ARRAY(DataTypes.STRING),
         },
     },
-    { paranoid: true }
+    {
+        paranoid: true,
+        hooks: {
+            afterUpdate: async (project, options) => {
+                await sequelize.query(`NOTIFY ${events.BID_UPDATE}, '${JSON.stringify(project)}'`);
+            },
+        },
+    }
 );
 
 // Project can have many bids

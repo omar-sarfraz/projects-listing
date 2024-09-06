@@ -11,6 +11,7 @@ import { sequelize } from "./lib/sequelize";
 import bidsRouter from "./controllers/bids";
 import authRouter from "./controllers/auth";
 import projectsRouter from "./controllers/projects";
+import usersRouter from "./controllers/users";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,7 @@ app.use(passport.authenticate("jwt", { session: false }));
 
 app.use("/projects", projectsRouter);
 app.use("/projects/:projectId/bids", bidsRouter);
+app.use("/users", usersRouter);
 
 app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 
