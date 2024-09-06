@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Project } from "../../lib/types";
 import { RootState } from "../store";
-import { NavigateFunction } from "react-router-dom";
 
 type StateType = {
     project: Project | null;
@@ -27,6 +26,10 @@ const slice = createSlice({
         fetchProjectFailure(state) {
             state.loading = false;
         },
+        resetProject(state) {
+            state.project = null;
+            state.loading = false;
+        },
         acceptBidRequest(_, __: PayloadAction<{ bidId: number; projectId: number }>) {},
         acceptBidSuccess(state, { payload }: { payload: Project }) {
             if (state.project) {
@@ -41,14 +44,7 @@ const slice = createSlice({
                 state.project = { ...project, bids: newBids };
             }
         },
-        deleteProjectRequest(
-            _,
-            __: PayloadAction<{ projectId: number; navigate: NavigateFunction }>
-        ) {},
-        deleteProjectSuccess(_, { payload }: { payload: { navigate: NavigateFunction } }) {
-            // toast(response.data.message, "success");
-            payload.navigate("/");
-        },
+        deleteProjectRequest(_, __: PayloadAction<{ projectId: number }>) {},
     },
 });
 
@@ -56,12 +52,12 @@ export const {
     fetchProjectRequest,
     fetchProjectSuccess,
     fetchProjectFailure,
+    resetProject,
     acceptBidRequest,
     acceptBidSuccess,
     deleteBidRequest,
     deleteBidSuccess,
     deleteProjectRequest,
-    deleteProjectSuccess,
 } = slice.actions;
 export const selectProject = (state: RootState) => state.project;
 

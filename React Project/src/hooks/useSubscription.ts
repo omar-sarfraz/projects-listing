@@ -40,7 +40,7 @@ export const useMyProjectSubscription = () => {
     const [projectIds, setProjectIds] = useState([]);
     const [skipSubscription, setSkipSubscription] = useState(true);
 
-    const axiosInstance = useAxios(false);
+    const axiosInstance = useAxios();
     const { toast } = useToast();
     const { user } = useAuth();
 
@@ -78,7 +78,7 @@ export const useMyBidSubscription = () => {
     const [bidIds, setBidIds] = useState([]);
     const [skipSubscription, setSkipSubscription] = useState(true);
 
-    const axiosInstance = useAxios(false);
+    const axiosInstance = useAxios();
     const { toast } = useToast();
     const { user } = useAuth();
 

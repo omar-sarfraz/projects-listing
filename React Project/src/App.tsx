@@ -1,5 +1,5 @@
 import { AuthContextProvider } from "./contexts/AuthContext";
-import { BrowserRouter } from "react-router-dom";
+import { HistoryRouter as Router } from "redux-first-history/rr6";
 import MainNavigator from "./Navigators/MainNavigator";
 
 import { ToastContextProvider } from "./contexts/ToastContext";
@@ -9,7 +9,7 @@ import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 
 import { Provider } from "react-redux";
-import { store } from "./redux/store";
+import { history, store } from "./redux/store";
 
 function App() {
     return (
@@ -17,9 +17,9 @@ function App() {
             <MantineProvider>
                 <AuthContextProvider>
                     <ToastContextProvider>
-                        <BrowserRouter>
+                        <Router history={history}>
                             <MainNavigator />
-                        </BrowserRouter>
+                        </Router>
                         <ToastContainer />
                     </ToastContextProvider>
                 </AuthContextProvider>

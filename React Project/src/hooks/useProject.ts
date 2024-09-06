@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { useAuth } from "../contexts/AuthContext";
@@ -13,6 +13,7 @@ import {
     deleteBidRequest,
     deleteProjectRequest,
     fetchProjectRequest,
+    resetProject,
     selectProject,
 } from "../redux/project/slice";
 
@@ -23,7 +24,6 @@ export default function useProject() {
     const dispatch = useAppDispatch();
 
     const params = useParams();
-    const navigate = useNavigate();
 
     const { user } = useAuth();
 
@@ -32,6 +32,10 @@ export default function useProject() {
             const projectId = parseInt(params.id);
             dispatch(fetchProjectRequest({ projectId }));
         }
+
+        return () => {
+            dispatch(resetProject());
+        };
     }, []);
 
     useEffect(() => {
@@ -58,7 +62,7 @@ export default function useProject() {
     };
 
     const handleDeleteProject = async () => {
-        if (project?.id) dispatch(deleteProjectRequest({ projectId: project.id, navigate }));
+        if (project?.id) dispatch(deleteProjectRequest({ projectId: project.id }));
     };
 
     return { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject };

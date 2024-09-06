@@ -13,10 +13,10 @@ import {
     acceptBidRequest,
     deleteBidRequest,
     deleteBidSuccess,
-    deleteProjectSuccess,
     deleteProjectRequest,
 } from "./slice";
 import { NavigateFunction } from "react-router-dom";
+import { push } from "redux-first-history";
 
 const axiosInstance = useAxios();
 
@@ -76,7 +76,7 @@ function* deleteProject(action: {
 
         yield call(axiosInstance.delete, url);
 
-        yield put(deleteProjectSuccess({ navigate: action.payload.navigate }));
+        yield put(push("/"));
     } catch (error: any) {
         yield put(setError(error.response?.data?.message || error?.message));
     }
