@@ -17,10 +17,11 @@ const slice = createSlice({
         setProjects(state, action: PayloadAction<Project[]>) {
             state.value = action.payload;
         },
+        listenProjectEvents() {},
     },
 });
 
-export const { setProjects } = slice.actions;
+export const { setProjects, listenProjectEvents } = slice.actions;
 
 export const selectProjects = (state: RootState) => state.projects.value;
 

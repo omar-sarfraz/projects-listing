@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 
 import Layout from "../pages/Layout";
 const ProjectsList = lazy(() => import("../pages/ProjectsList/ProjectList"));
@@ -19,8 +19,18 @@ import { WEBSOCKET_URL } from "../configs/urls";
 import { Subscription } from "../components/Subscription";
 import { useAuth } from "../contexts/AuthContext";
 
+import { useAppDispatch } from "../redux/store";
+import { listenProjectEvents } from "../redux/projects/slice";
+import { listenOnlineStatus } from "../redux/onlineStatus/slice";
+
 export default function MainNavigator() {
     const { user, loading } = useAuth();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(listenProjectEvents());
+        dispatch(listenOnlineStatus());
+    }, []);
 
     if (loading) return <div>Loading</div>;
 
