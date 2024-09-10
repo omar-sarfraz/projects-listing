@@ -14,11 +14,11 @@ export default defineConfig({
                 runtimeCaching: [
                     {
                         urlPattern: ({ url }) => {
-                            return url.pathname.startsWith("/projects");
+                            return url.pathname.startsWith("/");
                         },
-                        handler: "CacheFirst" as const,
+                        handler: "NetworkFirst" as const,
                         options: {
-                            cacheName: "api-cache",
+                            cacheName: "cache",
                             cacheableResponse: {
                                 statuses: [0, 200],
                             },
