@@ -15,14 +15,11 @@ import * as marked from "marked";
 import { Form, Formik, FormikHelpers } from "formik";
 import dayjs from "dayjs";
 import { Icon } from "@iconify/react";
-
-type ProjectInput = {
-    name: string;
-    budget: string;
-    deadline: string;
-    description: string;
-    files: FileList | null;
-};
+import { ProjectInput } from "../../lib/types";
+import { createProjectFormData } from "./utils";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
+import { addOfflineEvent } from "../../redux/projects/slice";
 
 export default function SubmitProject() {
     const [loading, setLoading] = useState(false);
@@ -35,6 +32,9 @@ export default function SubmitProject() {
 
     const navigate = useNavigate();
     const { state } = useLocation();
+
+    const isOnline = useAppSelector(selectOnlineStatus);
+    const dispatch = useAppDispatch();
 
     const initialValues: ProjectInput = {
         name: state ? state.name : "",
@@ -70,36 +70,51 @@ export default function SubmitProject() {
         try {
             setLoading(true);
 
-            const deadlineWithTimezone = dayjs(deadline).toISOString();
-
-            const formData = new FormData();
-            formData.append("name", name);
-            formData.append("budget", budget);
-            formData.append("deadline", deadlineWithTimezone);
-            formData.append("description", description);
-            if (user?.id) formData.append("userId", String(user.id));
-            if (files?.length) {
-                for (let i = 0; i < files.length; i++) {
-                    formData.append("projectFiles", files[i]);
-                }
-            }
+            const payload = {
+                name,
+                deadline,
+                description,
+                budget,
+                files,
+                user,
+            };
 
             const url = state ? `/projects/${state.id}` : "/projects";
+            const formData = createProjectFormData(payload);
             const requestOptions = {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             };
 
-            if (state) await axiosInstance.put(url, formData, requestOptions);
-            else await axiosInstance.post(url, formData, requestOptions);
+            if (isOnline) {
+                if (state) await axiosInstance.put(url, formData, requestOptions);
+                else await axiosInstance.post(url, formData, requestOptions);
+
+                toast("Project Submitted Successfully!", "success");
+                navigate("/");
+            }
+
+            if (!isOnline && !state) {
+                toast(
+                    "It seems you are offline, we'll automatically post the project when you're back online",
+                    "success"
+                );
+                dispatch(
+                    addOfflineEvent({
+                        payload: {
+                            data: payload,
+                            url,
+                            requestOptions,
+                        },
+                        name: "CREATE_PROJECT",
+                    })
+                );
+            }
 
             actions.resetForm();
-
-            toast("Project Submitted Successfully!", "success");
-            navigate("/");
         } catch (e: any) {
-            console.log(e?.response);
+            console.log(e);
         } finally {
             setLoading(false);
         }
