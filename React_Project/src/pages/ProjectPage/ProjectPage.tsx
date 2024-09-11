@@ -1,12 +1,15 @@
 import { Link, useParams } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import { useDocumentTitle } from "@mantine/hooks";
 
 import { USER_ROLES } from "../../lib/utils";
+import { BASE_URL } from "../../configs/urls";
+
 import BidsList from "../../components/BidsList";
 import Description from "../../components/Description";
-import useProject from "../../hooks/useProject";
+
 import { useAuth } from "../../contexts/AuthContext";
-import { BASE_URL } from "../../configs/urls";
-import { Icon } from "@iconify/react";
+import useProject from "../../hooks/useProject";
 
 export default function ProjectPage() {
     const { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject } =
@@ -14,6 +17,8 @@ export default function ProjectPage() {
 
     const params = useParams();
     const { user } = useAuth();
+
+    useDocumentTitle(project?.name || "Project");
 
     if (loading) return <div>Loading</div>;
 

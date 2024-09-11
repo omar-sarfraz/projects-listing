@@ -1,7 +1,9 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import { AxiosResponse } from "axios";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useDocumentTitle } from "@mantine/hooks";
 
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -26,6 +28,8 @@ export default function ProjectsList() {
     const { user } = useAuth();
     const axiosInstance = useAxios();
     const dispatch = useAppDispatch();
+
+    useDocumentTitle("View Projects");
 
     useMyProjectSubscription();
     useMyBidSubscription();

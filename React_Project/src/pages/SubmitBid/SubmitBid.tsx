@@ -13,9 +13,11 @@ import { BidInput } from "../../lib/types";
 import { bidSchema } from "./validationSchema";
 import useAxios from "../../hooks/useAxios";
 
+import dayjs from "dayjs";
 import { marked } from "marked";
 import { Form, Formik, FormikHelpers } from "formik";
-import dayjs from "dayjs";
+import { useDocumentTitle } from "@mantine/hooks";
+
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
 import { addOfflineEvent } from "../../redux/events/slice";
@@ -35,6 +37,8 @@ export default function AddBid() {
 
     const isOnline = useAppSelector(selectOnlineStatus);
     const dispatch = useAppDispatch();
+
+    useDocumentTitle("Submit Bid");
 
     const initialValues = {
         budget: state ? state.budget : "",

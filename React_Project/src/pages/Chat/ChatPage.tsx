@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "@apollo/client";
 
 import { Icon } from "@iconify/react";
 import { Button, Box, Input, Loader, Blockquote } from "@mantine/core";
+import { useDocumentTitle } from "@mantine/hooks";
 
 import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -27,6 +28,8 @@ export default function ChatPage() {
     const endRef = useRef<null | HTMLDivElement>(null);
 
     const projectId = parseInt(params.id || "0");
+
+    useDocumentTitle("Chat");
 
     const { data, error, loading } = useQuery(MESSAGES_QUERY, {
         variables: { projectId },

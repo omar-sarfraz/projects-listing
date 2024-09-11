@@ -5,18 +5,21 @@ import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
 
 import { USER_ROLES } from "../../lib/utils";
+import { ProjectInput } from "../../lib/types";
 
 import TextField from "../../components/TextField";
 import { projectSchema } from "./validationSchema";
 import TextEditor from "../../components/TextEditor";
 import useAxios from "../../hooks/useAxios";
 
+import dayjs from "dayjs";
 import * as marked from "marked";
 import { Form, Formik, FormikHelpers } from "formik";
-import dayjs from "dayjs";
 import { Icon } from "@iconify/react";
-import { ProjectInput } from "../../lib/types";
+import { useDocumentTitle } from "@mantine/hooks";
+
 import { createProjectFormData } from "./utils";
+
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
 import { addOfflineEvent } from "../../redux/events/slice";
@@ -35,6 +38,8 @@ export default function SubmitProject() {
 
     const isOnline = useAppSelector(selectOnlineStatus);
     const dispatch = useAppDispatch();
+
+    useDocumentTitle("Submit Project");
 
     const initialValues: ProjectInput = {
         name: state ? state.name : "",

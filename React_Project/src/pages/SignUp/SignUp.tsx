@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Field, Form, Formik, FormikHelpers } from "formik";
+import { useDocumentTitle } from "@mantine/hooks";
 
 import TextField from "../../components/TextField";
 import Button from "../../components/Button";
@@ -25,6 +26,8 @@ export default function SignUp() {
     const axiosInstance = useAxios();
 
     const navigate = useNavigate();
+
+    useDocumentTitle("Sign Up");
 
     const handleSignUp = async (
         { firstName, lastName, email, password, role }: SignUpValues,
