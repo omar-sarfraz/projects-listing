@@ -1,38 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 
 import { Icon } from "@iconify/react";
 import { Button, Box, Input, Loader, Blockquote } from "@mantine/core";
 
 import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
+
 import { MessageType } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
+
 import { useMessageSubscription } from "../../hooks/useSubscription";
+import { MESSAGES_QUERY, POST_MESSAGE_QUERY } from "../../graphql/queries";
+
 import Message from "../../components/Message";
-
-const MESSAGES_QUERY = gql`
-    query Messages($projectId: Int!) {
-        messages(projectId: $projectId) {
-            id
-            text
-            projectId
-            userId
-        }
-    }
-`;
-
-const POST_MESSAGE_QUERY = gql`
-    mutation ($message: MessageInput!) {
-        postMessage(message: $message) {
-            id
-            text
-            projectId
-            userId
-        }
-    }
-`;
 
 export default function ChatPage() {
     const params = useParams();

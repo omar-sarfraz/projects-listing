@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosResponse } from "axios";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -10,9 +11,9 @@ import { USER_ROLES } from "../../lib/utils";
 import useAxios from "../../hooks/useAxios";
 import { useMyProjectSubscription, useMyBidSubscription } from "../../hooks/useSubscription";
 
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectProjects, setProjects } from "../../redux/projects/slice";
+
 import ProjectCard from "../../components/ProjectCard";
 
 export default function ProjectsList() {
