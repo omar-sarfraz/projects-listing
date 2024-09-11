@@ -1,7 +1,7 @@
 import { call, put, select, delay, takeLatest } from "redux-saga/effects";
 
 import { listenEvents, removeOfflineEvent, selectEvents } from "../events/slice";
-import { CreateProject, OfflineEventType } from "../../lib/types";
+import { CreateBid, CreateProject, OfflineEventType } from "../../lib/types";
 
 import { createProjectFormData } from "../../pages/SubmitProject/utils";
 import { usePlainAxios } from "../../hooks/useAxios";
@@ -14,6 +14,11 @@ const postProject = ({ payload }: OfflineEventType) => {
     return axiosInstance.post(url, formData, requestOptions);
 };
 
+const postBid = ({ payload }: OfflineEventType) => {
+    const { data, url } = payload as CreateBid;
+    return axiosInstance.post(url, data);
+};
+
 function* processEvents() {
     while (true) {
         const events: OfflineEventType[] | undefined = yield select(selectEvents);
@@ -24,6 +29,11 @@ function* processEvents() {
                     if (event.name === "CREATE_PROJECT") {
                         yield call(postProject, event);
                     }
+
+                    if (event.name === "CREATE_BID") {
+                        yield call(postBid, event);
+                    }
+
                     if (event.id) yield put(removeOfflineEvent({ id: event.id }));
                 } catch (error) {
                     console.error(`Failed to process event with ID ${event.id}:`, error);

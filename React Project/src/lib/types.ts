@@ -60,7 +60,7 @@ export type BidInput = {
     description: string;
 };
 
-type CreateBid = {
+export type CreateBid = {
     data: BidInput & { userId: number | undefined };
     url: string;
 };

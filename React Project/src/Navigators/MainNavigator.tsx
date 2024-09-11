@@ -20,7 +20,7 @@ import { Subscription } from "../components/Subscription";
 import { useAuth } from "../contexts/AuthContext";
 
 import { useAppDispatch } from "../redux/store";
-import { listenProjectEvents } from "../redux/projects/slice";
+import { listenEvents } from "../redux/events/slice";
 import { listenOnlineStatus } from "../redux/onlineStatus/slice";
 
 export default function MainNavigator() {
@@ -28,7 +28,7 @@ export default function MainNavigator() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(listenProjectEvents());
+        dispatch(listenEvents());
         dispatch(listenOnlineStatus());
     }, []);
 

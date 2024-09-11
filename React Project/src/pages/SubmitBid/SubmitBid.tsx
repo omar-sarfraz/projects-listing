@@ -80,7 +80,7 @@ export default function AddBid() {
                 deadline: deadlineWithTimezone,
             };
 
-            if (!isOnline) {
+            if (isOnline) {
                 if (state) await axiosInstance.put(url, requestData);
                 else await axiosInstance.post(url, requestData);
 
