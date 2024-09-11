@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 
 import { Icon } from "@iconify/react";
 import { Button, Box, Input, Loader, Blockquote } from "@mantine/core";
-import { useDocumentTitle } from "@mantine/hooks";
+import { useDocumentTitle, useScrollIntoView } from "@mantine/hooks";
 
 import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -25,7 +25,13 @@ export default function ChatPage() {
     const [text, setText] = useState("");
     const [messages, setMessages] = useState<MessageType[]>([]);
 
-    const endRef = useRef<null | HTMLDivElement>(null);
+    const {
+        scrollIntoView,
+        scrollableRef,
+        targetRef: lastDiv,
+    } = useScrollIntoView<HTMLDivElement>({
+        offset: 60,
+    });
 
     const projectId = parseInt(params.id || "0");
 
@@ -69,7 +75,9 @@ export default function ChatPage() {
     }, [postMessageLoading, postMessageData]);
 
     useEffect(() => {
-        endRef.current?.scrollIntoView({ behavior: "smooth" });
+        scrollIntoView({
+            alignment: "center",
+        });
     }, [messages]);
 
     if (!loading && error) return <div>An error has occurred!</div>;
@@ -87,11 +95,14 @@ export default function ChatPage() {
                 Chat with {user?.role === USER_ROLES.client ? "freelancer" : "client"}
             </Blockquote>
             <div>
-                <div className="flex flex-col gap-2 py-4 my-4 w-full overflow-scroll h-[60vh]">
+                <div
+                    className="flex flex-col gap-2 py-4 my-4 w-full overflow-scroll h-[60vh]"
+                    ref={scrollableRef}
+                >
                     {messages.map((message: MessageType) => (
                         <Message message={message} userId={user?.id} key={message.id} />
                     ))}
-                    <div ref={endRef}></div>
+                    <div ref={lastDiv}></div>
                 </div>
                 <form className="flex w-full gap-2" onSubmit={handleSend}>
                     <Input
