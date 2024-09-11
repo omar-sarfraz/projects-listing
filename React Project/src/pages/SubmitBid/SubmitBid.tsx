@@ -3,20 +3,22 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
-import { USER_ROLES } from "../../lib/utils";
-import { bidSchema } from "./validationSchema";
+
 import TextField from "../../components/TextField";
 import TextEditor from "../../components/TextEditor";
+
+import { USER_ROLES } from "../../lib/utils";
+import { BidInput } from "../../lib/types";
+
+import { bidSchema } from "./validationSchema";
 import useAxios from "../../hooks/useAxios";
+
 import { marked } from "marked";
 import { Form, Formik, FormikHelpers } from "formik";
 import dayjs from "dayjs";
-
-type BidInput = {
-    budget: string;
-    deadline: string;
-    description: string;
-};
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
+import { addOfflineEvent } from "../../redux/events/slice";
 
 export default function AddBid() {
     const [deadline, setDeadline] = useState("");
@@ -30,6 +32,9 @@ export default function AddBid() {
     const { toast } = useToast();
     const { state } = useLocation();
     const axiosInstance = useAxios();
+
+    const isOnline = useAppSelector(selectOnlineStatus);
+    const dispatch = useAppDispatch();
 
     const initialValues = {
         budget: state ? state.budget : "",
@@ -75,12 +80,31 @@ export default function AddBid() {
                 deadline: deadlineWithTimezone,
             };
 
-            if (state) await axiosInstance.put(url, requestData);
-            else await axiosInstance.post(url, requestData);
+            if (!isOnline) {
+                if (state) await axiosInstance.put(url, requestData);
+                else await axiosInstance.post(url, requestData);
+
+                toast("Bid Submitted Successfully!", "success");
+                navigate("/projects/" + params.id);
+            }
+
+            if (!isOnline && !state) {
+                toast(
+                    "It seems you are offline, we'll automatically submit your bid for this project when you're back online",
+                    "success"
+                );
+                dispatch(
+                    addOfflineEvent({
+                        payload: {
+                            data: requestData,
+                            url,
+                        },
+                        name: "CREATE_BID",
+                    })
+                );
+            }
 
             actions.resetForm();
-            toast("Bid Submitted Successfully!", "success");
-            navigate("/projects/" + params.id);
         } catch (e: any) {
             console.log(e?.response);
         } finally {

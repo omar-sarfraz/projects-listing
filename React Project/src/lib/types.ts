@@ -44,16 +44,29 @@ export type ProjectInput = {
     files: FileList | null;
 };
 
-export type OfflineEventType = {
-    id?: number;
-    name: "CREATE_PROJECT";
-    payload: {
-        data: ProjectInput & { user: User | undefined };
-        url: string;
-        requestOptions?: {
-            headers: {
-                "Content-Type": string;
-            };
+export type CreateProject = {
+    data: ProjectInput & { user: User | undefined };
+    url: string;
+    requestOptions?: {
+        headers: {
+            "Content-Type": string;
         };
     };
+};
+
+export type BidInput = {
+    budget: string;
+    deadline: string;
+    description: string;
+};
+
+type CreateBid = {
+    data: BidInput & { userId: number | undefined };
+    url: string;
+};
+
+export type OfflineEventType = {
+    id?: number;
+    name: "CREATE_PROJECT" | "CREATE_BID";
+    payload: CreateProject | CreateBid;
 };

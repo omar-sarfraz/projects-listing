@@ -7,6 +7,7 @@ import storage from "redux-persist/lib/storage";
 
 import projectsReducer from "./projects/slice";
 import onlineStateSlice from "./onlineStatus/slice";
+import eventsReducer from "./events/slice";
 
 import rootSaga from "./rootSaga";
 
@@ -15,7 +16,11 @@ const persistConfig = {
     storage,
 };
 
-const rootReducer = combineReducers({ projects: projectsReducer, isUserOnline: onlineStateSlice });
+const rootReducer = combineReducers({
+    projects: projectsReducer,
+    isUserOnline: onlineStateSlice,
+    events: eventsReducer,
+});
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const sagaMiddleware = createSagaMiddleware();

@@ -1,7 +1,7 @@
 import { call, put, select, delay, takeLatest } from "redux-saga/effects";
 
-import { listenProjectEvents, removeOfflineEvent, selectEvents } from "./slice";
-import { OfflineEventType } from "../../lib/types";
+import { listenEvents, removeOfflineEvent, selectEvents } from "../events/slice";
+import { CreateProject, OfflineEventType } from "../../lib/types";
 
 import { createProjectFormData } from "../../pages/SubmitProject/utils";
 import { usePlainAxios } from "../../hooks/useAxios";
@@ -9,8 +9,9 @@ import { usePlainAxios } from "../../hooks/useAxios";
 const axiosInstance = usePlainAxios();
 
 const postProject = ({ payload }: OfflineEventType) => {
-    const formData = createProjectFormData(payload.data);
-    return axiosInstance.post(payload.url, formData, payload.requestOptions);
+    const { data, requestOptions, url } = payload as CreateProject;
+    const formData = createProjectFormData(data);
+    return axiosInstance.post(url, formData, requestOptions);
 };
 
 function* processEvents() {
@@ -34,6 +35,6 @@ function* processEvents() {
     }
 }
 
-export function* watchProjectEvents() {
-    yield takeLatest(listenProjectEvents.type, processEvents);
+export function* watchEvents() {
+    yield takeLatest(listenEvents.type, processEvents);
 }
