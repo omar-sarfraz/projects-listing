@@ -1,6 +1,6 @@
 import { call, put, select, delay, takeLatest } from "redux-saga/effects";
 
-import { listenEvents, removeOfflineEvent, selectEvents } from "../events/slice";
+import { listenEvents, removeOfflineEvent, selectEvents } from "./slice";
 import { CreateBid, CreateProject, OfflineEventType } from "../../lib/types";
 
 import { createProjectFormData } from "../../pages/SubmitProject/utils";
