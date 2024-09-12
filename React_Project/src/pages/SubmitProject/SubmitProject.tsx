@@ -8,8 +8,9 @@ import { USER_ROLES } from "../../lib/utils";
 import { ProjectInput } from "../../lib/types";
 
 import TextField from "../../components/TextField";
-import { projectSchema } from "./validationSchema";
 import TextEditor from "../../components/TextEditor";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
+import { projectSchema } from "./validationSchema";
 import useAxios from "../../hooks/useAxios";
 
 import dayjs from "dayjs";
@@ -202,15 +203,20 @@ export default function SubmitProject() {
                         {state?.files?.length ? (
                             <div className="mt-4 flex gap-4 flex-wrap w-full">
                                 {state.files.map((file: string) => (
-                                    <button
-                                        key={file}
-                                        type="button"
-                                        className="flex gap-2 items-center border-[1px] py-1 px-2 rounded-md"
+                                    <ConfirmationDialog
                                         onClick={() => handleFileDelete(file)}
+                                        title="Confirm File Deletion"
+                                        description="Do you really want to delete this file?"
                                     >
-                                        {file.split("/").pop()}
-                                        <Icon icon="line-md:close" />
-                                    </button>
+                                        <button
+                                            key={file}
+                                            type="button"
+                                            className="flex gap-2 items-center border-[1px] py-1 px-2 rounded-md"
+                                        >
+                                            {file.split("/").pop()}
+                                            <Icon icon="line-md:close" />
+                                        </button>
+                                    </ConfirmationDialog>
                                 ))}
                             </div>
                         ) : null}

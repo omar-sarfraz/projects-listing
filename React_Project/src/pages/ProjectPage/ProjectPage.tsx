@@ -7,6 +7,7 @@ import { BASE_URL } from "../../configs/urls";
 
 import BidsList from "../../components/BidsList";
 import Description from "../../components/Description";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
 
 import { useAuth } from "../../contexts/AuthContext";
 import useProject from "../../hooks/useProject";
@@ -56,17 +57,20 @@ export default function ProjectPage() {
                             <div className="text-white font-semibold text-xl">Edit</div>
                             <Icon icon="basil:edit-solid" fontSize={24} color="white" />
                         </Link>
-                        <button
-                            className="flex items-center bg-red-500 rounded-xl py-2 px-4 gap-1"
+                        <ConfirmationDialog
                             onClick={handleDeleteProject}
+                            title="Confirm Project Deletion"
+                            description="Do you really want to delete this project? This action is irreversible."
                         >
-                            <div className="text-white font-semibold text-xl">Delete</div>
-                            <Icon
-                                icon="material-symbols-light:delete"
-                                fontSize={28}
-                                color="white"
-                            />
-                        </button>
+                            <button className="flex items-center bg-red-500 rounded-xl py-2 px-4 gap-1 h-full">
+                                <div className="text-white font-semibold text-xl">Delete</div>
+                                <Icon
+                                    icon="material-symbols-light:delete"
+                                    fontSize={28}
+                                    color="white"
+                                />
+                            </button>
+                        </ConfirmationDialog>
                     </div>
                 ) : null}
             </div>

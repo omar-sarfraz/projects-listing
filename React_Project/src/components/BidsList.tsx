@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+
 import { Bid } from "../lib/types";
+
 import Description from "./Description";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 type PropType = {
     bids: Bid[];
@@ -35,12 +38,15 @@ export default function BidsList({
                                 >
                                     Edit
                                 </Link>
-                                <button
-                                    className="bg-red-50 border-red-500 border-[1px] text-red-500 rounded-md px-4 py-1"
+                                <ConfirmationDialog
                                     onClick={() => handleDeleteBid(bid.id)}
+                                    title="Confirm Bid Deletion"
+                                    description="Do you really want to delete this bid? This action is irreversible."
                                 >
-                                    Delete
-                                </button>
+                                    <button className="bg-red-50 border-red-500 border-[1px] text-red-500 rounded-md px-4 py-1">
+                                        Delete
+                                    </button>
+                                </ConfirmationDialog>
                             </div>
                         ) : null}
                     </div>
