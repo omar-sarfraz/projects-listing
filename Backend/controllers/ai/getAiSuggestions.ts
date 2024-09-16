@@ -24,7 +24,6 @@ const getAiSuggestions = async (req: Request, res: Response) => {
 
         const result = await model.generateContent(projectPrompt);
         const suggestion = result.response.text();
-        console.log(suggestion);
 
         res.status(200).json({ suggestion, error: false });
     } catch (e: any) {

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-
 import { useField, useFormikContext } from "formik";
 
 import Quill from "quill";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { EditorType } from "../lib/types";
+
+import { EditorType, ProjectInput } from "../lib/types";
+import { usePlainAxios } from "../hooks/useAxios";
 
 type SuggestionPosition = { start: number; end: number };
 
@@ -19,7 +20,7 @@ const TextEditor = ({
     placeholder: string;
     type: EditorType;
 }) => {
-    const { setFieldValue } = useFormikContext();
+    const { values, setFieldValue } = useFormikContext<ProjectInput>();
     const [field, meta] = useField(name);
 
     const quillRef = useRef<ReactQuill>(null);
@@ -29,6 +30,14 @@ const TextEditor = ({
     const suggestionPosition = useRef<SuggestionPosition>({ start: 0, end: 0 });
 
     const [suggestion, setSuggestion] = useState("");
+
+    const axiosInstance = usePlainAxios();
+
+    const valuesRef = useRef(values);
+
+    useEffect(() => {
+        valuesRef.current = values;
+    }, [values]);
 
     const handleChange = (value: string) => {
         setFieldValue(name, value);
@@ -75,18 +84,23 @@ const TextEditor = ({
 
         if (!isSuggesting.current || !selection) return;
 
+        console.log("suggestion", suggestion);
+
         quill.insertText(selection.index, suggestion, "api");
         quill.setSelection(quill.getLength(), 0);
 
         resetSuggestionPosition();
     };
 
-    const fetch = async () => {
-        return new Promise((resolve, _) => {
-            setTimeout(() => {
-                resolve(0);
-            }, 3000);
-        });
+    const getAiSuggestion = async (currentDescription: string) => {
+        try {
+            const url = `/ai/suggestions?title=${valuesRef.current.name}&budget=${valuesRef.current.budget}&deadline=${valuesRef.current.deadline}&description=${currentDescription}`;
+            const response = await axiosInstance.get(url);
+
+            setSuggestion(response.data.suggestion);
+        } catch (e: any) {
+            console.log("Faliled to get suggestion", e);
+        }
     };
 
     const updateSuggestion = (quill: Quill, source: string) => {
@@ -95,34 +109,39 @@ const TextEditor = ({
 
         if (suggestionTimeOutRef.current) clearTimeout(suggestionTimeOutRef.current);
         suggestionTimeOutRef.current = setTimeout(async () => {
-            await fetch();
-
-            const selection = quill.getSelection();
-            if (selection && suggestion && isCursorAtEnd()) {
-                const cursorPosition = selection.index;
-
-                isSuggesting.current = true;
-
-                clearSuggestionText();
-
-                suggestionPosition.current = {
-                    start: cursorPosition,
-                    end: cursorPosition + 1 + suggestion.length,
-                };
-
-                quill.insertText(cursorPosition, suggestion, {
-                    color: "rgba(0,0,0,0.3)",
-                    "user-select": "none",
-                });
-
-                quill.setSelection(cursorPosition, 0);
-            }
+            await getAiSuggestion(quill.getText(0, quill.getLength()));
         }, 3000);
     };
 
     useEffect(() => {
         const quill = getQuillEditor();
-        if (!quill) return;
+        if (!suggestion || !quill) return;
+
+        const selection = quill.getSelection();
+        if (selection && isCursorAtEnd()) {
+            const cursorPosition = selection.index;
+
+            isSuggesting.current = true;
+
+            clearSuggestionText();
+
+            suggestionPosition.current = {
+                start: cursorPosition,
+                end: cursorPosition + 1 + suggestion.length,
+            };
+
+            quill.insertText(cursorPosition, suggestion, {
+                color: "rgba(0,0,0,0.3)",
+                "user-select": "none",
+            });
+
+            quill.setSelection(cursorPosition, 0);
+        }
+    }, [suggestion]);
+
+    useEffect(() => {
+        const quill = getQuillEditor();
+        if (!quill || type === "BID") return;
 
         quill.on("text-change", (_, __, source) => updateSuggestion(quill, source));
         quill.on("selection-change", (_, __, source) => {
@@ -141,7 +160,7 @@ const TextEditor = ({
         return () => {
             document.removeEventListener("keydown", tabListener);
         };
-    }, []);
+    }, [suggestion]);
 
     return (
         <div className="w-full">
