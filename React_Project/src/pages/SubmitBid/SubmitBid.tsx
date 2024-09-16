@@ -147,6 +147,7 @@ export default function AddBid() {
                             <TextEditor
                                 name="description"
                                 placeholder="e.g., I have experience in this kind of project..."
+                                type="BID"
                             />
                         </div>
                     </div>
