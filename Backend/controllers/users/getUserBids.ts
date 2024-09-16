@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { Project } from "../../models/Project";
 import { CustomRequest } from "../../lib/types";
 import { Bid } from "../../models/Bid";
 
