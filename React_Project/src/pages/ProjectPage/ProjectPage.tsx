@@ -11,6 +11,7 @@ import ConfirmationDialog from "../../components/ConfirmationDialog";
 
 import { useAuth } from "../../contexts/AuthContext";
 import useProject from "../../hooks/useProject";
+import Comments from "../../components/Comments";
 
 export default function ProjectPage() {
     const { project, loading, canBid, handleAcceptBid, handleDeleteBid, handleDeleteProject } =
@@ -114,6 +115,7 @@ export default function ProjectPage() {
                     handleDeleteBid={handleDeleteBid}
                 />
             ) : null}
+            <Comments projectId={project.id} />
         </>
     );
 }
