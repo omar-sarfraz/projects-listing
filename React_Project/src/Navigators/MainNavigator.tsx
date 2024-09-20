@@ -11,17 +11,15 @@ const ProjectPage = lazy(() => import("../pages/ProjectPage/ProjectPage"));
 const SubmitBid = lazy(() => import("../pages/SubmitBid/SubmitBid"));
 const ChatPage = lazy(() => import("../pages/Chat/ChatPage"));
 
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
-import { createClient } from "graphql-ws";
+import { ApolloProvider } from "@apollo/client";
 
-import { WEBSOCKET_URL } from "../configs/urls";
 import { Subscription } from "../components/Subscription";
 import { useAuth } from "../contexts/AuthContext";
 
 import { useAppDispatch } from "../redux/store";
 import { listenEvents } from "../redux/events/slice";
 import { listenOnlineStatus } from "../redux/onlineStatus/slice";
+import useGraphQL from "../hooks/useGraphql";
 
 export default function MainNavigator() {
     const { user, loading } = useAuth();
@@ -34,17 +32,7 @@ export default function MainNavigator() {
 
     if (loading) return <div>Loading</div>;
 
-    const wsLink = new GraphQLWsLink(
-        createClient({
-            url: WEBSOCKET_URL,
-            connectionParams: { authToken: user?.token },
-        })
-    );
-
-    const client = new ApolloClient({
-        link: wsLink,
-        cache: new InMemoryCache(),
-    });
+    const client = useGraphQL(user);
 
     return (
         <ApolloProvider client={client}>

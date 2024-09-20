@@ -1,40 +1,19 @@
 import { useState, useEffect } from "react";
-import { useSubscription, gql } from "@apollo/client";
+import { useSubscription } from "@apollo/client";
 
 import useAxios from "./useAxios";
+
 import { useToast } from "../contexts/ToastContext";
 import { useAuth } from "../contexts/AuthContext";
+
 import { USER_ROLES } from "../lib/utils";
 import { MessageType } from "../lib/types";
 
-const PROJECT_UPDATES_SUBSCRIPTION = gql`
-    subscription ($projectIds: [Int!]!) {
-        projectUpdate(projectIds: $projectIds) {
-            message
-            type
-        }
-    }
-`;
-
-const BID_UPDATES_SUBSCRIPTION = gql`
-    subscription ($bidIds: [Int!]!) {
-        bidUpdate(bidIds: $bidIds) {
-            message
-            type
-        }
-    }
-`;
-
-const MESSAGE_SUBSCRIPTION_QUERY = gql`
-    subscription ($projectId: Int!) {
-        messageCreated(projectId: $projectId) {
-            id
-            text
-            projectId
-            userId
-        }
-    }
-`;
+import {
+    BID_UPDATES_SUBSCRIPTION,
+    MESSAGE_SUBSCRIPTION_QUERY,
+    PROJECT_UPDATES_SUBSCRIPTION,
+} from "../graphql/queries";
 
 export const useMyProjectSubscription = () => {
     const [projectIds, setProjectIds] = useState([]);
