@@ -8,21 +8,24 @@ import ToastContainer from "./components/ToastContainer";
 import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 
+import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
-import { store } from "./redux/store";
+import { store, persistor } from "./redux/store";
 
 function App() {
     return (
         <Provider store={store}>
             <MantineProvider>
-                <AuthContextProvider>
-                    <ToastContextProvider>
-                        <BrowserRouter>
-                            <MainNavigator />
-                        </BrowserRouter>
-                        <ToastContainer />
-                    </ToastContextProvider>
-                </AuthContextProvider>
+                <PersistGate persistor={persistor} loading={<div>Loading...</div>}>
+                    <AuthContextProvider>
+                        <ToastContextProvider>
+                            <BrowserRouter>
+                                <MainNavigator />
+                            </BrowserRouter>
+                            <ToastContainer />
+                        </ToastContextProvider>
+                    </AuthContextProvider>
+                </PersistGate>
             </MantineProvider>
         </Provider>
     );

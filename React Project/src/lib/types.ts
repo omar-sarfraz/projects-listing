@@ -35,3 +35,25 @@ export type MessageType = {
     projectId: number;
     userId: number;
 };
+
+export type ProjectInput = {
+    name: string;
+    budget: string;
+    deadline: string;
+    description: string;
+    files: FileList | null;
+};
+
+export type OfflineEventType = {
+    id?: number;
+    name: "CREATE_PROJECT";
+    payload: {
+        data: ProjectInput & { user: User | undefined };
+        url: string;
+        requestOptions?: {
+            headers: {
+                "Content-Type": string;
+            };
+        };
+    };
+};

@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../configs/urls";
 import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../contexts/ToastContext";
+import { User } from "../lib/types";
 
 const useAxios = (shouldDisplayError: boolean = true) => {
     const { user } = useAuth();
@@ -28,4 +29,24 @@ const useAxios = (shouldDisplayError: boolean = true) => {
     return axiosInstance;
 };
 
+const usePlainAxios = () => {
+    const axiosInstance = axios.create({
+        baseURL: BASE_URL,
+    });
+
+    const localUser = localStorage.getItem("user");
+
+    if (localUser) {
+        const userData: User | undefined = JSON.parse(localUser);
+
+        axiosInstance.interceptors.request.use((config) => {
+            if (userData?.token) config.headers.Authorization = `Bearer ${userData.token}`;
+            return config;
+        });
+    }
+
+    return axiosInstance;
+};
+
+export { usePlainAxios };
 export default useAxios;
