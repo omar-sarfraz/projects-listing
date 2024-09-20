@@ -19,7 +19,7 @@ import { ProjectInput } from "../../lib/types";
 import { createProjectFormData } from "./utils";
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
-import { addOfflineEvent } from "../../redux/projects/slice";
+import { addOfflineEvent } from "../../redux/events/slice";
 
 export default function SubmitProject() {
     const [loading, setLoading] = useState(false);

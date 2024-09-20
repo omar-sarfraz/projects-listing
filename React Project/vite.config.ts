@@ -26,6 +26,8 @@ export default defineConfig({
                     },
                 ],
             },
+            includeAssets: ["**/*.{png}", "favicon.ico", "favicon.svg"],
+            manifest: false,
         }),
         sentryVitePlugin({
             org: "arbisoft-m1",
