@@ -1,16 +1,22 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AxiosResponse } from "axios";
+
 import { useAuth } from "../../contexts/AuthContext";
+
 import { Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
-import Markdown from "react-markdown";
+
 import useAxios from "../../hooks/useAxios";
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { useMyProjectSubscription, useMyBidSubscription } from "../../hooks/useSubscription";
 
+import Markdown from "react-markdown";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { useAppDispatch, useAppSelector } from "../../redux/store";
+import { selectProjects, setProjects } from "../../redux/projects/slice";
+
 export default function ProjectsList() {
-    const [projects, setProjects] = useState<Project[] | undefined>();
+    const projects = useAppSelector(selectProjects);
     const [loading, setLoading] = useState(true);
 
     const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
@@ -18,6 +24,7 @@ export default function ProjectsList() {
 
     const { user } = useAuth();
     const axiosInstance = useAxios();
+    const dispatch = useAppDispatch();
 
     useMyProjectSubscription();
     useMyBidSubscription();
@@ -31,7 +38,8 @@ export default function ProjectsList() {
             const response: AxiosResponse = await axiosInstance.get("/projects");
 
             const projects: Project[] = await response.data.data;
-            setProjects(projects);
+
+            dispatch(setProjects(projects));
             setSearchedProjects(projects);
         } catch (e) {
             console.log("Error while fetching projects", e);
