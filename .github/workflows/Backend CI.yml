@@ -1,4 +1,4 @@
-name: Express CI
+name: Backend CI
 
 on:
     push:
