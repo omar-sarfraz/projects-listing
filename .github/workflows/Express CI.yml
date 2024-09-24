@@ -1,0 +1,34 @@
+name: Express CI
+
+on:
+    push:
+        branches: ["main", "backend/workflows"]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install Sentry
+              run: curl -sL https://sentry.io/get-cli/ | sh
+
+            - name: Login Sentry
+              run: sentry-cli login --auth-token ${{secrets.SENTRY_AUTH_TOKEN}}
+
+            - name: Login Dockerhub
+              env:
+                  DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+                  DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
+              run: docker login -u $DOCKER_USERNAME -p $DOCKER_TOKEN
+
+            - name: Build Docker images for backend and graphql
+              run: |
+                  docker compose build backend
+                  docker compose build graphql
+
+            - name: Push Docker images to DockerHub
+              run: |
+                  docker push omarsarfraz/project-listings:backend
+                  docker push omarsarfraz/project-listings:graphql
