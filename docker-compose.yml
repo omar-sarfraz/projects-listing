@@ -3,6 +3,9 @@ services:
         build:
             context: .
             dockerfile: ./Backend/Dockerfile
+            args:
+                ENVIRONMENT: ${ENVIRONMENT}
+                SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
         image: omarsarfraz/project-listings:backend
         ports:
             - "5000:5000"
@@ -17,9 +20,7 @@ services:
             PORT: ${PORT}
             KEY: ${KEY}
             SECTRET: ${SECTRET}
-            ENVIRONMENT: ${ENVIRONMENT}
             GEMINI_API_KEY: ${GEMINI_API_KEY}
-            SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
         networks:
             - app-network
 
