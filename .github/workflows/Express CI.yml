@@ -8,10 +8,6 @@ jobs:
     build:
         runs-on: ubuntu-latest
 
-        env:
-            ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
-            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-
         steps:
             - uses: actions/checkout@v4
 
@@ -22,6 +18,9 @@ jobs:
               run: docker login -u $DOCKER_USERNAME -p $DOCKER_TOKEN
 
             - name: Build Docker images for backend and graphql
+              env:
+                  ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+                  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
               run: |
                   docker compose build backend
                   docker compose build graphql
