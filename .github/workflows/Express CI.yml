@@ -8,14 +8,12 @@ jobs:
     build:
         runs-on: ubuntu-latest
 
+        env:
+            ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
+            SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
         steps:
             - uses: actions/checkout@v4
-
-            - name: Install Sentry
-              run: curl -sL https://sentry.io/get-cli/ | sh
-
-            - name: Login Sentry
-              run: sentry-cli login --auth-token ${{secrets.SENTRY_AUTH_TOKEN}}
 
             - name: Login Dockerhub
               env:
