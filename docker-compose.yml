@@ -19,6 +19,7 @@ services:
             SECTRET: ${SECTRET}
             ENVIRONMENT: ${ENVIRONMENT}
             GEMINI_API_KEY: ${GEMINI_API_KEY}
+            SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
         networks:
             - app-network
 
