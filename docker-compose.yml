@@ -3,6 +3,7 @@ services:
         build:
             context: .
             dockerfile: ./Backend/Dockerfile
+        image: omarsarfraz/project-listings:backend
         ports:
             - "5000:5000"
         depends_on:
@@ -25,6 +26,7 @@ services:
         build:
             context: .
             dockerfile: ./Graphql_Server/Dockerfile
+        image: omarsarfraz/project-listings:graphql
         ports:
             - "4000:4000"
         depends_on:
