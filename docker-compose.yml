@@ -1,0 +1,58 @@
+services:
+    backend:
+        build:
+            context: .
+            dockerfile: ./Backend/Dockerfile
+        ports:
+            - "5000:5000"
+        depends_on:
+            - postgres
+        environment:
+            DB_NAME: ${DB_NAME}
+            DB_USER: ${DB_USER}
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT}
+            DB_PASSWORD: ${DB_PASSWORD}
+            PORT: ${PORT}
+            KEY: ${KEY}
+            SECTRET: ${SECTRET}
+            ENVIRONMENT: ${ENVIRONMENT}
+            GEMINI_API_KEY: ${GEMINI_API_KEY}
+        networks:
+            - app-network
+
+    graphql:
+        build:
+            context: .
+            dockerfile: ./Graphql_Server/Dockerfile
+        ports:
+            - "4000:4000"
+        depends_on:
+            - postgres
+        environment:
+            DB_NAME: ${DB_NAME}
+            DB_USER: ${DB_USER}
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT}
+            DB_PASSWORD: ${DB_PASSWORD}
+        networks:
+            - app-network
+
+    postgres:
+        image: postgres:16
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        networks:
+            - app-network
+
+volumes:
+    postgres_data:
+
+networks:
+    app-network:
