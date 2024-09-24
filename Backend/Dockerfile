@@ -8,6 +8,9 @@ RUN yarn install
 
 COPY ./Backend .
 
+ARG SENTRY_AUTH_TOKEN
+ARG ENVIRONMENT
+
 RUN npm run build
 
 EXPOSE 5000
