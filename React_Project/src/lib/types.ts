@@ -70,3 +70,5 @@ export type OfflineEventType = {
     name: "CREATE_PROJECT" | "CREATE_BID";
     payload: CreateProject | CreateBid;
 };
+
+export type EditorType = "PROJECT" | "BID";

@@ -183,6 +183,7 @@ export default function SubmitProject() {
                                 <TextEditor
                                     name="description"
                                     placeholder="e.g., I want you to create an Clothing Ecommerce Store using React"
+                                    type="PROJECT"
                                 />
                             </div>
                         </div>
