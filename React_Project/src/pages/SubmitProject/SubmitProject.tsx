@@ -5,18 +5,22 @@ import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
 
 import { USER_ROLES } from "../../lib/utils";
+import { ProjectInput } from "../../lib/types";
 
 import TextField from "../../components/TextField";
-import { projectSchema } from "./validationSchema";
 import TextEditor from "../../components/TextEditor";
+import ConfirmationDialog from "../../components/ConfirmationDialog";
+import { projectSchema } from "./validationSchema";
 import useAxios from "../../hooks/useAxios";
 
+import dayjs from "dayjs";
 import * as marked from "marked";
 import { Form, Formik, FormikHelpers } from "formik";
-import dayjs from "dayjs";
 import { Icon } from "@iconify/react";
-import { ProjectInput } from "../../lib/types";
+import { useDocumentTitle } from "@mantine/hooks";
+
 import { createProjectFormData } from "./utils";
+
 import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
 import { addOfflineEvent } from "../../redux/events/slice";
@@ -35,6 +39,8 @@ export default function SubmitProject() {
 
     const isOnline = useAppSelector(selectOnlineStatus);
     const dispatch = useAppDispatch();
+
+    useDocumentTitle("Submit Project");
 
     const initialValues: ProjectInput = {
         name: state ? state.name : "",
@@ -197,15 +203,20 @@ export default function SubmitProject() {
                         {state?.files?.length ? (
                             <div className="mt-4 flex gap-4 flex-wrap w-full">
                                 {state.files.map((file: string) => (
-                                    <button
-                                        key={file}
-                                        type="button"
-                                        className="flex gap-2 items-center border-[1px] py-1 px-2 rounded-md"
+                                    <ConfirmationDialog
                                         onClick={() => handleFileDelete(file)}
+                                        title="Confirm File Deletion"
+                                        description="Do you really want to delete this file?"
                                     >
-                                        {file.split("/").pop()}
-                                        <Icon icon="line-md:close" />
-                                    </button>
+                                        <button
+                                            key={file}
+                                            type="button"
+                                            className="flex gap-2 items-center border-[1px] py-1 px-2 rounded-md"
+                                        >
+                                            {file.split("/").pop()}
+                                            <Icon icon="line-md:close" />
+                                        </button>
+                                    </ConfirmationDialog>
                                 ))}
                             </div>
                         ) : null}

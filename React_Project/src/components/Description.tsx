@@ -1,6 +1,7 @@
-import { useState } from "react";
 import { Icon } from "@iconify/react";
+
 import Markdown from "react-markdown";
+import { useToggle } from "@mantine/hooks";
 
 const MAX_CHAR_LENGTH = 100;
 
@@ -11,7 +12,7 @@ export default function Description({
     description: string;
     customClasses?: string;
 }) {
-    const [open, setOpen] = useState(false);
+    const [open, toggle] = useToggle([false, true]);
 
     const shouldShowMore = description.length > MAX_CHAR_LENGTH ? true : false;
 
@@ -29,7 +30,7 @@ export default function Description({
 
             {shouldShowMore && (
                 <div className="w-full my-2 flex gap-1 justify-center items-center">
-                    <button className="text-lg font-medium" onClick={() => setOpen(!open)}>
+                    <button className="text-lg font-medium" onClick={() => toggle()}>
                         View More
                     </button>
                     <Icon icon={open ? "ph:arrow-up-bold" : "ph:arrow-down-bold"} />

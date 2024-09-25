@@ -19,7 +19,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useAppDispatch } from "../redux/store";
 import { listenEvents } from "../redux/events/slice";
 import { listenOnlineStatus } from "../redux/onlineStatus/slice";
-import useGraphQL from "../hooks/useGraphql";
+import useGraphQL from "../hooks/useGraphQL";
 
 export default function MainNavigator() {
     const { user, loading } = useAuth();
