@@ -21,15 +21,6 @@ jobs:
               env:
                   ENVIRONMENT: ${{ secrets.ENVIRONMENT }}
                   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-                  DB_NAME: ${{ secrets.DB_NAME}}
-                  DB_USER: ${{ secrets.DB_USER}}
-                  DB_HOST: ${{ secrets.DB_HOST}}
-                  DB_PORT: ${{ secrets.DB_PORT}}
-                  DB_PASSWORD: ${{ secrets.DB_PASSWORD}}
-                  PORT: ${{ secrets.PORT}}
-                  KEY: ${{ secrets.KEY}}
-                  SECTRET: ${{ secrets.SECTRET}}
-                  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY}}
               run: |
                   docker compose build backend
                   docker compose build graphql
