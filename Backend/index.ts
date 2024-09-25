@@ -17,7 +17,8 @@ import usersRouter from "./controllers/users";
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(morgan("tiny"));
+if (process.env.ENVIRONMENT === "development") app.use(morgan("tiny"));
+
 app.use(express.json());
 app.use(cors());
 app.use(express.static("public"));
@@ -29,8 +30,6 @@ app.use(passport.authenticate("jwt", { session: false }));
 app.use("/projects", projectsRouter);
 app.use("/projects/:projectId/bids", bidsRouter);
 app.use("/users", usersRouter);
-
-app.get("/", (req: Request, res: Response) => res.send("Hello World!"));
 
 Sentry.setupExpressErrorHandler(app);
 
