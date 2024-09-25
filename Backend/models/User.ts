@@ -4,6 +4,7 @@ import { USER_ROLES } from "../lib/utils";
 import { Project } from "./Project";
 import { Bid } from "./Bid";
 import { decrypt } from "@omar-sarfraz/caesar-cipher";
+import { Comment } from "./Comment";
 
 const key = parseInt(process.env.KEY || "0");
 
@@ -47,3 +48,7 @@ Project.belongsTo(User);
 // User can have many bids
 User.hasMany(Bid, { foreignKey: { allowNull: false }, onDelete: "RESTRICT" });
 Bid.belongsTo(User);
+
+// User can have many comments
+User.hasMany(Comment, { foreignKey: { allowNull: false }, onDelete: "RESTRICT" });
+Comment.belongsTo(User);

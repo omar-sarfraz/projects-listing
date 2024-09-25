@@ -14,6 +14,7 @@ import authRouter from "./controllers/auth";
 import projectsRouter from "./controllers/projects";
 import usersRouter from "./controllers/users";
 import aiRouter from "./controllers/ai";
+import commentsRouter from "./controllers/comments";
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ app.use("/projects", projectsRouter);
 app.use("/projects/:projectId/bids", bidsRouter);
 app.use("/users", usersRouter);
 app.use("/ai", aiRouter);
+app.use("/projects/:projectId/comments", commentsRouter);
 
 Sentry.setupExpressErrorHandler(app);
 

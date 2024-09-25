@@ -72,3 +72,12 @@ export type OfflineEventType = {
 };
 
 export type EditorType = "PROJECT" | "BID";
+
+export type CommentType = {
+    id?: number;
+    text: string;
+    projectId: number;
+    userId: number;
+    createdAt?: string;
+    user?: User;
+};

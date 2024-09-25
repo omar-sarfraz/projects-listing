@@ -2,6 +2,7 @@ import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
 import { Bid } from "./Bid";
 import { events } from "../lib/utils";
+import { Comment } from "./Comment";
 
 export const Project = sequelize.define(
     "project",
@@ -48,3 +49,7 @@ Bid.belongsTo(Project);
 // Project can have 1 accepted bid | Foreign key defined in Project Model
 Bid.hasOne(Project, { foreignKey: "acceptedBid" });
 Project.belongsTo(Bid, { foreignKey: "acceptedBid" });
+
+// Project can have many comments
+Project.hasMany(Comment, { foreignKey: { allowNull: false }, onDelete: "CASCADE" });
+Comment.belongsTo(Project);
