@@ -4,12 +4,13 @@
     "main": "index.js",
     "scripts": {
         "compile": "tsc && node -r dotenv/config ./dist/index.js dotenv_config_path=.env.local",
-        "dev": "nodemon -e ts  --exec \"npm run compile\""
+        "dev": "nodemon -e ts  --exec \"npm run compile\"",
+        "build": "tsc",
+        "start": "node -r dotenv/config ./dist/index.js dotenv_config_path=.env.local"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "description": "",
-    "type": "module",
-    "dependencies": {}
+    "type": "module"
 }
