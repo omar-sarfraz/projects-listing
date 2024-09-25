@@ -7,7 +7,8 @@
         "start": "node -r dotenv/config dist/index.js dotenv_config_path=.env.local",
         "dev": "nodemon -r dotenv/config index.ts dotenv_config_path=.env.local",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "sentry:sourcemaps": "sentry-cli sourcemaps inject --org arbisoft-m1 --project project-listings-backend ./dist && sentry-cli sourcemaps upload --org arbisoft-m1 --project project-listings-backend ./dist"
+        "sentry:login": "sentry-cli login --auth-token $SENTRY_AUTH_TOKEN",
+        "sentry:sourcemaps": "npm run sentry:login && sentry-cli sourcemaps inject --org arbisoft-m1 --project project-listings-backend ./dist && sentry-cli sourcemaps upload --org arbisoft-m1 --project project-listings-backend ./dist"
     },
     "keywords": [],
     "author": "",
