@@ -11,15 +11,6 @@ export const addProject = async (req: Request, res: Response) => {
     try {
         let validatedProject = await projectSchema.validateAsync(project);
 
-        if (req.files) {
-            const files = req.files as Express.Multer.File[];
-            validatedProject.files = files.map((file) => {
-                let path = file.path;
-                let firstSlash = path.indexOf("/");
-                return path.slice(firstSlash + 1);
-            });
-        }
-
         const nhm = new NodeHtmlMarkdown();
         validatedProject.description = nhm.translate(validatedProject.description);
 
