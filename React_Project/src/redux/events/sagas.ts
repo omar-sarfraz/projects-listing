@@ -3,15 +3,13 @@ import { call, put, select, delay, takeLatest } from "redux-saga/effects";
 import { listenEvents, removeOfflineEvent, selectEvents } from "./slice";
 import { CreateBid, CreateProject, OfflineEventType } from "../../lib/types";
 
-import { createProjectFormData } from "../../pages/SubmitProject/utils";
 import { usePlainAxios } from "../../hooks/useAxios";
 
 const axiosInstance = usePlainAxios();
 
 const postProject = ({ payload }: OfflineEventType) => {
-    const { data, requestOptions, url } = payload as CreateProject;
-    const formData = createProjectFormData(data);
-    return axiosInstance.post(url, formData, requestOptions);
+    const { data, url } = payload as CreateProject;
+    return axiosInstance.post(url, data);
 };
 
 const postBid = ({ payload }: OfflineEventType) => {
