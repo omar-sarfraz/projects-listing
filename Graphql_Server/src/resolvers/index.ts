@@ -26,13 +26,13 @@ const resolvers = {
         projectUpdate: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator([channels.PROJECT_UPDATE]),
-                (payload, variables, { user }) => {
+                (payload, _, { user }) => {
                     if (
                         user.data.role === "CLIENT" &&
                         payload.projectUpdate.type === events.BID_CREATE
                     ) {
-                        // Only send event to clients who have subscribed to this project
-                        let validProject = variables.projectIds.filter(
+                        // Only send event to clients for their own project
+                        let validProject = user.data.projectIds.filter(
                             (id: number) => id === payload.projectUpdate.data.projectId
                         ).length;
 
@@ -46,13 +46,13 @@ const resolvers = {
         bidUpdate: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator([channels.BID_UPDATE]),
-                (payload, variables, { user }) => {
+                (payload, _, { user }) => {
                     if (
                         user.data.role === "FREELANCER" &&
                         payload.bidUpdate.type === events.BID_UPDATE
                     ) {
-                        // Only send event to freelancers who have subscribed to their bids
-                        let validBid = variables.bidIds.filter(
+                        // Only send event to freelancers for their own bids
+                        let validBid = user.data.bidIds.filter(
                             (id: number) => id === payload.bidUpdate.data.acceptedBid
                         ).length;
 

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const PROJECT_UPDATES_SUBSCRIPTION = gql`
-    subscription ($projectIds: [Int!]!) {
-        projectUpdate(projectIds: $projectIds) {
+    subscription {
+        projectUpdate {
             message
             type
         }
@@ -10,8 +10,8 @@ export const PROJECT_UPDATES_SUBSCRIPTION = gql`
 `;
 
 export const BID_UPDATES_SUBSCRIPTION = gql`
-    subscription ($bidIds: [Int!]!) {
-        bidUpdate(bidIds: $bidIds) {
+    subscription {
+        bidUpdate {
             message
             type
         }
