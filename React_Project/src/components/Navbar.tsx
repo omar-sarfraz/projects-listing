@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 function Navbar() {
-    const [isNavOpen, setIsNavOpen] = useState(true);
+    const [isNavOpen, setIsNavOpen] = useState(false);
     const { user, setUser } = useAuth();
 
     const navigate = useNavigate();

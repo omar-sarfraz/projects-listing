@@ -11,6 +11,7 @@ import useAxios from "../../hooks/useAxios";
 
 import { USER_ROLES } from "../../lib/utils";
 import { User } from "../../lib/types";
+import { useState } from "react";
 
 export type SignUpValues = {
     firstName: string;
@@ -22,6 +23,8 @@ export type SignUpValues = {
 };
 
 export default function SignUp() {
+    const [loading, setLoading] = useState(false);
+
     const { toast } = useToast();
     const axiosInstance = useAxios();
 
@@ -33,6 +36,7 @@ export default function SignUp() {
         { firstName, lastName, email, password, role }: SignUpValues,
         actions: FormikHelpers<SignUpValues>
     ) => {
+        setLoading(true);
         try {
             let userData: User = {
                 firstName,
@@ -50,6 +54,8 @@ export default function SignUp() {
             navigate("/login");
         } catch (e: any) {
             console.log("Sign up error", e?.response);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -128,7 +134,7 @@ export default function SignUp() {
                                 </Link>
                             </div>
                         </div>
-                        <Button text="SignUp" type="submit" />
+                        <Button text="SignUp" type="submit" loading={loading} />
                     </Form>
                 </Formik>
             </div>
