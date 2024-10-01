@@ -1,12 +1,34 @@
 import { withFilter } from "graphql-subscriptions";
+import { Op } from "sequelize";
+
 import { channels, events, pubsub } from "../lib/utils.js";
 import { ContextType, MessageType } from "../lib/types.js";
+
 import { Message } from "../models/Message.js";
+import { dateScalar } from "../typeDefs/scalarTypes.js";
 
 const resolvers = {
+    Date: dateScalar,
     Query: {
-        messages: async (_: any, { projectId }: { projectId: number }, ctx: ContextType) => {
-            const messages = await Message.findAll({ where: { projectId: projectId } });
+        messages: async (
+            _: any,
+            { projectId, limit = 20, cursor }: { projectId: number; limit: number; cursor?: number }
+        ) => {
+            const whereClause = {
+                projectId,
+            };
+
+            const whereClauseCursor = {
+                projectId,
+                id: { [Op.lt]: cursor },
+            };
+
+            const messages = await Message.findAll({
+                where: cursor ? whereClauseCursor : whereClause,
+                limit,
+                order: [["createdAt", "DESC"]],
+            });
+
             return messages;
         },
     },
@@ -14,6 +36,8 @@ const resolvers = {
         postMessage: async (_: any, { message }: { message: MessageType }, ctx: ContextType) => {
             const data = { ...message, userId: ctx.user.data.id };
             const createdMessage = await Message.create(data);
+
+            console.log(createdMessage);
 
             pubsub.publish(channels.MESSAGE_CREATED, {
                 messageCreated: createdMessage.dataValues,

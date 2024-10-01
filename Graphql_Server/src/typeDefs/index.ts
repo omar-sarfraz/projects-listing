@@ -1,6 +1,8 @@
 const typeDefs = `
+scalar Date
+
 type Query {
-  messages(projectId: Int!): [Message]
+  messages(projectId: Int!, limit: Int!, cursor: Int): [Message]
 }
 
 type Mutation {
@@ -12,6 +14,7 @@ type Message {
   text: String
   projectId: Int
   userId: Int
+  createdAt: Date
 }
 
 input MessageInput {
