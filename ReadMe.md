@@ -100,7 +100,7 @@ yarn install
 
 ```bash
 cd React_Project
-cp .env.example .env  # Create env file
+cp .env-example .env  # Create env file
 npm run dev
 ```
 
@@ -108,7 +108,7 @@ npm run dev
 
 ```bash
 cd ..
-cp .env.example .env
+cp .env-example .env
 docker-compose up
 ```
 
