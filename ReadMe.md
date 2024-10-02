@@ -90,18 +90,24 @@ A freelance project marketplace platform with real-time communication, offline s
 git clone https://github.com/omar-sarfraz/projects-listing
 ```
 
+2. Install Dependencies
+
+```bash
+yarn install
+```
+
 2. Frontend
 
 ```bash
 cd React_Project
 cp .env.example .env  # Create env file
-npm install
 npm run dev
 ```
 
 3. Backend services
 
 ```bash
+cd ..
 cp .env.example .env
 docker-compose up
 ```
