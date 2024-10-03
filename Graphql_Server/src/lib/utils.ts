@@ -5,7 +5,7 @@ export const pubsub = new PubSub();
 
 export const verifyUser = async (token: string) => {
     try {
-        const response = await fetch("http://localhost:5000/users/verify", {
+        const response = await fetch(`${process.env.BACKEND_URL}/users/verify`, {
             method: "POST",
             headers: { authorization: "Bearer " + token },
         });
