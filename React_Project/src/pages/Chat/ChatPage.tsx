@@ -78,6 +78,9 @@ export default function ChatPage() {
     useEffect(() => {
         if (!postMessageLoading && postMessageData) {
             setMessages((prev) => [postMessageData.postMessage, ...prev]);
+            setTimeout(() => {
+                listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+            }, 500);
         }
     }, [postMessageLoading, postMessageData]);
 
