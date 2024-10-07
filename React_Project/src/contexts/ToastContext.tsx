@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useRef, useState } from "react";
 
 type MessageVariant = undefined | "success" | "error";
 type Color = "green-500" | "red-500";
@@ -32,7 +32,7 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
     });
     const toastRef = useRef<any>();
 
-    const toast = (message: string, type: MessageVariant) => {
+    const toast = useCallback((message: string, type: MessageVariant) => {
         if (toastRef.current) clearTimeout(toastRef.current);
 
         let typeColor: Color = "green-500";
@@ -52,7 +52,7 @@ export function ToastContextProvider({ children }: { children: React.ReactNode }
                 type: undefined,
             }));
         }, 4000);
-    };
+    }, []);
 
     return <ToastContext.Provider value={{ toastState, toast }}>{children}</ToastContext.Provider>;
 }
