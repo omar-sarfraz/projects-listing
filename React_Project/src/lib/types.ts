@@ -34,6 +34,7 @@ export type MessageType = {
     text: String;
     projectId: number;
     userId: number;
+    createdAt: string;
 };
 
 export type ProjectInput = {

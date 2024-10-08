@@ -30,12 +30,13 @@ export const MESSAGE_SUBSCRIPTION_QUERY = gql`
 `;
 
 export const MESSAGES_QUERY = gql`
-    query Messages($projectId: Int!) {
-        messages(projectId: $projectId) {
+    query Messages($projectId: Int!, $limit: Int!, $cursor: Int) {
+        messages(projectId: $projectId, limit: $limit, cursor: $cursor) {
             id
             text
             projectId
             userId
+            createdAt
         }
     }
 `;

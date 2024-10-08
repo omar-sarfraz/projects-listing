@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 
 import { Icon } from "@iconify/react";
 import { Button, Box, Input, Loader, Blockquote } from "@mantine/core";
-import { useDocumentTitle, useScrollIntoView } from "@mantine/hooks";
+import { useDocumentTitle } from "@mantine/hooks";
 
 import { useToast } from "../../contexts/ToastContext";
 import { useAuth } from "../../contexts/AuthContext";
@@ -17,6 +17,8 @@ import { MESSAGES_QUERY, POST_MESSAGE_QUERY } from "../../graphql/queries";
 
 import Message from "../../components/Message";
 
+const MESSAGE_LIMIT = 13;
+
 export default function ChatPage() {
     const params = useParams();
     const { user } = useAuth();
@@ -24,21 +26,17 @@ export default function ChatPage() {
 
     const [text, setText] = useState("");
     const [messages, setMessages] = useState<MessageType[]>([]);
+    const [loadingPrevious, setLoadingPrevious] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
 
-    const {
-        scrollIntoView,
-        scrollableRef,
-        targetRef: lastDiv,
-    } = useScrollIntoView<HTMLDivElement>({
-        offset: 60,
-    });
+    const listRef = useRef<HTMLDivElement>(null);
 
     const projectId = parseInt(params.id || "0");
 
     useDocumentTitle("Chat");
 
-    const { data, error, loading } = useQuery(MESSAGES_QUERY, {
-        variables: { projectId },
+    const { data, error, loading, fetchMore } = useQuery(MESSAGES_QUERY, {
+        variables: { projectId, limit: MESSAGE_LIMIT },
     });
 
     useEffect(() => {
@@ -70,15 +68,35 @@ export default function ChatPage() {
 
     useEffect(() => {
         if (!postMessageLoading && postMessageData) {
-            setMessages((prev) => [...prev, postMessageData.postMessage]);
+            setMessages((prev) => [postMessageData.postMessage, ...prev]);
         }
     }, [postMessageLoading, postMessageData]);
 
-    useEffect(() => {
-        scrollIntoView({
-            alignment: "center",
-        });
-    }, [messages]);
+    const handleScroll = async () => {
+        if (!listRef.current || loadingPrevious || !hasMore) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+        if (scrollTop + scrollHeight === clientHeight) {
+            setLoadingPrevious(true);
+
+            const lastMessageId = messages[messages.length - 1]?.id;
+            const { data: moreMessages } = await fetchMore({
+                variables: {
+                    projectId,
+                    cursor: lastMessageId,
+                    limit: MESSAGE_LIMIT,
+                },
+            });
+
+            if (moreMessages?.messages.length) {
+                setMessages((prev) => [...prev, ...moreMessages.messages]);
+            } else {
+                setHasMore(false);
+            }
+
+            setLoadingPrevious(false);
+        }
+    };
 
     if (!loading && error) return <div>An error has occurred!</div>;
 
@@ -94,15 +112,20 @@ export default function ChatPage() {
             <Blockquote color="blue" mt="xs" py="md">
                 Chat with {user?.role === USER_ROLES.client ? "freelancer" : "client"}
             </Blockquote>
-            <div>
+            <div className="relative">
+                {loadingPrevious && (
+                    <div className="absolute left-[50%] top-3">
+                        <Loader />
+                    </div>
+                )}
                 <div
-                    className="flex flex-col gap-2 py-4 my-4 w-full overflow-scroll h-[60vh]"
-                    ref={scrollableRef}
+                    className="flex flex-col-reverse gap-2 pb-4 my-4 w-full overflow-scroll h-[60vh] pt-10"
+                    ref={listRef}
+                    onScroll={handleScroll}
                 >
                     {messages.map((message: MessageType) => (
                         <Message message={message} userId={user?.id} key={message.id} />
                     ))}
-                    <div ref={lastDiv}></div>
                 </div>
                 <form className="flex w-full gap-2" onSubmit={handleSend}>
                     <Input
