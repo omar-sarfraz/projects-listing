@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 
 import { Icon } from "@iconify/react";
@@ -23,6 +23,8 @@ export default function ChatPage() {
     const params = useParams();
     const { user } = useAuth();
     const { toast } = useToast();
+    const { state } = useLocation();
+    const navigate = useNavigate();
 
     const [text, setText] = useState("");
     const [messages, setMessages] = useState<MessageType[]>([]);
@@ -34,6 +36,13 @@ export default function ChatPage() {
     const projectId = parseInt(params.id || "0");
 
     useDocumentTitle("Chat");
+
+    useLayoutEffect(() => {
+        if (state?.projectOwner !== user?.id && state?.bidOwner !== user?.id) {
+            toast("You are not allowed to access this page", "error");
+            navigate("/");
+        }
+    }, []);
 
     const { data, error, loading, fetchMore } = useQuery(MESSAGES_QUERY, {
         variables: { projectId, limit: MESSAGE_LIMIT },
@@ -69,6 +78,9 @@ export default function ChatPage() {
     useEffect(() => {
         if (!postMessageLoading && postMessageData) {
             setMessages((prev) => [postMessageData.postMessage, ...prev]);
+            setTimeout(() => {
+                listRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+            }, 500);
         }
     }, [postMessageLoading, postMessageData]);
 

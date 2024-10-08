@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Bid, Project } from "../lib/types";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
@@ -46,41 +46,47 @@ export default function useProject() {
         }
     };
 
-    const handleAcceptBid = async (id: number) => {
-        try {
-            const response: AxiosResponse = await axiosInstance.post(
-                `/projects/${project?.id}/bids/${id}/accept`
-            );
+    const handleAcceptBid = useCallback(
+        async (id: number) => {
+            try {
+                const response: AxiosResponse = await axiosInstance.post(
+                    `/projects/${project?.id}/bids/${id}/accept`
+                );
 
-            const updatedProject: Project = response.data.data;
-            setProject((project) => {
-                if (project) {
-                    return { ...project, acceptedBid: updatedProject.acceptedBid };
-                }
-            });
-            toast("Bid accepted successfully", "success");
-        } catch (e: any) {
-            console.log("Accept Bid response", e);
-        }
-    };
+                const updatedProject: Project = response.data.data;
+                setProject((project) => {
+                    if (project) {
+                        return { ...project, acceptedBid: updatedProject.acceptedBid };
+                    }
+                });
+                toast("Bid accepted successfully", "success");
+            } catch (e: any) {
+                console.log("Accept Bid response", e);
+            }
+        },
+        [project]
+    );
 
-    const handleDeleteBid = async (id: number) => {
-        try {
-            const response: AxiosResponse = await axiosInstance.delete(
-                `/projects/${project?.id}/bids/${id}`
-            );
-            toast(response.data.message, "success");
-            setProject((project) => {
-                if (project && project.bids?.length) {
-                    let newBids = project.bids.filter((bid) => bid.id !== id);
-                    return { ...project, bids: newBids };
-                }
-            });
-            navigate("/projects/" + project?.id);
-        } catch (e: any) {
-            console.log("Delete bid response", e);
-        }
-    };
+    const handleDeleteBid = useCallback(
+        async (id: number) => {
+            try {
+                const response: AxiosResponse = await axiosInstance.delete(
+                    `/projects/${project?.id}/bids/${id}`
+                );
+                toast(response.data.message, "success");
+                setProject((project) => {
+                    if (project && project.bids?.length) {
+                        let newBids = project.bids.filter((bid) => bid.id !== id);
+                        return { ...project, bids: newBids };
+                    }
+                });
+                navigate("/projects/" + project?.id);
+            } catch (e: any) {
+                console.log("Delete bid response", e);
+            }
+        },
+        [project]
+    );
 
     const handleDeleteProject = async () => {
         try {

@@ -12,6 +12,7 @@ type PropType = {
     isFreelancer: boolean;
     handleAcceptBid: (id: number) => void;
     handleDeleteBid: (id: number) => void;
+    projectOwner: number | undefined;
 };
 
 export default function BidsList({
@@ -21,6 +22,7 @@ export default function BidsList({
     isFreelancer,
     handleAcceptBid,
     handleDeleteBid,
+    projectOwner,
 }: PropType) {
     return (
         <div>
@@ -73,6 +75,7 @@ export default function BidsList({
                     {bid.id === acceptedBid && (
                         <Link
                             to={`/projects/${bid?.projectId}/chat`}
+                            state={{ projectOwner, bidOwner: bid.user?.id }}
                             className="bg-emerald-500 text-white px-4 py-1 mt-2 rounded-md text-center"
                         >
                             Bid Accepted: Chat Now

@@ -113,6 +113,7 @@ export default function ProjectPage() {
                     acceptedBid={project.acceptedBid}
                     handleAcceptBid={handleAcceptBid}
                     handleDeleteBid={handleDeleteBid}
+                    projectOwner={project.userId}
                 />
             ) : null}
             <Comments projectId={project.id} />
