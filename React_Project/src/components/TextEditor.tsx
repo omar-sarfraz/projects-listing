@@ -84,8 +84,6 @@ const TextEditor = ({
 
         if (!isSuggesting.current || !selection) return;
 
-        console.log("suggestion", suggestion);
-
         quill.insertText(selection.index, suggestion, "api");
         quill.setSelection(quill.getLength(), 0);
 

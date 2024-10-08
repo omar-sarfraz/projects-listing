@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AxiosResponse } from "axios";
 import { Formik, FormikHelpers, Form } from "formik";
@@ -18,6 +19,8 @@ type LoginValues = {
 };
 
 export default function Login() {
+    const [loading, setLoading] = useState(false);
+
     const { setUser } = useAuth();
     const { toast } = useToast();
     const axiosInstance = useAxios();
@@ -30,6 +33,7 @@ export default function Login() {
         { email, password }: LoginValues,
         actions: FormikHelpers<LoginValues>
     ) => {
+        setLoading(true);
         try {
             let response: AxiosResponse = await axiosInstance.post("/login", { email, password });
             const user = { ...response.data.user, token: response.data.token };
@@ -42,6 +46,8 @@ export default function Login() {
             navigate("/", { replace: true });
         } catch (e: any) {
             console.log("Login Error", e?.response);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -83,7 +89,7 @@ export default function Login() {
                             </div>
                         </div>
 
-                        <Button text="Login" type="submit" />
+                        <Button text="Login" type="submit" loading={loading} />
                     </Form>
                 </Formik>
             </div>

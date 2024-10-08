@@ -50,7 +50,7 @@ export default function BidsList({
                             </div>
                         ) : null}
                     </div>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between flex-col sm:flex-row">
                         <div className="flex gap-1">
                             Amount:<div className="font-bold">{bid.budget} $</div>
                         </div>
