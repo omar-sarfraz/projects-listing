@@ -37,26 +37,34 @@ export default function MainNavigator() {
     return (
         <ApolloProvider client={client}>
             <Subscription>
-                <Routes>
-                    <Route path="/" element={<Layout />}>
-                        {user ? (
-                            <>
-                                <Route index element={<ProjectsList />} />
-                                <Route path="projects/submit" element={<SubmitProject />} />
-                                <Route path="projects/:id" element={<ProjectPage />} />
-                                <Route path="projects/:id/bid" element={<SubmitBid />} />
-                                <Route path="projects/:id/chat" element={<ChatPage />} />
-                            </>
-                        ) : (
-                            <>
-                                <Route index element={<Login />} />
-                                <Route path="login" element={<Login />} />
-                                <Route path="sign-up" element={<SignUp />} />
-                            </>
-                        )}
-                        <Route path="*" element={<NotFound />} />
-                    </Route>
-                </Routes>
+                {(resubscribe) => (
+                    <Routes>
+                        <Route path="/" element={<Layout />}>
+                            {user ? (
+                                <>
+                                    <Route index element={<ProjectsList />} />
+                                    <Route
+                                        path="projects/submit"
+                                        element={<SubmitProject resubscribe={resubscribe} />}
+                                    />
+                                    <Route path="projects/:id" element={<ProjectPage />} />
+                                    <Route
+                                        path="projects/:id/bid"
+                                        element={<SubmitBid resubscribe={resubscribe} />}
+                                    />
+                                    <Route path="projects/:id/chat" element={<ChatPage />} />
+                                </>
+                            ) : (
+                                <>
+                                    <Route index element={<Login />} />
+                                    <Route path="login" element={<Login />} />
+                                    <Route path="sign-up" element={<SignUp />} />
+                                </>
+                            )}
+                            <Route path="*" element={<NotFound />} />
+                        </Route>
+                    </Routes>
+                )}
             </Subscription>
         </ApolloProvider>
     );

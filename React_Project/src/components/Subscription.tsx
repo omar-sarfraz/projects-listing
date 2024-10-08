@@ -1,9 +1,18 @@
 import React from "react";
 import { useMyBidSubscription, useMyProjectSubscription } from "../hooks/useSubscription";
 
-export function Subscription({ children }: { children: React.ReactNode }) {
-    useMyBidSubscription();
-    useMyProjectSubscription();
+export function Subscription({
+    children,
+}: {
+    children: (resubscribe: () => void) => React.ReactNode;
+}) {
+    const { resubscribe: resubscribeBid } = useMyBidSubscription();
+    const { resubscribe: resubscribeProject } = useMyProjectSubscription();
 
-    return <div>{children}</div>;
+    const resubscribe = () => {
+        resubscribeProject();
+        resubscribeBid();
+    };
+
+    return <div>{children(resubscribe)}</div>;
 }

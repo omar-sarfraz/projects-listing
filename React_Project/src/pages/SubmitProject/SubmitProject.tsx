@@ -22,7 +22,7 @@ import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
 import { addOfflineEvent } from "../../redux/events/slice";
 import FilesComponent from "../../components/FilesComponent";
 
-export default function SubmitProject() {
+export default function SubmitProject({ resubscribe }: { resubscribe: () => void }) {
     const [loading, setLoading] = useState(false);
     const [deadline, setDeadline] = useState("");
     const [description, setDescription] = useState("");
@@ -89,6 +89,7 @@ export default function SubmitProject() {
                 else await axiosInstance.post(url, payload);
 
                 toast("Project Submitted Successfully!", "success");
+                resubscribe();
                 navigate("/");
             }
 

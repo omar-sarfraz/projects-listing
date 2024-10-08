@@ -22,7 +22,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store";
 import { selectOnlineStatus } from "../../redux/onlineStatus/slice";
 import { addOfflineEvent } from "../../redux/events/slice";
 
-export default function AddBid() {
+export default function AddBid({ resubscribe }: { resubscribe: () => void }) {
     const [deadline, setDeadline] = useState("");
     const [description, setDescription] = useState("");
     const [loading, setLoading] = useState(false);
@@ -89,6 +89,7 @@ export default function AddBid() {
                 else await axiosInstance.post(url, requestData);
 
                 toast("Bid Submitted Successfully!", "success");
+                resubscribe();
                 navigate("/projects/" + params.id);
             }
 

@@ -1,12 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSubscription } from "@apollo/client";
 
-import useAxios from "./useAxios";
-
 import { useToast } from "../contexts/ToastContext";
-import { useAuth } from "../contexts/AuthContext";
 
-import { USER_ROLES } from "../lib/utils";
 import { MessageType } from "../lib/types";
 
 import {
@@ -16,34 +12,13 @@ import {
 } from "../graphql/queries";
 
 export const useMyProjectSubscription = () => {
-    const [projectIds, setProjectIds] = useState([]);
-    const [skipSubscription, setSkipSubscription] = useState(true);
-
-    const axiosInstance = useAxios(false);
     const { toast } = useToast();
-    const { user } = useAuth();
 
-    useEffect(() => {
-        if (!user || user.role === USER_ROLES.freelancer) return;
-
-        const fetchProjectIds = async () => {
-            try {
-                const response = await axiosInstance.get("/users/projects");
-                const ids = response.data.data.map((obj: { id: number }) => obj.id);
-                setProjectIds(ids);
-                setSkipSubscription(false);
-            } catch (error) {
-                console.error("Error fetching project IDs:", error);
-                setSkipSubscription(true);
-            }
-        };
-
-        fetchProjectIds();
-    }, []);
+    const [resubscribeFlag, setResubscribeFlag] = useState(true);
 
     const { data, loading } = useSubscription(PROJECT_UPDATES_SUBSCRIPTION, {
-        variables: { projectIds: projectIds },
-        skip: skipSubscription,
+        skip: !resubscribeFlag,
+        shouldResubscribe: true,
     });
 
     useEffect(() => {
@@ -51,37 +26,23 @@ export const useMyProjectSubscription = () => {
             toast(data.projectUpdate.message, "success");
         }
     }, [data, loading]);
+
+    const resubscribe = () => {
+        setResubscribeFlag(false);
+        setTimeout(() => setResubscribeFlag(true), 0);
+    };
+
+    return { resubscribe };
 };
 
 export const useMyBidSubscription = () => {
-    const [bidIds, setBidIds] = useState([]);
-    const [skipSubscription, setSkipSubscription] = useState(true);
-
-    const axiosInstance = useAxios(false);
     const { toast } = useToast();
-    const { user } = useAuth();
 
-    useEffect(() => {
-        if (!user || user.role === USER_ROLES.client) return;
-
-        const fetchBidIds = async () => {
-            try {
-                const response = await axiosInstance.get("/users/bids");
-                const ids = response.data.data.map((obj: { id: number }) => obj.id);
-                setBidIds(ids);
-                setSkipSubscription(false);
-            } catch (error) {
-                console.error("Error fetching bid IDs:", error);
-                setSkipSubscription(true);
-            }
-        };
-
-        fetchBidIds();
-    }, []);
+    const [resubscribeFlag, setResubscribeFlag] = useState(true);
 
     const { data, loading } = useSubscription(BID_UPDATES_SUBSCRIPTION, {
-        variables: { bidIds: bidIds },
-        skip: skipSubscription,
+        skip: !resubscribeFlag,
+        shouldResubscribe: true,
     });
 
     useEffect(() => {
@@ -89,6 +50,13 @@ export const useMyBidSubscription = () => {
             toast(data.bidUpdate.message, "success");
         }
     }, [data, loading]);
+
+    const resubscribe = () => {
+        setResubscribeFlag(false);
+        setTimeout(() => setResubscribeFlag(true), 0);
+    };
+
+    return { resubscribe };
 };
 
 export const useMessageSubscription = (
