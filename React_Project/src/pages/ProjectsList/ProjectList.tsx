@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 import { AxiosResponse } from "axios";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useDocumentTitle } from "@mantine/hooks";
+import { Pagination } from "@mantine/core";
 
 import { useAuth } from "../../contexts/AuthContext";
 
-import { Project } from "../../lib/types";
+import { PaginationType, Project } from "../../lib/types";
 import { USER_ROLES } from "../../lib/utils";
 
 import useAxios from "../../hooks/useAxios";
@@ -18,11 +19,14 @@ import { selectProjects, setProjects } from "../../redux/projects/slice";
 
 import ProjectCard from "../../components/ProjectCard";
 
+const PROJECTS_LIMIT = 10;
+
 export default function ProjectsList() {
     const projects = useAppSelector(selectProjects);
+    const [pagination, setPagination] = useState<PaginationType | null>(null);
+    const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(true);
 
-    const [searchedProjects, setSearchedProjects] = useState<Project[] | undefined>(projects);
     const [searchTerm, setSearchTerm] = useState("");
 
     const { user } = useAuth();
@@ -36,16 +40,18 @@ export default function ProjectsList() {
 
     useEffect(() => {
         fetchProjects();
-    }, []);
+    }, [page]);
 
     const fetchProjects = async () => {
         try {
-            const response: AxiosResponse = await axiosInstance.get("/projects");
+            const response: AxiosResponse = await axiosInstance.get(
+                `/projects?page=${page}&limit=${PROJECTS_LIMIT}&search=${searchTerm}`
+            );
 
             const projects: Project[] = await response.data.data;
 
             dispatch(setProjects(projects));
-            setSearchedProjects(projects);
+            setPagination(response.data.pagination);
         } catch (e) {
             console.log("Error while fetching projects", e);
         } finally {
@@ -55,21 +61,7 @@ export default function ProjectsList() {
 
     const handleSearch = (e: FormEvent) => {
         e.preventDefault();
-
-        if (searchTerm) {
-            if (!projects) return;
-
-            const projectList: Project[] | [] = projects.filter((project) => {
-                let name = project.name.toLowerCase();
-                let regex = new RegExp(searchTerm, "i");
-
-                return name.match(regex) ? true : false;
-            });
-
-            setSearchedProjects(projectList);
-        } else {
-            setSearchedProjects(projects);
-        }
+        fetchProjects();
     };
 
     return (
@@ -102,15 +94,27 @@ export default function ProjectsList() {
             {loading ? (
                 <div>Loading...</div>
             ) : (
-                <ul id="list" className="flex flex-wrap justify-start gap-2">
-                    {searchedProjects?.length ? (
-                        searchedProjects.map((project) => (
-                            <ProjectCard key={project.id} {...project} />
-                        ))
+                <>
+                    <ul id="list" className="flex flex-wrap justify-start gap-2">
+                        {projects?.length ? (
+                            projects.map((project) => <ProjectCard key={project.id} {...project} />)
+                        ) : (
+                            <div>No projects</div>
+                        )}
+                    </ul>
+                    {pagination ? (
+                        <div className="my-8 flex justify-end w-full">
+                            <Pagination
+                                color="teal"
+                                total={pagination.totalPages}
+                                value={page}
+                                onChange={setPage}
+                            />
+                        </div>
                     ) : (
-                        <div>No projects</div>
+                        <></>
                     )}
-                </ul>
+                </>
             )}
         </div>
     );

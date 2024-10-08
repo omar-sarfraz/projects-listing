@@ -81,3 +81,9 @@ export type CommentType = {
     createdAt?: string;
     user?: User;
 };
+
+export type PaginationType = {
+    totalProjects: number;
+    totalPages: number;
+    limit: number;
+};
