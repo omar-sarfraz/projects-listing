@@ -1,11 +1,22 @@
+import { Request, Response, NextFunction } from "express";
 import multer from "multer";
 import * as fs from "fs";
-import { Request, Response, NextFunction } from "express";
+
+import { CustomRequest } from "../lib/types";
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const folderName = req.body.userId;
-        const folderPath = `public/${folderName}/${req.body.name}`;
+    destination: (req: Request, file, cb) => {
+        const userRequest = req as CustomRequest;
+
+        const folderName = userRequest.user.id;
+
+        if (!folderName) {
+            const error = new Error("User Id is required!");
+            cb(error, "");
+            return;
+        }
+
+        const folderPath = `public/${folderName}`;
 
         if (!fs.existsSync(folderPath)) {
             fs.mkdirSync(folderPath, { recursive: true });
@@ -26,13 +37,15 @@ export const uploadFile =
 
         upload(req, res, function (err) {
             if (err instanceof multer.MulterError && err.code === "LIMIT_UNEXPECTED_FILE") {
-                return res
-                    .status(400)
-                    .json({ message: "You can only upload maximum of 5 files", error: true });
+                return res.status(400).json({
+                    message: `You can only upload maximum of ${maxFile} files`,
+                    error: true,
+                });
             } else if (err) {
-                return res
-                    .status(500)
-                    .json({ message: "An unexpected error has occured!", error: true });
+                return res.status(500).json({
+                    message: err.message || "An unexpected error has occured!",
+                    error: true,
+                });
             }
 
             next();

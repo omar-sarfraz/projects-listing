@@ -6,6 +6,7 @@ const projectSchema = Joi.object({
     deadline: Joi.date().required(),
     description: Joi.string().required(),
     userId: Joi.number().required(),
+    files: Joi.array().items(Joi.string()),
 });
 
 export default projectSchema;

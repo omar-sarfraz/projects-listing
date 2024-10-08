@@ -11,25 +11,8 @@ export const updateProject = async (req: Request, res: Response) => {
 
     if (!projectId) return res.status(400).json({ message: "Invalid project Id", error: true });
 
-    console.log(project, req.files);
-
     try {
         let validatedProject = await projectSchema.validateAsync(project);
-
-        if (req.files) {
-            const existingProject = await Project.findByPk(projectId);
-            const existingFiles: string[] = existingProject?.dataValues.files;
-            const files = req.files as Express.Multer.File[];
-
-            validatedProject.files = [
-                ...existingFiles,
-                ...files.map((file) => {
-                    let path = file.path;
-                    let firstSlash = path.indexOf("/");
-                    return path.slice(firstSlash + 1);
-                }),
-            ];
-        }
 
         const nhm = new NodeHtmlMarkdown();
         validatedProject.description = nhm.translate(validatedProject.description);
