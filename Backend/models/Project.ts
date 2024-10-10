@@ -1,7 +1,9 @@
-import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
-import { Bid } from "./Bid";
+
+import { sequelize } from "../lib/sequelize";
 import { events } from "../lib/utils";
+
+import { Bid } from "./Bid";
 import { Comment } from "./Comment";
 
 export const Project = sequelize.define(
@@ -35,7 +37,7 @@ export const Project = sequelize.define(
     {
         paranoid: true,
         hooks: {
-            afterUpdate: async (project, options) => {
+            afterUpdate: async (project) => {
                 await sequelize.query(`NOTIFY ${events.BID_UPDATE}, '${JSON.stringify(project)}'`);
             },
         },

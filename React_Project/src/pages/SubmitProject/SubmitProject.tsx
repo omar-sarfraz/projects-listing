@@ -42,8 +42,8 @@ export default function SubmitProject({ resubscribe }: { resubscribe: () => void
     const initialValues: ProjectInput = {
         name: state ? state.name : "",
         budget: state ? state.budget : "",
-        deadline: deadline,
-        description: description,
+        deadline,
+        description,
         files: state ? state.files : [],
     };
 
@@ -62,7 +62,7 @@ export default function SubmitProject({ resubscribe }: { resubscribe: () => void
         const dateStr = dayjs(state.deadline).format("YYYY-MM-DD");
         setDeadline(dateStr);
 
-        let html = await marked.parse(state.description);
+        const html = await marked.parse(state.description);
         setDescription(html);
     };
 
@@ -131,21 +131,21 @@ export default function SubmitProject({ resubscribe }: { resubscribe: () => void
                     id="add_form"
                 >
                     <TextField
-                        required={true}
+                        required
                         name="name"
                         type="text"
                         label="Name"
                         placeholder="e.g., Ecommerce Website"
                     />
                     <TextField
-                        required={true}
+                        required
                         name="budget"
                         label="Budget"
                         type="number"
                         placeholder="e.g., 500"
                     />
                     <TextField
-                        required={true}
+                        required
                         name="deadline"
                         placeholder="Date"
                         label="Deadline"

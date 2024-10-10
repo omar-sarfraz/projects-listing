@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useToast } from "../contexts/ToastContext";
 import { User } from "../lib/types";
 
-const useAxios = (shouldDisplayError: boolean = true) => {
+const useAxios = (shouldDisplayError = true) => {
     const { user } = useAuth();
     const { toast } = useToast();
 

@@ -30,7 +30,7 @@ export default function BidsList({
             {bids.map((bid) => (
                 <div className="bg-gray-100 p-4 mt-4 rounded-md" key={bid.id}>
                     <div className="flex justify-between items-center border-b-[1px] border-gray-200 pb-2 mb-3">
-                        <div>Freelancer: {bid.user?.firstName + " " + bid.user?.lastName}</div>
+                        <div>Freelancer: {`${bid.user?.firstName} ${bid.user?.lastName}`}</div>
                         {isFreelancer ? (
                             <div className="flex gap-2">
                                 <Link

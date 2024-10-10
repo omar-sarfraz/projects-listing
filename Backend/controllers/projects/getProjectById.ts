@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+
 import { Project } from "../../models/Project";
-import { error } from "console";
-import { BidType, CustomRequest, ProjectType } from "../../lib/types";
 import { Bid } from "../../models/Bid";
 import { User } from "../../models/User";
+
+import { BidType, CustomRequest, ProjectType } from "../../lib/types";
 
 const getProjectById = async (expressReq: Request, res: Response) => {
     const req = expressReq as CustomRequest;

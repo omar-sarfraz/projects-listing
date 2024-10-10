@@ -35,7 +35,7 @@ export default function Login() {
     ) => {
         setLoading(true);
         try {
-            let response: AxiosResponse = await axiosInstance.post("/login", { email, password });
+            const response: AxiosResponse = await axiosInstance.post("/login", { email, password });
             const user = { ...response.data.user, token: response.data.token };
 
             setUser(user);
@@ -65,7 +65,7 @@ export default function Login() {
                 >
                     <Form>
                         <TextField
-                            required={true}
+                            required
                             type="email"
                             placeholder="johndoe@gmail.com"
                             label="Email"
@@ -73,7 +73,7 @@ export default function Login() {
                             name="email"
                         />
                         <TextField
-                            required={true}
+                            required
                             type="password"
                             placeholder="Password"
                             label="Password"

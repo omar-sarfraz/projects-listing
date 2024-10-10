@@ -17,10 +17,10 @@ if (!db_name || !username) {
 
 const db = new Client({
     user: username,
-    host: host,
+    host,
     database: db_name,
     password,
-    port: port,
+    port,
 });
 
 const setupListeners = async () => {
@@ -28,9 +28,9 @@ const setupListeners = async () => {
     await db.query(`LISTEN ${events.BID_CREATE}`);
 };
 
-const setupNotifications = async () => {
+const setupNotifications = () => {
     db.on("notification", (msg) => {
-        let payload = msg.payload ? JSON.parse(msg.payload) : null;
+        const payload = msg.payload ? JSON.parse(msg.payload) : null;
 
         if (msg.channel === events.BID_UPDATE && payload.acceptedBid) {
             pubsub.publish(channels.BID_UPDATE, {
@@ -63,5 +63,5 @@ export const setupDatabase = async () => {
     console.log("Models have been synchronized!");
 
     await setupListeners();
-    await setupNotifications();
+    setupNotifications();
 };

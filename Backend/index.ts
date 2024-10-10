@@ -1,13 +1,14 @@
 import "./configs/instrument";
 
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import cors from "cors";
-import * as Sentry from "@sentry/node";
-
-import passport from "passport";
-import "./configs/passport";
-import { sequelize } from "./lib/sequelize";
 import morgan from "morgan";
+import * as Sentry from "@sentry/node";
+import passport from "passport";
+
+import "./configs/passport";
+
+import { sequelize } from "./lib/sequelize";
 
 import bidsRouter from "./controllers/bids";
 import authRouter from "./controllers/auth";

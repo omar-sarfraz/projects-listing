@@ -42,8 +42,8 @@ export default function AddBid({ resubscribe }: { resubscribe: () => void }) {
 
     const initialValues = {
         budget: state ? state.budget : "",
-        deadline: deadline,
-        description: description,
+        deadline,
+        description,
     };
 
     useEffect(() => {
@@ -61,7 +61,7 @@ export default function AddBid({ resubscribe }: { resubscribe: () => void }) {
         const dateStr = dayjs(state.deadline).format("YYYY-MM-DD");
         setDeadline(dateStr);
 
-        let html = await marked.parse(state.description);
+        const html = await marked.parse(state.description);
         setDescription(html);
     };
 
@@ -90,7 +90,7 @@ export default function AddBid({ resubscribe }: { resubscribe: () => void }) {
 
                 toast("Bid Submitted Successfully!", "success");
                 resubscribe();
-                navigate("/projects/" + params.id);
+                navigate(`/projects/${params.id}`);
             }
 
             if (!isOnline && !state) {
@@ -128,7 +128,7 @@ export default function AddBid({ resubscribe }: { resubscribe: () => void }) {
             >
                 <Form className="flex flex-col gap-4 items-end bg-gray-100 px-6 py-10 rounded-md">
                     <TextField
-                        required={true}
+                        required
                         label="Budget"
                         type="number"
                         placeholder="e.g., 500"
@@ -136,7 +136,7 @@ export default function AddBid({ resubscribe }: { resubscribe: () => void }) {
                     />
                     <TextField
                         name="deadline"
-                        required={true}
+                        required
                         placeholder="Date"
                         label="Deadline"
                         type="date"

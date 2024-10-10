@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import { Op } from "sequelize";
+
 import { CustomRequest } from "../lib/types";
 import { Project } from "../models/Project";
-import { Op } from "sequelize";
 
 const isProjectOwner = async (req: Request, res: Response, next: NextFunction) => {
     const customRequest = req as CustomRequest;

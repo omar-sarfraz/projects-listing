@@ -7,7 +7,6 @@ import { updateProject } from "./updateProject";
 import { deleteProject } from "./deleteProject";
 
 import isClient from "../../middlewares/isClient";
-import { uploadFile } from "../../middlewares/uploadFiles";
 import isProjectOwner from "../../middlewares/isProjectOwner";
 
 const projectsRouter = Router();

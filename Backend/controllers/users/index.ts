@@ -1,8 +1,10 @@
 import { Router } from "express";
+
 import getUserProjects from "./getUserProjects";
+import getUserBids from "./getUserBids";
+
 import isClient from "../../middlewares/isClient";
 import isFreelancer from "../../middlewares/isFreelancer";
-import getUserBids from "./getUserBids";
 
 const usersRouter = Router();
 

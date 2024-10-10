@@ -12,7 +12,7 @@ export type ContextType = {
 
 export type MessageType = {
     id: number;
-    text: String;
+    text: string;
     projectId: number;
     userId: number;
 };

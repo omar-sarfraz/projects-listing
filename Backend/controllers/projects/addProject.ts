@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
+import { NodeHtmlMarkdown } from "node-html-markdown";
+
 import { ProjectType } from "../../lib/types";
+import { createJoiError } from "../../lib/utils";
+
 import { Project } from "../../models/Project";
 import projectSchema from "./validationSchema";
-import { createJoiError } from "../../lib/utils";
-import { NodeHtmlMarkdown } from "node-html-markdown";
 
 export const addProject = async (req: Request, res: Response) => {
     const project: ProjectType = req.body;

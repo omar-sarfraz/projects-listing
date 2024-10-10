@@ -20,13 +20,13 @@ export default function FilesComponent({ name }: { name: string }) {
         const files = e.target.files;
         if (!files?.length) return;
 
-        let formData = new FormData();
+        const formData = new FormData();
         for (let i = 0; i < files.length; i++) {
             formData.append("projectFiles", files[i]);
         }
 
         try {
-            let response = await axiosInstance.post(`/files`, formData, {
+            const response = await axiosInstance.post("/files", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -52,7 +52,7 @@ export default function FilesComponent({ name }: { name: string }) {
 
     const handleFileDelete = async (path: string) => {
         try {
-            await axiosInstance.delete(`/files`, { data: { path } });
+            await axiosInstance.delete("/files", { data: { path } });
             toast("File deleted Successfully", "success");
 
             helper.setValue(field.value.filter((filePath: string) => filePath !== path));

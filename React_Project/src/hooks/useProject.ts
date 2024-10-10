@@ -25,17 +25,17 @@ export default function useProject() {
     const fetchProject = async () => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get("/projects/" + params.id);
+            const response = await axiosInstance.get(`/projects/${params.id}`);
             const project: Project = response.data.data;
             setProject(project);
 
             // Check to see if the current user can bid or not
             if (user?.role === USER_ROLES.client || project.acceptedBid) return;
 
-            let bids: Bid[] | undefined = project.bids;
+            const bids: Bid[] | undefined = project.bids;
             if (!bids) return;
 
-            let currentUserBids = bids.filter((bid) => bid.user?.id === user?.id);
+            const currentUserBids = bids.filter((bid) => bid.user?.id === user?.id);
             if (currentUserBids.length) return;
 
             setCanBid(true);
@@ -76,11 +76,11 @@ export default function useProject() {
                 toast(response.data.message, "success");
                 setProject((project) => {
                     if (project && project.bids?.length) {
-                        let newBids = project.bids.filter((bid) => bid.id !== id);
+                        const newBids = project.bids.filter((bid) => bid.id !== id);
                         return { ...project, bids: newBids };
                     }
                 });
-                navigate("/projects/" + project?.id);
+                navigate(`/projects/${project?.id}`);
             } catch (e: any) {
                 console.log("Delete bid response", e);
             }

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomRequest } from "../lib/types";
-import { Project } from "../models/Project";
 import { Op } from "sequelize";
+
+import { CustomRequest } from "../lib/types";
 import { Bid } from "../models/Bid";
 
 const isBidOwner = async (req: Request, res: Response, next: NextFunction) => {
