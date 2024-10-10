@@ -7,7 +7,7 @@ export const verifyUser = async (token: string) => {
     try {
         const response = await fetch(`${process.env.BACKEND_URL}/users/verify`, {
             method: "POST",
-            headers: { authorization: "Bearer " + token },
+            headers: { authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {

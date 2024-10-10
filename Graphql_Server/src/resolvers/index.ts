@@ -28,7 +28,7 @@ const validateUserAccessToProject = async (
         throw new Error("Project not found.");
     }
 
-    let validBidForProject = bidIds?.filter(
+    const validBidForProject = bidIds?.filter(
         (id: number) => id === projectResult[0].acceptedBid
     )?.length;
 
@@ -97,7 +97,7 @@ const resolvers = {
                         payload.projectUpdate.type === events.BID_CREATE
                     ) {
                         // Only send event to clients for their own project
-                        let validProject = user.data.projectIds.filter(
+                        const validProject = user.data.projectIds.filter(
                             (id: number) => id === payload.projectUpdate.data.projectId
                         ).length;
 
@@ -117,7 +117,7 @@ const resolvers = {
                         payload.bidUpdate.type === events.BID_UPDATE
                     ) {
                         // Only send event to freelancers for their own bids
-                        let validBid = user.data.bidIds.filter(
+                        const validBid = user.data.bidIds.filter(
                             (id: number) => id === payload.bidUpdate.data.acceptedBid
                         ).length;
 

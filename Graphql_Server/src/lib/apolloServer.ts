@@ -41,7 +41,7 @@ export default function createApolloServer(httpServer: Server) {
                 if (!user) return false;
                 console.log("Connected WebSocket");
             },
-            onDisconnect(ctx, code, reason) {
+            onDisconnect() {
                 console.log("Disconnected WebSocket");
             },
         },
