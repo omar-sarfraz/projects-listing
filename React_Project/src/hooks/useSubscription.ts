@@ -69,7 +69,7 @@ export const useMessageSubscription = (
 
     useEffect(() => {
         if (!loading && data) {
-            setMessages((prev) => [...prev, data.messageCreated]);
+            setMessages((prev) => [data.messageCreated, ...prev]);
         }
     }, [data, loading]);
 };
