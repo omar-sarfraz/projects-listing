@@ -51,7 +51,7 @@ export default function ProjectPage() {
                 {project.userId === user?.id ? (
                     <div className="flex gap-2">
                         <Link
-                            to={`/projects/submit`}
+                            to={"/projects/submit"}
                             state={project}
                             className="flex items-center bg-emerald-500 rounded-xl py-2 px-4 gap-2"
                         >
@@ -93,6 +93,7 @@ export default function ProjectPage() {
                                 key={file}
                                 className="flex gap-2 items-center border-[1px] py-1 px-2 rounded-md"
                                 target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 <Icon icon="akar-icons:file" />
                                 {file.split("/").pop()}

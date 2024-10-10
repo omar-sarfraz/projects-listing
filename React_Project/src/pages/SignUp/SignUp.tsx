@@ -38,7 +38,7 @@ export default function SignUp() {
     ) => {
         setLoading(true);
         try {
-            let userData: User = {
+            const userData: User = {
                 firstName,
                 lastName,
                 email,
@@ -80,7 +80,7 @@ export default function SignUp() {
                 >
                     <Form>
                         <TextField
-                            required={true}
+                            required
                             name="firstName"
                             type="text"
                             placeholder="John"
@@ -88,7 +88,7 @@ export default function SignUp() {
                             vertical={true}
                         />
                         <TextField
-                            required={true}
+                            required
                             name="lastName"
                             type="text"
                             placeholder="Doe"
@@ -96,7 +96,7 @@ export default function SignUp() {
                             vertical={true}
                         />
                         <TextField
-                            required={true}
+                            required
                             name="email"
                             type="email"
                             placeholder="johndoe@gmail.com"
@@ -104,7 +104,7 @@ export default function SignUp() {
                             vertical={true}
                         />
                         <TextField
-                            required={true}
+                            required
                             name="password"
                             type="password"
                             placeholder="Password"
@@ -112,7 +112,7 @@ export default function SignUp() {
                             vertical={true}
                         />
                         <TextField
-                            required={true}
+                            required
                             name="confirmPassword"
                             type="password"
                             placeholder="Confirm Password"

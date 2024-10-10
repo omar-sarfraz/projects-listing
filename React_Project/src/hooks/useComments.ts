@@ -54,7 +54,7 @@ const useComments = (projectId: number, inViewPort: boolean) => {
 
     const deleteComment = useCallback(async (commentId: number) => {
         try {
-            const deleteUrl = url + `/${commentId}`;
+            const deleteUrl = `${url}/${commentId}`;
             await axiosInstance.delete(deleteUrl);
             toast("Comment Deleted Successfully", "success");
             setComments((prev) => prev.filter((comment) => comment.id !== commentId));
