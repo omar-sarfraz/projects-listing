@@ -2,10 +2,10 @@ import { Router } from "express";
 
 import isClient from "../../middlewares/isClient";
 import { uploadFile } from "../../middlewares/uploadFiles";
+import isFileOwner from "../../middlewares/isFileOwner";
 
 import { deleteFiles } from "./deleteFile";
 import { addFiles } from "./addFiles";
-import isFileOwner from "../../middlewares/isFileOwner";
 
 const filesRouter = Router();
 

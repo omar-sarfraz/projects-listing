@@ -1,5 +1,6 @@
-import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
+
+import { sequelize } from "../lib/sequelize";
 
 export const Comment = sequelize.define("comment", {
     id: {

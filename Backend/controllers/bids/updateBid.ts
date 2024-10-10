@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
-import { Op } from "sequelize";
+import { NodeHtmlMarkdown } from "node-html-markdown";
 
 import { BidType } from "../../lib/types";
-import bidSchema from "./validationSchema";
-import { Bid } from "../../models/Bid";
 import { createJoiError } from "../../lib/utils";
-import { NodeHtmlMarkdown } from "node-html-markdown";
+
+import bidSchema from "./validationSchema";
+
+import { Bid } from "../../models/Bid";
 import { Project } from "../../models/Project";
 
 export const updateBid = async (req: Request, res: Response) => {

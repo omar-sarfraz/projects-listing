@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 
-import commentSchema from "./validationSchema";
-import { Comment } from "../../models/Comment";
-
 import { createJoiError } from "../../lib/utils";
 import { CustomRequest } from "../../lib/types";
+
 import { User } from "../../models/User";
+import { Comment } from "../../models/Comment";
+
+import commentSchema from "./validationSchema";
 
 type CommentType = {
     text: string;

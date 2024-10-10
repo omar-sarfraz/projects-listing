@@ -1,5 +1,3 @@
-import { Request, Response } from "express";
-import { CustomRequest } from "../../lib/types";
 import { Bid } from "../../models/Bid";
 
 const getUserBids = async (freelancerId: number | undefined) => {

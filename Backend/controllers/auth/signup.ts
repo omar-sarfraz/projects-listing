@@ -3,9 +3,10 @@ import { encrypt } from "@omar-sarfraz/caesar-cipher";
 import bcrypt from "bcrypt";
 
 import { UserType } from "../../lib/types";
+import { createJoiError } from "../../lib/utils";
+
 import { User } from "../../models/User";
 import { signUpSchema } from "./validationSchema";
-import { createJoiError } from "../../lib/utils";
 
 const signup = async (req: Request, res: Response) => {
     try {

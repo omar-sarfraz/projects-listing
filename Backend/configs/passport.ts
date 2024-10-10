@@ -1,5 +1,6 @@
 import { ExtractJwt, Strategy, StrategyOptions } from "passport-jwt";
 import passport from "passport";
+
 import { User } from "../models/User";
 
 if (!process.env.SECTRET) {

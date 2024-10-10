@@ -1,5 +1,6 @@
-import { sequelize } from "../lib/sequelize";
 import { DataTypes } from "sequelize";
+
+import { sequelize } from "../lib/sequelize";
 import { events } from "../lib/utils";
 
 export const Bid = sequelize.define(
@@ -25,7 +26,7 @@ export const Bid = sequelize.define(
     },
     {
         hooks: {
-            afterCreate: async (bid, options) => {
+            afterCreate: async (bid) => {
                 await sequelize.query(`NOTIFY ${events.BID_CREATE}, '${JSON.stringify(bid)}'`);
             },
         },
